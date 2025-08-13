@@ -12,7 +12,7 @@ module TwoBucket
   end
 
   def self.measure(bucket_one : UInt32, bucket_two : UInt32, goal : UInt32, start_bucket : Bucket)
-    raise ArgumentError.new if !is_valid?(bucket_one, bucket_two, goal)
+    raise ArgumentError.new if !valid?(bucket_one, bucket_two, goal)
 
     one = SingleBucket.new(Bucket::One, bucket_one)
     two = SingleBucket.new(Bucket::Two, bucket_two)
@@ -29,9 +29,9 @@ module TwoBucket
 
     moves : UInt32 = 0
     until first.amount == goal || other.amount == goal
-      if first.is_empty?
+      if first.empty?
         first.fill
-      elsif other.is_full?
+      elsif other.full?
         other.empty
       else
         first.pour(into: other)
@@ -42,7 +42,7 @@ module TwoBucket
     first.amount == goal ? Result.new(moves, other.amount, first.name) : Result.new(moves, first.amount, other.name)
   end
 
-  def self.is_valid?(bucket_one : UInt32, bucket_two : UInt32, goal : UInt32)
+  def self.valid?(bucket_one : UInt32, bucket_two : UInt32, goal : UInt32)
     goal <= Math.max(bucket_one, bucket_two) && goal % bucket_one.gcd(bucket_two) == 0
   end
 
@@ -54,11 +54,11 @@ module TwoBucket
       @amount = 0
     end
 
-    def is_full?
+    def full?
       @amount == size
     end
 
-    def is_empty?
+    def empty?
       @amount == 0
     end
 
