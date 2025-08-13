@@ -19,34 +19,26 @@ defmodule RPG do
     defstruct []
   end
 
-  @doc """
-  Define edibility
-  """
+  # Define edibility
   defprotocol Edible do
     def eat(term, term)
   end
 
-  @doc """
-  Make loaves of bread edible
-  """
+  # Make loaves of bread edible
   defimpl Edible, for: LoafOfBread do
     def eat(%RPG.LoafOfBread{}, %RPG.Character{health: hp} = character) do
       {nil, %RPG.Character{character | health: hp + 5}}
     end
   end
 
-  @doc """
-  Make mana potions edible
-  """
+  # Make mana potions edible
   defimpl Edible, for: ManaPotion do
     def eat(%RPG.ManaPotion{strength: str}, %RPG.Character{mana: mp} = character) do
       {%RPG.EmptyBottle{}, %RPG.Character{character | mana: mp + str}}
     end
   end
 
-  @doc """
-  Make poisons edible
-  """
+  # Make poisons edible
   defimpl Edible, for: Poison do
     def eat(%RPG.Poison{}, %RPG.Character{} = character) do
       {%RPG.EmptyBottle{}, %RPG.Character{character | health: 0}}
