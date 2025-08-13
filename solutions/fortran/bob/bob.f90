@@ -24,9 +24,8 @@ contains
       end if
    end function hey
 
-   function isQuestion(str)
+   logical function isQuestion(str)
       character(len=*), intent(in) :: str
-      logical :: isQuestion
 
       ! get last actual character from input string
       integer :: pos
@@ -37,20 +36,18 @@ contains
       isQuestion = ( last == '?' )
    end function isQuestion
 
-   function isYelling(str)
+   logical function isYelling(str)
       character(len=*), intent(in) :: str
-      logical :: isYelling
 
       isYelling = ( str == toUpper(str) .and. str /= toLower(str) )
    end function isYelling
 
-   function isSilence(str)
+   logical function isSilence(str)
       character(len=*), intent(in) :: str
-      logical :: isSilence
       character :: TAB = achar( 9 )
       integer :: i
 
-      ! check string for whitespace ASCII code values
+      ! check string for whitespace ASCII characters
       isSilence = .true.
       do i = 1,len(str)
          if(str(i:i) /= ' ' .and. str(i:i) /= TAB) then
@@ -58,7 +55,6 @@ contains
          end if
       end do
    end function
-
 
    function toUpper(string) result(upper)
       character(len=*), intent(in) :: string
