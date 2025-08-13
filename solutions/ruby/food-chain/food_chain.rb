@@ -4,6 +4,7 @@ class FoodChain
   end
 
   def self.verse(n)
+    "I know an old lady who swallowed a " +
     SWALLOWED[ANIMAL[n]] + "\n" << (n < DEAD ? to_catch(n) : "")
   end
 
@@ -13,14 +14,14 @@ class FoodChain
 
   ANIMAL = [:fly, :spider, :bird, :cat, :dog, :goat, :cow, :horse].freeze
   SWALLOWED = {
-    fly: "I know an old lady who swallowed a fly.",
-    spider: "I know an old lady who swallowed a spider.\nIt wriggled and jiggled and tickled inside her.",
-    bird: "I know an old lady who swallowed a bird.\nHow absurd to swallow a bird!",
-    cat: "I know an old lady who swallowed a cat.\nImagine that, to swallow a cat!",
-    dog: "I know an old lady who swallowed a dog.\nWhat a hog, to swallow a dog!",
-    goat: "I know an old lady who swallowed a goat.\nJust opened her throat and swallowed a goat!",
-    cow: "I know an old lady who swallowed a cow.\nI don't know how she swallowed a cow!",
-    horse: "I know an old lady who swallowed a horse.\nShe's dead, of course!",
+    fly: "fly.",
+    spider: "spider.\nIt wriggled and jiggled and tickled inside her.",
+    bird: "bird.\nHow absurd to swallow a bird!",
+    cat: "cat.\nImagine that, to swallow a cat!",
+    dog: "dog.\nWhat a hog, to swallow a dog!",
+    goat: "goat.\nJust opened her throat and swallowed a goat!",
+    cow: "cow.\nI don't know how she swallowed a cow!",
+    horse: "horse.\nShe's dead, of course!",
   }.freeze
   WHY = {
     fly: "I don't know why she swallowed the fly. Perhaps she'll die.",
