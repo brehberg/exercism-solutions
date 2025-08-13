@@ -1,5 +1,5 @@
 module Acronym
   def self.abbreviate(phrase)
-    phrase.gsub(/\B[\w']+|[\s\W]/, "").upcase
+    phrase.gsub(/(?<!_)\B[\w']+|[\s\W_]/, "").upcase
   end
 end
