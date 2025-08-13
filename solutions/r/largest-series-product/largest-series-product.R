@@ -16,10 +16,7 @@ largest_series_product <- function(digits, span) {
     for (i in seq(digits)) {
         size <- i + span - 1
         if (size <= length(digits)) {
-            product <- prod(digits[i:size])
-            if (largest < product) {
-                largest <- product
-            }
+            largest <- max(largest, prod(digits[i:size]))
         }
     }
     largest
