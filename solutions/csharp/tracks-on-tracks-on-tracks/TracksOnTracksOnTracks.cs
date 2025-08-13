@@ -5,7 +5,11 @@ public static class Languages
 {
     public static List<string> NewList() => new List<string>();
 
-    public static List<string> GetExistingLanguages() => new List<string>(["C#", "Clojure", "Elm"]);
+    public static List<string> GetExistingLanguages()
+    {
+        string[] languages = { "C#", "Clojure", "Elm" };
+        return new List<string>(languages);
+    }
 
     public static List<string> AddLanguage(List<string> languages, string language)
     {
@@ -13,9 +17,11 @@ public static class Languages
         return languages;
     }
 
-    public static int CountLanguages(List<string> languages) => languages.Count;
+    public static int CountLanguages(List<string> languages) =>
+        languages.Count;
 
-    public static bool HasLanguage(List<string> languages, string language) => languages.Contains(language);
+    public static bool HasLanguage(List<string> languages, string language) =>
+        languages.Contains(language);
 
     public static List<string> ReverseList(List<string> languages)
     {
