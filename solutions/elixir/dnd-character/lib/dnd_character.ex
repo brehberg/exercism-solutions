@@ -1,5 +1,5 @@
 defmodule DndCharacter do
-  @docmodule false
+  @moduledoc false
   import Enum
 
   @type t :: %__MODULE__{
