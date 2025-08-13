@@ -11,7 +11,7 @@ namespace circular_buffer
     {
         if (m_count == 0)
         {
-            throw(domain_error(""));
+            throw(domain_error("Circular buffer is empty"));
         }
         T result = m_buffer[m_head];
         m_head = (m_head + 1) % m_capacity;
@@ -24,7 +24,7 @@ namespace circular_buffer
     {
         if (m_count == m_capacity)
         {
-            throw(domain_error(""));
+            throw(domain_error("Circular buffer is full"));
         }
         overwrite(value);
     }
