@@ -28,11 +28,11 @@ export function pizzaPrice(pizza, ...extras) {
    *
    * @returns {number} the price of the pizza
    */
-  function determinePrice(total, ...[extra, ...rest]) {
-    return !extra ? total : determinePrice(total + PRICE[extra], ...rest);
+  function determinePrice(total, [extra, ...rest]) {
+    return !extra ? total : determinePrice(total + PRICE[extra], rest);
   }
 
-  return determinePrice(PRICE[pizza], ...extras);
+  return determinePrice(PRICE[pizza], extras);
 }
 
 /**
