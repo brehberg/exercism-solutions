@@ -1,0 +1,16 @@
+rotationalCipher.rotate : Text -> Nat -> Text
+rotationalCipher.rotate plainText shiftKey = 
+    rotateChar : Char -> Char -> Char
+    rotateChar c start =
+        code = Char.toNat c
+        base = Char.toNat start
+        base + mod (code - base + shiftKey) 26 |> Char.fromNat |> getOrBug ""
+    
+    cipherText : Char -> Char
+    cipherText char =
+        match char with 
+            c | Char.ascii.isLower c -> rotateChar c ?a
+            c | Char.ascii.isUpper c -> rotateChar c ?A
+            _ -> char
+
+    Text.map (cipherText) plainText
