@@ -1,11 +1,10 @@
 #include "lasagna_master.h"
 
+#include <algorithm>
+
 namespace lasagna_master
 {
     using namespace std;
-
-    const int gramsOfNoodlesPerLayer{50};
-    const double litersOfSaucePerLayer{0.2};
 
     int preparationTime(const vector<string> &layers, int timePerLayer)
     {
@@ -15,13 +14,13 @@ namespace lasagna_master
     amount quantities(const std::vector<std::string> &layers)
     {
         amount needed{0, 0.0};
-        for (size_t i{0}; i < layers.size(); ++i)
+        for (const string &layer : layers)
         {
-            if (layers[i] == "noodles")
+            if (layer == "noodles")
             {
                 needed.noodles += gramsOfNoodlesPerLayer;
             }
-            else if (layers[i] == "sauce")
+            else if (layer == "sauce")
             {
                 needed.sauce += litersOfSaucePerLayer;
             }
@@ -29,26 +28,26 @@ namespace lasagna_master
         return needed;
     };
 
-    void addSecretIngredient(vector<string> &myList, const vector<string> &friendsList)
-    {
-        myList.pop_back();
-        myList.emplace_back(friendsList.back());
-    };
-
     vector<double> scaleRecipe(const vector<double> &quantities, int portions)
     {
+        double scaledPortions{portions / (double)standardRecipePortions};
         vector<double> scaledQuantities(quantities.size());
 
-        for (size_t i{0}; i < quantities.size(); ++i)
-        {
-            scaledQuantities[i] = quantities[i] * portions / 2;
-        }
+        transform(quantities.begin(), quantities.end(), scaledQuantities.begin(),
+                  [scaledPortions](double quantity)
+                  { return quantity * scaledPortions; });
+
         return scaledQuantities;
     }
 
+    void addSecretIngredient(vector<string> &myList, const vector<string> &friendsList)
+    {
+        addSecretIngredient(myList, friendsList.back());
+    };
+
     void addSecretIngredient(vector<string> &myList, const string secretIngredient)
     {
-        addSecretIngredient(myList, vector<string>{secretIngredient});
+        myList.back() = secretIngredient;
     };
 
 } // namespace lasagna_master
