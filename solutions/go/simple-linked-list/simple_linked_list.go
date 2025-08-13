@@ -8,8 +8,8 @@ type List struct {
 }
 
 type Element struct {
-	value int
-	next  *Element
+	next *Element
+	data int
 }
 
 func New(values []int) *List {
@@ -25,36 +25,35 @@ func (l *List) Size() int {
 }
 
 func (l *List) Push(element int) {
-	l.head = &Element{value: element, next: l.head}
+	l.head = &Element{data: element, next: l.head}
 	l.size += 1
 }
 
 func (l *List) Pop() (int, error) {
-	oldHead := l.head
-	if oldHead == nil {
+	if l.head == nil {
 		return 0, errors.New("empty list")
 	}
+
+	oldHead := l.head
 	l.head = oldHead.next
 	l.size -= 1
-	return oldHead.value, nil
+
+	oldHead.next = nil
+	return oldHead.data, nil
 }
 
 func (l *List) Array() []int {
-	values := l.backwards()
-	for left, right := 0, len(values)-1; left < right; left, right = left+1, right-1 {
-		values[left], values[right] = values[right], values[left]
+	values := make([]int, l.size)
+	for i, element := l.size-1, l.head; i >= 0; i, element = i-1, element.next {
+		values[i] = element.data
 	}
 	return values
 }
 
 func (l *List) Reverse() *List {
-	values := l.backwards()
-	return New(values)
-}
-
-func (l *List) backwards() (values []int) {
+	newList := &List{}
 	for element := l.head; element != nil; element = element.next {
-		values = append(values, element.value)
+		newList.Push(element.data)
 	}
-	return
+	return newList
 }
