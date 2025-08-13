@@ -14,9 +14,7 @@ def needs_license:
 # input: {array of strings} options to consider
 # output: {string} a sentence of advice which option to choose
 def choose_vehicle:
-  if .[0] < .[1] then .[0] else .[1] end
-  | "\(.) is clearly the better choice."
-;
+  sort|first|"\(.) is clearly the better choice.";
 
 # Task 3
 # Calculates an estimate for the price of a used vehicle in the dealership
@@ -26,11 +24,8 @@ def choose_vehicle:
 # output: {number} expected resell price in the dealership
 
 def resell_price:
-  (.original_price//0) as $original_price
-  | (.age//0) as $age
-  | if $age < 3 then 80
-    elif $age <= 10 then 70
-    else 50
-    end
-  | (.*$original_price/100)
+  (if .age < 3 then 80
+    elif .age <= 10 then 70
+    else 50 end) as $rate
+  | .original_price*$rate/100
 ;
