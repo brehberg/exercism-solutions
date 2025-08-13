@@ -2,11 +2,15 @@ package raindrops
 
 import "strconv"
 
-// Provides the mapping of factors to their corresponding rain sounds.
-var raindrops = []struct {
-	factor int
-	sound  string
-}{{3, "Pling"}, {5, "Plang"}, {7, "Plong"}}
+// Corresponding bit will be set when value is a factor of the given number.
+type factor struct {
+	value int
+	bit   int8
+}
+
+var factors = []factor{{3, 0b1}, {5, 0b10}, {7, 0b100}}
+var raindrops = []string{"", "Pling", "Plang", "PlingPlang",
+	"Plong", "PlingPlong", "PlangPlong", "PlingPlangPlong"}
 
 // Convert returns a string that contains raindrop sounds corresponding to potential factors.
 // The rules of raindrops are that if a given number:
@@ -15,19 +19,19 @@ var raindrops = []struct {
 //	has 5 as a factor, add 'Plang' to the result.
 //	has 7 as a factor, add 'Plong' to the result.
 //	does not have any of 3, 5, or 7 as a factor, result should be the digits of the number.
-func Convert(number int) (result string) {
-	for _, rain := range raindrops {
-		if divisible_by(rain.factor, number) {
-			result += rain.sound
-		}
+func Convert(number int) string {
+	var index int8
+	for _, rain := range factors {
+		index += divisible_by(number, rain)
 	}
-	if result == "" {
-		result = strconv.Itoa(number)
-	}
-	return
+	raindrops[0] = strconv.Itoa(number)
+	return raindrops[index]
 }
 
-// divisible_by tests if one number is a factor of another by using the modulo operation.
-func divisible_by(n, number int) bool {
-	return number%n == 0
+// divisible_by tests if rain value is a factor of number by using the modulo operation.
+func divisible_by(number int, rain factor) int8 {
+	if number%rain.value != 0 {
+		return 0
+	}
+	return rain.bit
 }
