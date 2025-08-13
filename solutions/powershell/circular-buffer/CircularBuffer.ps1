@@ -32,18 +32,18 @@ Class CircularBuffer {
     [int]hidden $head = -1
     [int]hidden $tail = -1
     [int]hidden $size
-    [int[]]hidden $values
+    [object[]]hidden $values
 
     CircularBuffer([int]$Size) {
         $this.size = $Size
-        $this.values = [int[]]::new($Size)
+        $this.values = [object[]]::new($Size)
     }
 
-    [void] Write([int]$Value) {
+    [void] Write([object]$Value) {
         if ($this.IsFull()) {
             Throw "BufferError: Circular buffer is full"
         }
-        elseif ($this.IsEmpty()) {
+        if ($this.IsEmpty()) {
             $this.tail = $this.head = 0
         }
         else {
@@ -52,25 +52,23 @@ Class CircularBuffer {
         $this.values[$this.tail] = $Value
     }
 
-    [void] Overwrite([int]$Value) {
+    [void] Overwrite([object]$Value) {
         if ($this.IsFull()) {
             $this.tail = $this.head
             $this.head = ($this.tail + 1) % $this.size
-        }
-        elseif ($this.IsEmpty()) {
-            $this.tail = $this.head = 0
+            $this.values[$this.tail] = $Value
         }
         else {
-            $this.tail = ($this.tail + 1) % $this.size
+            $this.Write($Value)
         }
-        $this.values[$this.tail] = $Value
     }
 
-    [int] Read() {        
+    [object] Read() {        
         if ($this.IsEmpty()) {
             Throw "BufferError: Circular buffer is empty"
         }
         $result = $this.values[$this.head]
+        $this.values[$this.head] = $null
         if ($this.head -eq $this.tail) {            
             $this.Clear()  # final element was removed from buffer
         }
@@ -82,6 +80,7 @@ Class CircularBuffer {
 
     [void] Clear() {
         $this.head = $this.tail = -1
+        $this.values = @($null) * $this.size
     }
 
     [boolean] IsEmpty() {
