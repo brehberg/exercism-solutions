@@ -64,6 +64,8 @@ CLASS zcl_state_of_tic_tac_toe IMPLEMENTATION.
     " becomes
     "  one = [2, 9, 4], two = [7, 6], none = [5, 1, 3, 8]
     DATA(board_state) = convert( board ).
+    DATA(winner_one) = winner( board_state-one ).
+    DATA(winner_two) = winner( board_state-two ).
 
     IF lines( board_state-one ) < lines( board_state-two ).
       " Wrong turn order: O started
@@ -71,13 +73,13 @@ CLASS zcl_state_of_tic_tac_toe IMPLEMENTATION.
     ELSEIF lines( board_state-one ) > lines( board_state-two ) + 1.
       " Wrong turn order: X went twice
       RAISE EXCEPTION TYPE cx_parameter_invalid.
-    ELSEIF winner( board_state-one ) AND winner( board_state-two ).
+    ELSEIF winner_one = abap_true AND winner_two = abap_true.
       " Impossible board: game should have ended after the game was won
       RAISE EXCEPTION TYPE cx_parameter_invalid.
     ENDIF.
 
     state = COND #(
-      WHEN winner( board_state-one ) OR winner( board_state-two )
+      WHEN winner_one = abap_true OR winner_two = abap_true
       THEN state_enum-win
       WHEN lines( board_state-none ) = 0
       THEN state_enum-draw
