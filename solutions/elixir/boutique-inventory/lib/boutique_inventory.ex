@@ -48,5 +48,5 @@ defmodule BoutiqueInventory do
   """
   @spec total_quantity(item) :: integer
   def total_quantity(item),
-    do: item.quantity_by_size |> Enum.reduce(0, fn {type, qty}, sum -> qty + sum end)
+    do: item.quantity_by_size |> Enum.reduce(0, fn {_, qty}, sum -> qty + sum end)
 end
