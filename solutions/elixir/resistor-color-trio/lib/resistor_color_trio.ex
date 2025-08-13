@@ -4,20 +4,20 @@ defmodule ResistorColorTrio do
   """
 
   # Better Be Right Or Your Great Big Values Go Wrong
-  @values [:black, :brown, :red, :orange, :yellow, :green, :blue, :violet, :grey, :white]
+  @values ~w[black brown red orange yellow green blue violet grey white]a
 
   @doc """
   Calculate the resistance value in ohms from resistor colors
   """
   @spec label(colors :: [atom]) :: {number, :ohms | :kiloohms | :megaohms | :gigaohms}
-  def label(colors), do: value(colors) |> format_label()
+  def label(colors), do: value(colors) |> format(:ohms)
 
   @doc false
   @spec label(number) :: {number, :ohms | :kiloohms | :megaohms | :gigaohms}
-  defp format_label(r) when r < 1_000, do: {r, :ohms}
-  defp format_label(r) when r < 1_000_000, do: {r / 1_000, :kiloohms}
-  defp format_label(r) when r < 1_000_000_000, do: {r / 1_000_000, :megaohms}
-  defp format_label(r), do: {r / 1_000_000_000, :gigaohms}
+  defp format(r, :ohms) when r >= 1000, do: format(r / 1000, :kiloohms)
+  defp format(r, :kiloohms) when r >= 1000, do: format(r / 1000, :megaohms)
+  defp format(r, :megaohms) when r >= 1000, do: format(r / 1000, :gigaohms)
+  defp format(r, unit), do: {r, unit}
 
   @doc false
   @spec value(colors :: [atom]) :: number
