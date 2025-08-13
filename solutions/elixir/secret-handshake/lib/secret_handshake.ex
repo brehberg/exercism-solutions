@@ -1,5 +1,5 @@
 defmodule SecretHandshake do
-  use Bitwise
+  import Bitwise
 
   @doc """
   Determine the actions of a secret handshake based on the binary
