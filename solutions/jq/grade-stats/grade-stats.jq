@@ -18,8 +18,7 @@ def letter_grade:
 # students with that grade
 
 def count_letter_grades:
-  {A:0,B:0,C:0,D:0,F:0} as $initial_grades
-  | reduce (to_entries|.[]) as $grade (
-      $initial_grades;
-      .[$grade.value|letter_grade] += 1
-    );
+  reduce to_entries[] as $grade (
+    {A:0, B:0, C:0, D:0, F:0};
+    .[$grade.value|letter_grade] += 1
+  );
