@@ -1,5 +1,9 @@
 (module
-  (memory 1) ;; a WebAssembly page is 4096 bytes, so up to 1024 i32s
+  (memory (export "mem") 1 4) ;; a WebAssembly page is 65536 bytes, so up to 16384 i32s
+
+  (global $intSize i32 (i32.const 4))       ;; 4 bytes per int32
+  (global $memSize i32 (i32.const 0x4000))  ;; 16384 ints per page
+  (global $maxSize i32 (i32.const 0x10000)) ;; 65536 ints (4 pages)
 
   (global $head (mut i32) (i32.const -1))
   (global $tail (mut i32) (i32.const -1))
@@ -7,13 +11,14 @@
   
   ;; returns 0 on success or -1 on error 
   (func (export "init") (param $newCapacity i32) (result i32)
-    (if (i32.or  ;; newCapacity is a capacity between 0 and 1024
-      (i32.le_s (local.get $newCapacity) (i32.const 0))
-      (i32.gt_s (local.get $newCapacity) (i32.const 1024)))
+    (if (i32.or  ;; newCapacity is a number between 0 and 65536
+      (i32.lt_s (local.get $newCapacity) (i32.const 0))
+      (i32.gt_s (local.get $newCapacity) (global.get $maxSize)))
       (return (i32.const -1))
     )
-    (global.set $size (i32.mul (local.get $newCapacity) (i32.const 4)))
-    (i32.const 0)
+    (global.set $size (i32.mul (local.get $newCapacity) (global.get $intSize)))
+    (memory.grow (i32.div_s (i32.sub (local.get $newCapacity) (i32.const 1)) (global.get $memSize)))
+    (i32.sub (i32.const 1))
   )
 
   (func $clear (export "clear")
@@ -80,7 +85,7 @@
     (i32.eq (global.get $head) (call $incr (global.get $tail)))
   )  
   (func $incr (param $n i32) (result i32)
-    (i32.add (local.get $n) (i32.const 4))
+    (i32.add (local.get $n) (global.get $intSize))
     (i32.rem_u (global.get $size))
   )
 )
