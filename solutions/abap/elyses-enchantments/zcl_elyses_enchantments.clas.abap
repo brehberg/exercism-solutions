@@ -88,13 +88,13 @@ CLASS zcl_elyses_enchantments IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD remove_item_from_bottom.
-    result = VALUE #( ( LINES OF stack FROM 2 ) ).
+    result = stack.
+    DELETE result INDEX 1.
   ENDMETHOD.
 
   METHOD remove_item_from_top.
-    DATA(last) = get_size_of_stack( stack ) - 1.
-    CHECK last > 0.
-    result = VALUE #( ( LINES OF stack TO last ) ).
+    result = stack.
+    DELETE result INDEX lines( stack ).
   ENDMETHOD.
 
 ENDCLASS.
