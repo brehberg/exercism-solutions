@@ -13,7 +13,9 @@ defmodule RotationalCipher do
   def rotate(text, shift),
     do: text |> String.to_charlist() |> map(&rotate_char(&1, shift)) |> to_string()
 
-  def rotate_char(c, n) when c in ?a..?z, do: ?a..?z |> at(rem(c + n - ?a, 26))
-  def rotate_char(c, n) when c in ?A..?Z, do: ?A..?Z |> at(rem(c + n - ?A, 26))
-  def rotate_char(c, _), do: c
+  @doc false
+  @spec rotate_char(char, integer) :: char
+  defp rotate_char(c, n) when c in ?a..?z, do: ?a..?z |> at(rem(c + n - ?a, 26))
+  defp rotate_char(c, n) when c in ?A..?Z, do: ?A..?Z |> at(rem(c + n - ?A, 26))
+  defp rotate_char(c, _), do: c
 end
