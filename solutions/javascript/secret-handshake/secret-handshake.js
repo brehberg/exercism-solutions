@@ -19,14 +19,9 @@ export const commands = (/** @type {number} */ code) => {
   const handshake = [];
 
   ACTIONS.forEach((action, key) => {
-    const binary = Number(key);
-    if ((code & binary) === binary) {
-      if (action === "reverse") {
-        handshake.reverse();
-      } else {
-        handshake.push(action);
-      }
-    }
+    if (!(code & Number(key))) return;
+    if (action === "reverse") handshake.reverse();
+    else handshake.push(action);
   });
 
   return handshake;
