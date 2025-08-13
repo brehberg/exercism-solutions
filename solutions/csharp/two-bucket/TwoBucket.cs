@@ -17,83 +17,66 @@ public class TwoBucket
 {
     public TwoBucket(int bucketOne, int bucketTwo, Bucket startBucket)
     {
-        var one = new SingleBucket(Bucket.One, bucketOne, 0);
-        var two = new SingleBucket(Bucket.Two, bucketTwo, 0);
+        var one = new SingleBucket(Bucket.One, bucketOne);
+        var two = new SingleBucket(Bucket.Two, bucketTwo);
         (first, second) = startBucket == Bucket.One ? (one, two) : (two, one);
     }
 
     public TwoBucketResult Measure(int goal)
     {
         if (!isValid(goal)) throw new ArgumentException("invalid goal amount");
-        goalAmount = goal;
 
-        first.fill();
+        first.Fill();
         var moves = 1;
 
-        if (second.size == goalAmount && first.size != goalAmount)
+        if (second.Size == goal && first.Size != goal)
         {
-            second.fill();
+            second.Fill();
             moves += 1;
         }
-        return solve(moves);
-    }
-
-    private TwoBucketResult solve(int moves)
-    {
-        if (first.amount == goalAmount || second.amount == goalAmount)
+        while (first.Amount != goal && second.Amount != goal)
         {
-            var result = new TwoBucketResult();
-            result.Moves = moves;
-            result.GoalBucket = first.amount == goalAmount ? first.name : second.name;
-            result.OtherBucket = first.amount == goalAmount ? second.amount : first.amount;
-            return result;
+            if (first.IsEmpty()) first.Fill();
+            else if (second.IsFull()) second.Empty();
+            else first.Pour(second);
+            moves += 1;
         }
 
-        if (first.isEmpty()) first.fill();
-        else if (second.isFull()) second.empty();
-        else first.pour(second);
-        return solve(moves + 1);
+        var result = new TwoBucketResult();
+        result.Moves = moves;
+        result.GoalBucket = first.Amount == goal ? first.Name : second.Name;
+        result.OtherBucket = first.Amount == goal ? second.Amount : first.Amount;
+        return result;
     }
 
     private bool isValid(int goal)
     {
-        var factor = gcd(first.size, second.size);
-        return goal <= Math.Max(first.size, second.size) &&
+        // bool isDivisibleBy(int n) => year % n == 0;
+        var factor = gcd(first.Size, second.Size);
+        return goal <= Math.Max(first.Size, second.Size) &&
             (factor == 1 || goal % factor == 0);
     }
 
-    private int gcd(int a, int b)
-    {
-        if (b == 0) return a;
-        return gcd(b, a % b);
-    }
+    private int gcd(int a, int b) => b == 0 ? a : gcd(b, a % b);
 
     private SingleBucket first;
     private SingleBucket second;
-    private int goalAmount;
 
-    private class SingleBucket
+    private class SingleBucket(Bucket name, int size)
     {
-        public SingleBucket(Bucket name, int size, int amount)
+        public bool IsFull() => Amount == Size;
+        public bool IsEmpty() => Amount == 0;
+        public void Fill() => Amount = Size;
+        public void Empty() => Amount = 0;
+        public void Pour(SingleBucket into)
         {
-            this.name = name;
-            this.size = size;
-            this.amount = amount;
+            var quantity = Math.Min(Amount, into.Size - into.Amount);
+            Amount -= quantity;
+            into.Amount += quantity;
         }
 
-        public bool isFull() => amount == size;
-        public bool isEmpty() => amount == 0;
-        public void fill() => amount = size;
-        public void empty() => amount = 0;
-        public void pour(SingleBucket into)
-        {
-            var quantity = Math.Min(amount, into.size - into.amount);
-            amount -= quantity;
-            into.amount += quantity;
-        }
-
-        public Bucket name { get; }
-        public int size { get; }
-        public int amount { get; set; }
+        public Bucket Name => name;
+        public int Size => size;
+        public int Amount { get; set; }
     }
 }
