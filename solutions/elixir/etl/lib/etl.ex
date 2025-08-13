@@ -18,7 +18,7 @@ defmodule ETL do
     for {value, letters} <- input,
         letter <- letters,
         into: %{} do
-      &{downcase(letter), value}
+      {downcase(letter), value}
     end
   end
 end
