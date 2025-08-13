@@ -3,40 +3,36 @@ module high_scores
    implicit none
 contains
 
-   function scores(score_list)
+   pure function scores(score_list)
       integer, dimension(:), intent(in) :: score_list
       integer, dimension(size(score_list)) :: scores
       scores = score_list
    end function
 
-   integer function latest(score_list)
+   pure integer function latest(score_list)
       integer, dimension(:), intent(in) :: score_list
       latest = score_list(size(score_list))
    end function
 
-   integer function personalBest(score_list)
+   pure integer function personalBest(score_list)
       integer, dimension(:), intent(in) :: score_list
       personalBest = maxval(score_list)
    end function
 
-   function personalTopThree(score_list)
+   pure function personalTopThree(score_list)
       integer, dimension(:), intent(in) :: score_list
       integer, dimension(3) :: personalTopThree
-      logical, allocatable :: mask(:)
-      integer :: count, i
+      logical, dimension(size(score_list)) :: mask
+      integer :: i, max_pos
 
-      ! create mask as logical array the same size as score_list
-      count = size(score_list)
-      allocate(mask(count))
-      do i = 1,count
-         mask(i) = .true.
-      enddo
+      personalTopThree = 0
+      mask = .true.
 
-      ! find the largest non masked element, then copy and mask it
-      personalTopThree = [0,0,0]
-      do i = 1,count
-         personalTopThree(i) = maxval(score_list,mask)
-         mask(maxloc(score_list,mask)) = .false.
+      ! find largest non-masked element, copy to output and mask it
+      do i = 1,size(score_list)
+         max_pos = maxloc(score_list,1,mask)
+         personalTopThree(i) = score_list(max_pos)
+         mask(max_pos) = .false.
       enddo
    end function
 end module
