@@ -1,6 +1,5 @@
 #include "matching_brackets.h"
 #include <map>
-#include <vector>
 #include <stack>
 #include <algorithm>
 
@@ -15,32 +14,32 @@ namespace matching_brackets
 
     bool check(string input)
     {
-        stack<char> closerNeeded;
+        stack<char> closer_needed;
 
-        // determine if matching bracket map contains the specified char value
         auto find_value = [](char c)
         {
+            // determine if matching bracket map contains the specified char value
             return find_if(matches.begin(), matches.end(), [c](const auto &mo)
                            { return mo.second == c; });
         };
 
         for (auto &c : input)
         {
-            if (find_value(c) != matches.end())
+            if (matches.find(c) != matches.end())
+            {
+                // opening bracket was found, add matching closing value to the stack
+                closer_needed.push(matches[c]);
+            }
+            else if (find_value(c) != matches.end())
             {
                 // closing bracket was found, is it the next expected value on stack?
-                if (closerNeeded.empty() || closerNeeded.top() != c)
+                if (closer_needed.empty() || closer_needed.top() != c)
                     return false;
-                closerNeeded.pop();
-            }
-            else if (matches.find(c) != matches.end())
-            {
-                // opening bracket was found, add matching closing brack to the stack
-                closerNeeded.push(matches[c]);
+                closer_needed.pop();
             }
         }
 
-        return closerNeeded.empty();
+        return closer_needed.empty();
     }
 
 } // namespace matching_brackets
