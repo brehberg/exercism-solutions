@@ -8,18 +8,19 @@ namespace sieve
     vector<int> primes(int limit)
     {
         vector<int> primes;
-        vector<bool> list(limit + 1);
+        vector<bool> marked(limit + 1);
 
         for (int i = 2; i <= limit; i++)
         {
-            if (!list[i])
+            if (marked[i])
             {
-                for (int j = i * 2; j <= limit; j += i)
-                {
-                    list[j] = true;
-                }
-                primes.emplace_back(i);
+                continue;
             }
+            for (int j = i * i; j <= limit; j += i)
+            {
+                marked[j] = true;
+            }
+            primes.emplace_back(i);
         }
         return primes;
     }
