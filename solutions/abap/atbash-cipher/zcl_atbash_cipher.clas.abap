@@ -1,29 +1,29 @@
 CLASS zcl_atbash_cipher DEFINITION PUBLIC FINAL CREATE PUBLIC.
 
   PUBLIC SECTION.
-    METHODS constructor.
+    CLASS-METHODS class_constructor.
     METHODS decode
       IMPORTING
-        cipher_text TYPE string
+        cipher_text       TYPE string
       RETURNING
-        VALUE(plain_text)  TYPE string .
+        VALUE(plain_text) TYPE string .
     METHODS encode
       IMPORTING
-        plain_text        TYPE string
+        plain_text         TYPE string
       RETURNING
         VALUE(cipher_text) TYPE string .
   PROTECTED SECTION.
   PRIVATE SECTION.
-    DATA plain TYPE string.
-    DATA cipher TYPE string.
-    DATA group_size TYPE i.
+    CLASS-DATA plain TYPE string.
+    CLASS-DATA cipher TYPE string.
+    CLASS-DATA group_size TYPE i.
     METHODS replace_text
       IMPORTING
-        input_text TYPE string
-        from_text TYPE string
-        new_text TYPE string
+        input_text    TYPE string
+        from_text     TYPE string
+        new_text      TYPE string
       RETURNING
-        VALUE(output)  TYPE string .      
+        VALUE(output) TYPE string .
 ENDCLASS.
 
 
@@ -43,6 +43,10 @@ CLASS zcl_atbash_cipher IMPLEMENTATION.
         from_text = plain
         new_text = cipher
     ).
+
+    " CipherText is written out in groups of fixed length, the traditional
+    " group size being 5 letters, and punctuation is excluded. This is to
+    " make it harder to guess things based on word boundaries.
     DATA(offset) = group_size.
     DATA(splits) = ( strlen( cipher_text ) - 1 ) DIV group_size.
     DO splits TIMES.
@@ -53,10 +57,9 @@ CLASS zcl_atbash_cipher IMPLEMENTATION.
 
   METHOD replace_text.
     DATA(input) = condense( val = to_lower( input_text ) to = `` ).
-    DATA offset TYPE i.
+    DATA(offset) = 0.
     DO strlen( input ) TIMES.
-      DATA position TYPE i.
-      position = find( val = from_text sub = input+offset(1) ).
+      DATA(position) = find( val = from_text sub = input+offset(1) ).
       IF position <> -1.
         output = output && new_text+position(1).
       ENDIF.
@@ -64,7 +67,7 @@ CLASS zcl_atbash_cipher IMPLEMENTATION.
     ENDDO.
   ENDMETHOD.
 
-  METHOD constructor.
+  METHOD class_constructor.
     plain = 'abcdefghijklmnopqrstuvwxyz1234567890'.
     cipher = 'zyxwvutsrqponmlkjihgfedcba123456790'.
     group_size = 5.
