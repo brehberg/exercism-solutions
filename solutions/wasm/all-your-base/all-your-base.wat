@@ -13,15 +13,13 @@
   (func (export "convert") (param $arrOffset i32) (param $arrLength i32) 
     (param $inputBase i32) (param $outputBase i32) (result i32 i32 i32)
 
-
-    (if (i32.lt_s (local.get $inputBase) (i32.const 2)) 
-      (return (local.get $arrOffset) (local.get $arrLength) (global.get $wrongInputBase)))
-    (if (i32.lt_s (local.get $outputBase) (i32.const 2)) 
-      (return (local.get $arrOffset) (local.get $arrLength) (global.get $wrongOutputBase)))
-    (if (i32.eqz (local.get $arrLength)) 
-      (return (local.get $arrOffset) (local.get $arrLength) (global.get $inputHasWrongFormat)))
-    (if (call $invalidDigit (local.get $arrOffset) (local.get $arrLength) (local.get $inputBase))
-      (return (local.get $arrOffset) (local.get $arrLength) (global.get $inputHasWrongFormat)))
+    ;; check input base and output base are both >= 2 and
+    ;; that all digits in the input sequence are valid
+    (local $rc i32)
+    (local.tee $rc (call $validateArgs (local.get $arrOffset) 
+      (local.get $arrLength) (local.get $inputBase) (local.get $outputBase)))
+    (if (i32.ne (global.get $ok))
+      (return (global.get $outputEnd) (i32.const 0) (local.get $rc)))
 
     (call $inToDec
       (i32.const 0) ;; initialize value accumulator for integer result
@@ -55,8 +53,8 @@
     ;; store the right most digit of the output sequence
     (i32.store (local.get $arrPos) (i32.rem_u (local.get $value) (local.get $base)))
     (if (i32.lt_u (local.get $value) (local.get $base))
-      (return (local.get $arrPos) (local.get $arrLen))
-    )
+      (return (local.get $arrPos) (local.get $arrLen)))
+
     ;; reduce integer value and call for next position to the left
     (call $decToOut
       (i32.div_u (local.get $value) (local.get $base))
@@ -70,19 +68,31 @@
     (call $exp (local.get $base) (local.get $pos))
     (i32.mul (i32.load (local.get $offset)))  
   )
+  ;; return error code if any arguments are invalid, otherwise return ok code
+  (func $validateArgs (param $offset i32) (param $length i32) 
+    (param $inputBase i32) (param $outputBase i32) (result i32)
+
+    (if (i32.lt_s (local.get $inputBase) (i32.const 2)) (return (global.get $wrongInputBase)))
+    (if (i32.lt_s (local.get $outputBase) (i32.const 2)) (return (global.get $wrongOutputBase)))
+    (if (i32.eqz (local.get $length)) (return (global.get $inputHasWrongFormat)))
+    (if (i32.and  ;; length must be 1 or no leading zero is allowed
+      (i32.ne (local.get $length) (i32.const 1))
+      (i32.eqz (i32.load (local.get $offset))))
+      (return (global.get $inputHasWrongFormat)))
+    (if (call $invalidDigit (local.get $offset) (local.get $length) (local.get $inputBase))
+      (return (global.get $inputHasWrongFormat)))
+    (return (global.get $ok))    
+  )
   ;; return 1 if any invalid digit is found, otherwise 0
   (func $invalidDigit (param $offset i32) (param $length i32) (param $base i32) (result i32)
-    (local $pos i32) (local $end i32) (local $digit i32) (local $min i32)
+    (local $pos i32) (local $end i32) (local $digit i32)
 
     (local.tee $pos (local.get $offset))
-    (local.set $end (i32.add (i32.mul (local.get $length)) (i32.const 4)))
-    ;; if length is 1 or non-zero is found, then set minimum to -1 to allow zeros
-    (if (i32.eq (local.get $length) (i32.const 1)) (local.set $min (i32.const -1)))
+    (local.set $end (i32.add (i32.mul (local.get $length)) (i32.const 4)))        
     (loop $check
-      (local.tee $digit (i32.load (local.get $pos)))
-      (if (i32.gt_s (i32.const 0)) (local.set $min (i32.const -1)))
+      (local.set $digit (i32.load (local.get $pos)))
       (if (i32.or
-        (i32.le_s (local.get $digit) (local.get $min))   ;; must be greater than minimum
+        (i32.lt_s (local.get $digit) (i32.const 0))      ;; digit must be non-negative and
         (i32.ge_s (local.get $digit) (local.get $base))) ;; must be less than input base
         (return (i32.const 1)))
       (local.tee $pos (i32.add (local.get $pos) (i32.const 4)))
@@ -90,11 +100,11 @@
     )
     (i32.const 0)
   )
-  ;; returns value of integer base raised to the given power
-  (func $exp (param $base i32) (param $power i32) (result i32)
+  ;; returns value of integer num raised to the given power
+  (func $exp (param $num i32) (param $power i32) (result i32)
     (if (i32.eqz (local.get $power)) (return (i32.const 1)))
-    (call $exp (local.get $base)
+    (call $exp (local.get $num)
       (i32.sub (local.get $power) (i32.const 1)))
-    (i32.mul (local.get $base))
+    (i32.mul (local.get $num))
   )
 )
