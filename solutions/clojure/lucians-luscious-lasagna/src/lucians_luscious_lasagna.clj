@@ -23,7 +23,8 @@
   "Takes the number of layers added to the lasagna,
    and returns how many minutes you spent preparing the lasagna"
   [num-layers]
-  (* num-layers 2)
+  (def time-per-layer 2)
+  (* num-layers time-per-layer)
   )
 
 (defn total-time
