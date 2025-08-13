@@ -1,5 +1,5 @@
 defmodule RobotSimulator do
-  defstruct [:facing, x: 0, y: 0]
+  defstruct [facing: :north, x: 0, y: 0]
 
   @type robot() :: %RobotSimulator{facing: direction(), x: integer(), y: integer()}
   @type direction() :: :north | :east | :south | :west
