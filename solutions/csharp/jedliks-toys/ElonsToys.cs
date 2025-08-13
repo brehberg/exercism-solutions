@@ -1,0 +1,24 @@
+using System;
+
+class RemoteControlCar
+{
+    private int distance = 0;
+    private int battery = 100;
+    private int speed = 20;
+    private int batteryDrain = 1;
+
+    public static RemoteControlCar Buy() => new RemoteControlCar();
+
+    public string DistanceDisplay() => $"Driven {distance} meters";
+
+    public string BatteryDisplay() => battery == 0 ? "Battery empty" : $"Battery at {battery}%";
+
+    public void Drive()
+    {
+        if (battery >= batteryDrain)
+        {
+            distance += speed;
+            battery -= batteryDrain;
+        }
+    }
+}
