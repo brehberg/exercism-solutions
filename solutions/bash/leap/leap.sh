@@ -19,16 +19,12 @@ main() {
 
   local year="$1"
 
-  divisible_by() {
+  is_divisible_by() {
     local n="$1"
     ((year % n == 0))
   }
 
-  if (divisible_by 100); then
-    (divisible_by 400) && echo true || echo false
-  else
-    (divisible_by 4) && echo true || echo false
-  fi
+  (is_divisible_by 4 && ! is_divisible_by 100 || is_divisible_by 400) && echo true || echo false
 }
 
 main "$@"
