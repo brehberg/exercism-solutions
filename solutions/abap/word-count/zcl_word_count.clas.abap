@@ -30,9 +30,11 @@ CLASS zcl_word_count IMPLEMENTATION.
     SPLIT clean( phrase ) AT space INTO TABLE DATA(words).
 
     LOOP AT words INTO DATA(word).
-      COLLECT VALUE return_structure(
-        word = word
-        count = 1 ) INTO result.
+      ASSIGN result[ word = word ] TO FIELD-SYMBOL(<line>).
+      IF sy-subrc <> 0.
+        APPEND VALUE #( word = word ) TO result ASSIGNING <line>.
+      ENDIF.
+      <line>-count += 1.
     ENDLOOP.
   ENDMETHOD.
 
