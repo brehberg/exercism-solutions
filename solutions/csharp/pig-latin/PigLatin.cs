@@ -22,9 +22,9 @@ public static class PigLatin
                     ? Regex.Replace(word, vowelWord, vowelResult)
                     : Regex.Replace(word, otherWord, otherResult);
 
-            result.Append(" " + ordway);
+            result.Append($" {ordway}");
         }
 
         return result.ToString().Substring(1);
-    }
+    } 
 }
