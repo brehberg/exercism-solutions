@@ -1,14 +1,22 @@
 defmodule Username do
-  def sanitize([]), do: ''
-  def sanitize(username) do
-    case username do
-      [?ä | rest] -> 'ae' ++ sanitize(rest)
-      [?ö | rest] -> 'oe' ++ sanitize(rest)
-      [?ü | rest] -> 'ue' ++ sanitize(rest)
-      [?ß | rest] -> 'ss' ++ sanitize(rest)
-      [?_ | rest] -> '_' ++ sanitize(rest)
-      [char | rest] when char not in ?a..?z -> sanitize(rest)
-      [char | rest] -> [char | sanitize(rest)]
+  @doc """
+  Sanitize existing usernames by removing everything but lowercase letters,
+  allowing underscores, and substituting German characters
+  """
+  @spec sanitize(charlist) :: charlist
+  def sanitize(username), do: do_sanitize(username, [])
+
+  @spec do_sanitize(name :: charlist, clean :: charlist) :: charlist
+  defp do_sanitize([], clean), do: clean
+  defp do_sanitize([char | rest], clean) do
+    case char do
+      ?_ -> do_sanitize(rest, clean ++ '_')
+      ?ä -> do_sanitize(rest, clean ++ 'ae')
+      ?ö -> do_sanitize(rest, clean ++ 'oe')
+      ?ü -> do_sanitize(rest, clean ++ 'ue')
+      ?ß -> do_sanitize(rest, clean ++ 'ss')
+      char when char in ?a..?z -> do_sanitize(rest, clean ++ [char])
+      _ -> do_sanitize(rest, clean)
     end
   end
 end
