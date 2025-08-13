@@ -12,4 +12,4 @@
     (bit-test score 7) (conj :cats)))
 
 (defn allergic-to? [score allergen]
-  (some #{allergen} (allergies score)))
+  (some? (some #{allergen} (allergies score))))
