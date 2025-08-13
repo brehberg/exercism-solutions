@@ -11,7 +11,7 @@ pub fn raindrops(n: u32) -> String {
         output.push("Plong");
     }
 
-    if output.len() == 0 {
+    if output.is_empty() {
         n.to_string()
     } else {
         output.join("")
