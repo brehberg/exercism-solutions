@@ -21,7 +21,7 @@ defmodule Secrets do
     &(Bitwise.band(&1,secret))
   end
 
-  def secret_xor(secret) do
+  def secret_xor(secret) do 
     &(Bitwise.bxor(&1,secret))
   end
 
