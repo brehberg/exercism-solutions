@@ -5,16 +5,16 @@ class CastleDinner
 
   # Check if the food is correct
   def self.check_food?(food)
-    food.compare(EXPECTED_FOOD) == 0 ? food : nil
+    food if food.compare(EXPECTED_FOOD) == 0
   end
 
   # Check if the drink is poisoned
   def self.check_drink?(drink)
-    drink.downcase.includes?(EXPECTED_LETTER) ? drink : nil
+    drink if drink.downcase.includes?(EXPECTED_LETTER)
   end
 
   # Replace the drink
   def self.replace_drink(drink)
-    CastleDinner.check_drink?(drink) || REPLACEMENT_DRINK
+    check_drink?(drink) || REPLACEMENT_DRINK
   end
 end
