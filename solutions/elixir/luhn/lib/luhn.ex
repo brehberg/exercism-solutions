@@ -6,14 +6,11 @@ defmodule Luhn do
   def valid?(number) do
     trimmed = number |> String.replace(~s/ /, "")
 
-    if trimmed =~ ~r/^\d{2,}$/ do
+    trimmed =~ ~r/^\d{2,}$/ and
       [0 | get_digits(trimmed)]
       |> Enum.map_every(2, &double/1)
       |> Enum.sum()
       |> rem(10) == 0
-    else
-      false
-    end
   end
 
   @spec get_digits(String.t()) :: [integer]
