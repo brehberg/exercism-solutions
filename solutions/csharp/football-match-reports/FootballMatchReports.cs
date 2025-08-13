@@ -4,57 +4,39 @@ public static class PlayAnalyzer
 {
     public static string AnalyzeOnField(int shirtNum)
     {
-        //  Output descriptions of the players based on their shirt number
-        switch (shirtNum)
+        return shirtNum switch
         {
-            case 1:
-                return "goalie";
-            case 2:
-                return "left back";
-            case 3:
-            case 4:
-                return "center back";
-            case 5:
-                return "right back";
-            case 6:
-            case 7:
-            case 8:
-                return "midfielder";
-            case 9:
-                return "left wing";
-            case 10:
-                return "striker";
-            case 11:
-                return "right wing";
-            default:
-                // Raise an alert if an unknown shirt number is encountered
-                throw new ArgumentOutOfRangeException($"Unknown shirt number {shirtNum}");
-        }
+            //  Output descriptions of the players based on their shirt number
+            1 => "goalie",
+            2 => "left back",
+            3 or 4 => "center back",
+            5 => "right back",
+            6 or 7 or 8 => "midfielder",
+            9 => "left wing",
+            10 => "striker",
+            11 => "right wing",
+
+            // Raise an alert if an unknown shirt number is encountered
+            _ => throw new ArgumentOutOfRangeException($"Unknown shirt number {shirtNum}"),
+        };
     }
 
     public static string AnalyzeOffField(object report)
     {
-        // Extend the coverage to include off field activity
-        switch (report)
+        return report switch
         {
-            case int number:
-                return $"There are {number} supporters at the match.";
-            case string announcement:
-                return announcement;
+            // Extend the coverage to include off field activity
+            int => $"There are {report} supporters at the match.",
+            string => $"{report}",
 
             // Report on incidents during the match
-            case Injury injury:
-                return $"Oh no! {injury.GetDescription()} Medics are on the field.";
-            case Incident incident:
-                return incident.GetDescription();
+            Injury injury => $"Oh no! {injury.GetDescription()} Medics are on the field.",
+            Incident incident => incident.GetDescription(),
 
             // Report on club managers
-            case Manager manager when manager.Club == null:
-                return $"{manager.Name}";
-            case Manager manager:
-                return $"{manager.Name} ({manager.Club})";
-            default:
-                throw new ArgumentException();
-        }
+            Manager { Club: null } manager => $"{manager.Name}",
+            Manager manager => $"{manager.Name} ({manager.Club})",
+            _ => throw new ArgumentException(),
+        };
     }
 }
