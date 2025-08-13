@@ -4,17 +4,17 @@ anagram <- function(subject, candidates) {
         sort(strsplit(input, "")[[1]])
     }
 
-    is_anagram <- function(word, base) {
+    base <- toupper(subject)
+    is_anagram <- sapply(candidates, function(word) {
+        word <- toupper(word)
         nchar(word) == nchar(base) &&
             word != base &&
             all(sorted(word) == sorted(base))
-    }
+    })
 
-    output <- c()
-    for (word in candidates) {
-        if (is_anagram(toupper(word), toupper(subject))) {
-            output <- append(output, word)
-        }
+    if (any(is_anagram)) {
+        candidates[is_anagram]
+    } else {
+        c()
     }
-    output
 }
