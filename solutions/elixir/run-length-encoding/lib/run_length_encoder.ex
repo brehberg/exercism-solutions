@@ -25,16 +25,12 @@ defmodule RunLengthEncoder do
   """
   @spec decode(String.t()) :: String.t()
   def decode(string) do
-    Regex.scan(~r/(\d*.)/, string, capture: :all_but_first)
+    Regex.scan(~r/(\d*)(.)/, string, capture: :all_but_first)
     |> Enum.map_join(&decode_capture/1)
   end
 
   @doc false
   @spec decode_capture([String.t()]) :: String.t()
-  defp decode_capture([group]) when byte_size(group) == 1, do: group
-
-  defp decode_capture([group]) do
-      count = group |> Str.slice(0..-2//1) |> Str.to_integer()
-      group |> Str.last() |> Str.duplicate(count)
-  end
+  defp decode_capture(["", text]), do: text
+  defp decode_capture([count, text]), do: Str.duplicate(text, Str.to_integer(count))
 end
