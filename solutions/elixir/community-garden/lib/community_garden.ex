@@ -47,7 +47,7 @@ defmodule CommunityGarden do
   @doc false
   @spec release_by_id(Agent.state(), integer) :: Agent.state()
   defp release_by_id(%{plots: plots} = state, id) do
-    %{state | plots: Enum.reject(plots, fn plot -> plot.plot_id == id end)}
+    %{state | plots: Enum.reject(plots, &(&1.plot_id == id))}
   end
 
   @doc """
@@ -64,6 +64,6 @@ defmodule CommunityGarden do
   @doc false
   @spec return_by_id([%Plot{}], integer) :: %Plot{}
   defp return_by_id(plots, id) do
-    Enum.find(plots, fn plot -> plot.plot_id == id end)
+    Enum.find(plots, &(&1.plot_id == id))
   end
 end
