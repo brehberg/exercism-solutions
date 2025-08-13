@@ -6,7 +6,7 @@ module Port
   end
 
   def self.get_terminal(ship_identifier)
-    cargo = ship_identifier[0,3]
-    if ["OIL", "GAS"].include? cargo then :A else :B end
+    cargo = ship_identifier.to_s[0,3]
+    ["OIL", "GAS"].include?(cargo) ? :A : :B
   end
 end
