@@ -8,7 +8,6 @@ defmodule RemoteControlCar do
   @doc """
   Create a brand-new remote controlled car, with optional nickname
   """
-  def new(), do: %RemoteControlCar{nickname: "none"}
   def new(nickname \\ "none"), do: %RemoteControlCar{nickname: nickname}
 
   @doc """
