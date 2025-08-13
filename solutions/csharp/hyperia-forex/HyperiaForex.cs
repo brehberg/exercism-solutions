@@ -13,25 +13,32 @@ public struct CurrencyAmount
 
     // 1. Enable the currency amount to be tested for equality
     public static bool operator ==(CurrencyAmount a, CurrencyAmount b)
-    {
-        if (a.currency != b.currency) throw new ArgumentException("different currency");
-        return a.amount == b.amount;
-    }
+        => a.currency == b.currency
+            ? a.amount == b.amount
+            : throw new ArgumentException("different currency");
     public static bool operator !=(CurrencyAmount a, CurrencyAmount b)
         => !(a == b);
+    public override int GetHashCode() => (amount, currency).GetHashCode();
+    public override bool Equals(object obj)
+        => obj is null || this.GetType() != obj.GetType() ? false
+            : this == (CurrencyAmount)obj;
 
     // 2. Compare currency amounts
     public static bool operator >(CurrencyAmount a, CurrencyAmount b)
         => a != b && a.amount > b.amount;
     public static bool operator <(CurrencyAmount a, CurrencyAmount b)
         => a != b && a.amount < b.amount;
+    public static bool operator >=(CurrencyAmount a, CurrencyAmount b)
+        => a == b || a > b;
+    public static bool operator <=(CurrencyAmount a, CurrencyAmount b)
+        => a == b || a < b;
 
     // 3. Add and subtract currency amounts
+    public static CurrencyAmount operator +(CurrencyAmount a) => a;
     public static CurrencyAmount operator +(CurrencyAmount a, CurrencyAmount b)
-    {
-        if (a.currency != b.currency) throw new ArgumentException("different currency");
-        return new CurrencyAmount(a.amount + b.amount, a.currency);
-    }
+        => a.currency == b.currency
+            ? new CurrencyAmount(a.amount + b.amount, a.currency)
+            : throw new ArgumentException("different currency");
     public static CurrencyAmount operator -(CurrencyAmount c)
         => new CurrencyAmount(-c.amount, c.currency);
     public static CurrencyAmount operator -(CurrencyAmount a, CurrencyAmount b)
