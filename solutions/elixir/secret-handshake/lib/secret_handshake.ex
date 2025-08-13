@@ -16,20 +16,17 @@ defmodule SecretHandshake do
   10000 = Reverse the order of the operations in the secret handshake
   """
   @spec commands(code :: integer) :: list(String.t())
-  def commands(code), do: secret([], code)
+  def commands(code) do
+    []
+    |> secret(band(code, 0b01000) == 0b01000, "jump")
+    |> secret(band(code, 0b00100) == 0b00100, "close your eyes")
+    |> secret(band(code, 0b00010) == 0b00010, "double blink")
+    |> secret(band(code, 0b00001) == 0b00001, "wink")
+    |> secret(band(code, 0b10000) == 0b10000, &Enum.reverse/1)
+  end
 
-  defp secret(handshake, code) when band(code, 0b00001) == 0b00001,
-    do: secret(["wink" | handshake], bxor(code, 0b00001))
-
-  defp secret(handshake, code) when band(code, 0b00010) == 0b00010,
-    do: secret(["double blink" | handshake], bxor(code, 0b00010))
-
-  defp secret(handshake, code) when band(code, 0b00100) == 0b00100,
-    do: secret(["close your eyes" | handshake], bxor(code, 0b00100))
-
-  defp secret(handshake, code) when band(code, 0b01000) == 0b01000,
-    do: secret(["jump" | handshake], bxor(code, 0b01000))
-
-  defp secret(handshake, code) when band(code, 0b10000) == 0b10000, do: handshake
-  defp secret(handshake, code) when band(code, 0b00000) == 0b00000, do: Enum.reverse(handshake)
+  defp secret(handshake, do?, todo)
+  defp secret(handshake, false, _), do: handshake
+  defp secret(handshake, true, str) when is_binary(str), do: [str, handshake]
+  defp secret(handshake, true, todo), do: fun.(handshake)
 end
