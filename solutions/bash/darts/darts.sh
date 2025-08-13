@@ -1,39 +1,56 @@
 #!/usr/bin/env bash
 
+validate_arguments() {
+  # validate command line arguments given as two numbers
+  if [[ $# -lt 2 ]]; then
+    echo "$0 error: not enough arguments" >&2
+    return 1
+  fi
+
+  # regex to handle numbers with minus sign
+  local reNumber='^-?[0-9]+([.][0-9]+)?$'
+  if ! [[ $1 =~ $reNumber ]]; then
+    echo "$0 error: $1 is not a number" >&2
+    return 1
+  fi
+  if ! [[ $2 =~ $reNumber ]]; then
+    echo "$0 error: $2 is not a number" >&2
+    return 1
+  fi
+}
+
 distance() {
   # use Bash Calculator sqrt() to compute the distance from center
-  echo "scale=4; sqrt($1*$1+$2*$2)" | bc
+  local x=$1
+  local y=$2
+  bc <<< "scale=4; sqrt($x*$x+$y*$y)"
 }
 
 less_than() {
   # use bc again to check if the distance is less than given number
-  [[ $(bc <<< "$2 <= $1") -eq 1 ]] && exit 0 || exit 1
+  local num=$1
+  local dist=$2
+  [[ $(bc <<< "$dist <= $num") -eq 1 ]] && return 0 || return 1
 }
 
-# validate command line arguments given as two numbers
-if [[ $# -lt 2 ]]; then
-  echo "$0 error: not enough arguments"
-  exit 2
-fi
+main() {
+  validate_arguments "$@" || exit 1
 
-re='^-?[0-9]+([.][0-9]+)?$' # regex to handle numbers with minus sign
-if ! [[ $1 =~ $re ]]; then
-  echo "$0 error: $1 is not a number"
-  exit 2
-fi
-if ! [[ $2 =~ $re ]]; then
-  echo "$0 error: $2 is not a number"
-  exit 2
-fi
+  local d
+  d=$(distance "$@")
 
-d=$(distance "$@")
+  local points
+  if (less_than 1 "$d"); then
+    points=10 # inner circle
+  elif (less_than 5 "$d"); then
+    points=5 # middle circle
+  elif (less_than 10 "$d"); then
+    points=1 # outer circle
+  else
+    points=0 # missed target
+  fi
 
-if (less_than 1 "$d"); then
-  echo 10 # inner circle
-elif (less_than 5 "$d"); then
-  echo 5 # middle circle
-elif (less_than 10 "$d"); then
-  echo 1 # outer circle
-else
-  echo 0 # missed target
-fi
+  echo "$points"
+}
+
+main "$@"
