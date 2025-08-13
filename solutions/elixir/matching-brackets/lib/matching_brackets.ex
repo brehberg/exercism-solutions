@@ -12,10 +12,10 @@ defmodule MatchingBrackets do
 
   @doc false
   @spec closers_match?(String.t(), [String.t()]) :: boolean
-  def closers_match?("", []), do: true
-  def closers_match?("", _), do: false
+  defp closers_match?("", []), do: true
+  defp closers_match?("", _), do: false
 
-  def closers_match?(<<first::binary-size(1), rest::binary>>, closers) do
+  defp closers_match?(<<first::binary-size(1), rest::binary>>, closers) do
     cond do
       first in @close and closers == [] -> false
       first in @close and hd(closers) != first -> false
