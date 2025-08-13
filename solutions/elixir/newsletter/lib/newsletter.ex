@@ -12,7 +12,7 @@ defmodule Newsletter do
   """
   @spec open_log(Path.t()) :: File.io_device()
   def open_log(path) do
-    File.open!(path, [:read, :write])
+    File.open!(path, [:write])
   end
 
   @doc """
