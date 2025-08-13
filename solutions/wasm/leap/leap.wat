@@ -6,6 +6,13 @@
       (then (return (call $divisible-by (local.get $year) (i32.const 400))))
       (else (return (call $divisible-by (local.get $year) (i32.const 4))))
     )
+    (if (call $divisibleBy? (local.get $year) (i32.const 400) ) 
+      (then (return (i32.const 1))))
+    (if (call $divisibleBy? (local.get $year) (i32.const 100) ) 
+      (then (return (i32.const 0))))
+    (if (call $divisibleBy? (local.get $year) (i32.const 4) ) 
+      (then (return (i32.const 1))))
+    (return (i32.const 0) )    
   )
   ;; Returns 1 if x is evenly divisible by n
   (func $divisible-by (param $x i32) (param $n i32) (result i32)
