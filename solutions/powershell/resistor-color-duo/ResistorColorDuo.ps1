@@ -16,7 +16,7 @@ Function Get-ColorCodeValue() {
     Param(
         [string[]]$Colors
     )
-    
+     
     [string[]] $codes = Get-Colors    
     return 10 * $codes.indexof($Colors[0]) + $codes.indexof($Colors[1])
 }
