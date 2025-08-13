@@ -25,17 +25,18 @@
   [lang-list]
   (count lang-list))
 
+(defn add-both [lang-list lang1 lang2]
+  (-> lang-list
+      (add-language lang1)
+      (add-language lang2)))
+
 (defn learning-list
   "Creates an empty list, adds Clojure and Lisp, removes Lisp, adds
   Java and JavaScript, then finally returns a count of the total number
   of languages."
   []
-  (defn add-both [lang-list lang1 lang2]
-    (-> lang-list 
-        (add-language lang1)
-        (add-language lang2))) 
-  (count-languages
-   (add-both
-    (remove-language
-     (add-both (new-list) "Clojure" "Lisp"))
-    "Java" "JavaScript")))
+  (-> (new-list)
+      (add-both "Clojure" "Lisp")
+      (remove-language)
+      (add-both "Java" "JavaScript")
+      (count-languages)))
