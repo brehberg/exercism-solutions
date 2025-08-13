@@ -11,15 +11,13 @@ type alias Player =
 
 introduce : Player -> String
 introduce { name } =
-    case name of
-        Just playerName -> playerName
-        Nothing -> "Mighty Magician"
+    Maybe.withDefault "Mighty Magician" name
         
 
 
 revive : Player -> Maybe Player
-revive player =
-    case ( player.health, player.mana ) of        
+revive ({ health, mana } as player) =
+    case ( health, mana ) of
         ( 0, Nothing ) -> Just { player | health = 100 }
         ( 0, _ ) -> Just { player | health = 100, mana = Just 100 }
         _ -> Nothing
@@ -29,14 +27,11 @@ revive player =
 castSpell : Int -> Player -> ( Player, Int )
 castSpell manaCost player =
     case player.mana of
-        Just mana -> 
-            if manaCost <= mana then
-                ( { player | mana = Just (mana - manaCost) }, manaCost * 2)
+        Just mana ->
+            if manaCost > mana then
+                ( player, 0 )
             else
-                ( player, 0)
+                ( { player | mana = Just (mana - manaCost) }, manaCost * 2 )
 
         Nothing -> 
-            if manaCost <= player.health then
-                ( { player | health = player.health - manaCost }, 0)
-            else
-                ( { player | health = 0 }, 0)
+            ( { player | health = max (player.health - manaCost) 0 }, 0 )
