@@ -4,35 +4,25 @@
 # length n in that string in the order that they appear.
 set -eo pipefail
 
+fail() {
+  echo "$0 error: $1" >&2
+  return 1
+}
+
 validate_arguments() {
   if ! [[ $# == 2 ]]; then
     echo "Usage: ${0##*/} <digits> <n>" >&2
     return 1
   elif [ -z "$1" ]; then
-    echo "$0 error: digit series cannot be empty" >&2
-    return 1
-  fi
-
-  # use regex to check for integers with optional minus sign
-  local reNumber='^-?[[:digit:]]+$'
-  if ! [[ $1 =~ $reNumber ]]; then
-    echo "$0 error: digit series $1 is not a number" >&2
-    return 1
-  fi
-  if ! [[ $2 =~ $reNumber ]]; then
-    echo "$0 error: slice length $2 is not a number" >&2
-    return 1
+    fail "digit series cannot be empty"
   fi
 
   if (($2 == 0)); then
-    echo "$0 error: slice length cannot be zero" >&2
-    return 1
+    fail "slice length cannot be zero"
   elif (($2 < 0)); then
-    echo "$0 error: slice length cannot be negative" >&2
-    return 1
-  elif ((${#1} < $2)); then
-    echo "$0 error: slice length cannot be greater than series length" >&2
-    return 1
+    fail "slice length cannot be negative"
+  elif (($2 > ${#1})); then
+    fail "slice length cannot be greater than series length"
   fi
 }
 
@@ -43,13 +33,8 @@ main() {
   local -i n=$2
 
   local series=()
-
-  for ((start = 0; start <= (${#1} - n); start++)); do
-    local substring=""
-    for ((i = 0; i < n; i++)); do
-      substring="${substring}${digits:(start + i):1}"
-    done
-    series+=("${substring}")
+  for ((start = 0; start <= ${#digits} - n; start++)); do
+    series+=("${digits:start:n}")
   done
   echo "${series[@]}"
 }
