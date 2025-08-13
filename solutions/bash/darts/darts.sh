@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -eo pipefail
 
 validate_arguments() {
   # validate command line arguments given as two numbers
@@ -7,7 +8,7 @@ validate_arguments() {
     return 1
   fi
 
-  # regex to handle numbers with minus sign
+  # use regex to check for numbers with optional minus sign
   local reNumber='^-?[0-9]+([.][0-9]+)?$'
   if ! [[ $1 =~ $reNumber ]]; then
     echo "$0 error: $1 is not a number" >&2
@@ -30,7 +31,7 @@ less_than() {
   # use bc again to check if the distance is less than given number
   local num=$1
   local dist=$2
-  [[ $(bc <<< "$dist <= $num") -eq 1 ]] && return 0 || return 1
+  [[ $(bc <<< "$dist <= $num") -eq 1 ]]
 }
 
 main() {
