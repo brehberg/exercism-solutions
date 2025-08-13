@@ -1,0 +1,14 @@
+: cmp \ c1 c2 -- n
+    s:= !if 1 else 0 then
+; 
+
+: distance \ s1 s2 -- n
+    s:len2
+    n:= !if 2drop null
+    else
+        [1] s:/             \ Split first string into an array
+        swap [1] s:/        \ Split the second string into an array
+        ( cmp ) a:2map      \ Compare the strings in the array
+        ' n:+ 0 a:reduce    \ Sum up the values
+    then
+;
