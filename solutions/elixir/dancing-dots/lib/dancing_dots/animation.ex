@@ -28,7 +28,7 @@ defmodule DancingDots.Flicker do
   return the dot with half of its original opacity. In other
   frames, it should return the dot unchanged.
   """
-  @impl Animation
+  @impl DancingDots.Animation
   def handle_frame(dot, frame, _) when rem(frame, 4) != 0, do: dot
   def handle_frame(dot, _, _), do: %{dot | opacity: dot.opacity / 2}
 end
@@ -41,7 +41,7 @@ defmodule DancingDots.Zoom do
   This animation takes one option - velocity. Velocity can be any number.
   If it's negative, the dot gets zoomed out instead of zoomed in.
   """
-  @impl Animation
+  @impl DancingDots.Animation
   def init([velocity: value] = opts) when is_number(value), do: {:ok, opts}
   def init(opts), do: {:error, opts[:velocity] |> inspect() |> error_message()}
 
@@ -49,7 +49,7 @@ defmodule DancingDots.Zoom do
   Should return the dot with its radius increased by the
   current frame number, minus one, times velocity.
   """
-  @impl Animation
+  @impl DancingDots.Animation
   def handle_frame(dot, frame, velocity: value),
     do: %{dot | radius: dot.radius + (frame - 1) * value}
 
