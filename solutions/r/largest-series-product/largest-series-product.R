@@ -10,7 +10,7 @@ largest_series_product <- function(digits, span) {
         |> strsplit("") |> unlist()
         |> as.numeric() |> suppressWarnings())
 
-    stopifnot(span <= length(digits))
+    stopifnot(span <= length(digits) && !anyNA(digits))
 
     largest <- 0
     for (i in seq(digits)) {
