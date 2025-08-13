@@ -1,11 +1,20 @@
 class Nucleotide
-  def self.from_dna(dna)
-    @tally = dna.chars.tally
+  def self.from_dna(input)
+    raise ArgumentError if input.match(/[^GCTA]/)
+    Nucleotide.new(input)
   end
-  def self.count(nucleotide)
-    tally[nucleotide]
+
+  def initialize(strand)
+    @tally = strand.chars.tally(
+      { "G" => 0, "C" => 0, "T" => 0, "A" => 0 }
+    )
   end
-  def self.histogram
-    tally
+
+  def count(nucleotide)
+    @tally[nucleotide]
+  end
+
+  def histogram
+    @tally
   end
 end
