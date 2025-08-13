@@ -13,5 +13,6 @@ defmodule ArmstrongNumber do
 
   @doc false
   @spec expand([integer]) :: non_neg_integer
-  defp expand(digits), do: Enum.reduce(digits, 0, &(&2 + I.pow(&1, length(digits))))
+  defp expand(digits), do:
+    digits |> Enum.map(&I.pow(&1, length(digits))) |> Enum.sum()
 end
