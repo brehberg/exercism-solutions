@@ -1,7 +1,7 @@
 defmodule RobotSimulator do
   defstruct facing: :north, x: 0, y: 0
-  defguard is_direction(direction) when direction in [:north, :east, :south, :west]
-  defguard is_position(x, y) when is_integer(x) and is_integer(y)
+  defguardp is_direction(direction) when direction in [:north, :east, :south, :west]
+  defguardp is_position(x, y) when is_integer(x) and is_integer(y)
 
   @type robot() :: %RobotSimulator{facing: direction(), x: integer(), y: integer()}
   @type direction() :: :north | :east | :south | :west
