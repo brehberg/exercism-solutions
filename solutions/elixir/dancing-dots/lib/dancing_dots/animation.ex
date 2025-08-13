@@ -30,8 +30,8 @@ defmodule DancingDots.Flicker do
   frames, it should return the dot unchanged.
   """
   @impl DancingDots.Animation
-  def handle_frame(dot, frame, _) when rem(frame, 4) != 0, do: dot
-  def handle_frame(dot, _, _), do: %{dot | opacity: dot.opacity / 2}
+  def handle_frame(dot, frame, _),
+    do: if rem(frame, 4) == 0, do: %{dot | opacity: dot.opacity / 2}, else: dot
 end
 
 defmodule DancingDots.Zoom do
@@ -44,6 +44,7 @@ defmodule DancingDots.Zoom do
   """
   @impl DancingDots.Animation
   def init([velocity: value] = opts) when is_number(value), do: {:ok, opts}
+  @impl DancingDots.Animation
   def init(opts), do: {:error, opts[:velocity] |> inspect() |> error_message()}
 
   @doc """
