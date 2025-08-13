@@ -12,9 +12,9 @@ rotate <- function(text, key) {
     }
 
     shift <- Vectorize(function(code) {
-        if (ascii$a <= code && code <= ascii$z) {
+        if (intToUtf8(code) %in% letters) {
             do_shift(code, key, ascii$a)
-        } else if (ascii$A <= code && code <= ascii$Z) {
+        } else if (intToUtf8(code) %in% LETTERS) {
             do_shift(code, key, ascii$A)
         } else {
             code
