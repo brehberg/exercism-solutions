@@ -40,8 +40,8 @@ defmodule Yacht do
 
   def score(:four_of_a_kind, dice) do
     case Enum.sort(dice) do
-      [s, s, s, s, b] -> s * 4
-      [s, b, b, b, b] -> b * 4
+      [s, s, s, s, _] -> s * 4
+      [_, b, b, b, b] -> b * 4
       _ -> 0
     end
   end
