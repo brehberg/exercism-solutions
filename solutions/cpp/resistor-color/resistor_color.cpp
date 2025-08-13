@@ -6,18 +6,20 @@ namespace resistor_color
 {
     using namespace std;
 
-    vector<string> colors()
-    {
-        // Better Be Right Or Your Great Big Values Go Wrong
-        return {"black", "brown", "red", "orange", "yellow",
-                "green", "blue", "violet", "grey", "white"};
-    }
+    // Better Be Right Or Your Great Big Values Go Wrong
+    const vector<string> color_codes{
+        "black", "brown", "red", "orange", "yellow",
+        "green", "blue", "violet", "grey", "white"};
 
     int color_code(string color)
     {
-        vector<string> codes = colors();
-        auto it = find(codes.begin(), codes.end(), color);
-        return it - codes.begin();
+        auto it = find(color_codes.begin(), color_codes.end(), color);
+        return distance(color_codes.begin(), it);
+    }
+
+    vector<string> colors()
+    {
+        return color_codes;
     }
 
 } // namespace resistor_color
