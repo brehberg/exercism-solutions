@@ -19,13 +19,7 @@ export function seeingDouble(deck) {
  * @returns {number[]} deck with triplicate 3s
  */
 export function threeOfEachThree(deck) {
-  return deck.reduce((newDeck, n) => {
-    newDeck.push(n);
-    if (n === 3) {
-      newDeck.push(n, n);
-    }
-    return newDeck;
-  }, []);
+  return deck.flatMap((n) => (n === 3 ? [n, n, n] : n));
 }
 
 /**
