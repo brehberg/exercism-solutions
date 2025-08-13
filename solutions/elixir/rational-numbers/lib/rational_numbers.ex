@@ -38,8 +38,7 @@ defmodule RationalNumbers do
   def pow_rational({x1, y1}, n) when n >= 0, do: reduce({pow(x1, n), pow(y1, n)})
   def pow_rational({x1, y1}, n), do: reduce({pow(y1, Kernel.abs(n)), pow(x1, Kernel.abs(n))})
   @doc false
-  defp pow(_, 0), do: 1
-  defp pow(x, 1), do: x
+  defp pow(_, n) when n == 0, do: 1
   defp pow(x, n), do: x * pow(x, n-1)
 
   @doc """
@@ -61,9 +60,7 @@ defmodule RationalNumbers do
   Reduce a rational number to its lowest terms
   """
   @spec reduce(a :: rational) :: rational
-  def reduce({num, den}) when den >= 0, do:
-    {div(num, Integer.gcd(num, den)), div(den, Integer.gcd(num, den))}
-  def reduce({num, den}), do:
-    {div(num, Integer.gcd(num, den)) * -1, div(den, Integer.gcd(num, den)) * -1}
+  def reduce({x1, y1}) when y1 >= 0, do: {div(x1, Integer.gcd(x1, y1)), div(y1, Integer.gcd(x1, y1))}
+  def reduce({x1, y1}), do: {div(x1, Integer.gcd(x1, y1)) * -1, div(y1, Integer.gcd(x1, y1)) * -1}
 
 end
