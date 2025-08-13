@@ -8,10 +8,9 @@ defmodule WordCount do
   def count(sentence) do
     sentence
     |> String.downcase()
-    |> String.replace(~r/[^\w-']/u, "\s")
-    |> String.split(~r/[\s_]/)
-    |> Enum.reject(&(&1 == ""))
-    |> Enum.map(&String.replace(&1, ~r/^'|'$/, ""))
+    |> String.replace(~r/[^\w-']|_/u, "\s")
+    |> String.split()
+    |> Enum.map(&String.trim(&1, ~s/'/))
     |> Enum.frequencies()
   end
 end
