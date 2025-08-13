@@ -29,20 +29,65 @@ $tree.Postorder()
 Return: @(2, 4, 3)
 #>
 Class TreeNode {
-    [int]$data
-    [TreeNode]$left 
-    [TreeNode]$right
+    [int]hidden $data
+    [TreeNode]hidden $left = $null
+    [TreeNode]hidden $right = $null
 
     TreeNode([int]$value) {
         $this.data = $value
-        $this.left = $null
-        $this.right = $null
     }
 
     TreeNode([int]$value, [TreeNode]$leftchild, [TreeNode]$rightchild) {
         $this.data = $value
         $this.left = $leftchild
         $this.right = $rightchild
+    }
+
+    hidden [void] Insert([int]$value) {
+        if ($value -le $this.data) {
+            if (-not $this.left) {
+                $this.left = [TreeNode]::new($value)
+                return
+            }
+            $this.left.Insert($value)
+        }
+        else {
+            if (-not $this.right) {
+                $this.right = [TreeNode]::new($value)
+                return
+            }
+            $this.right.Insert($value)
+        }
+    }
+        
+    hidden [boolean] Search([int]$value) {
+        if ($value -eq $this.data) {
+            return $true
+        }
+        if ($value -le $this.data) {
+            return ($this.left) ? $this.left.Search($value) : $false
+        }
+        else {
+            return ($this.right) ? $this.right.Search($value) : $false
+        }
+    }
+
+    hidden [void] Traverse([string]$order, [ref]$values) {        
+        if ($order -eq "pre") {
+            $values.Value += $this.data
+        }
+        if ($this.left) {
+            $this.left.Traverse($order, $values)
+        }
+        if ($order -eq "in") {
+            $values.Value += $this.data
+        }
+        if ($this.right) {
+            $this.right.Traverse($order, $values)
+        }
+        if ($order -eq "post") {
+            $values.Value += $this.data
+        }
     }
 
     [string] ToString() {
@@ -52,7 +97,7 @@ Class TreeNode {
 
 
 Class BinarySearchTree {
-    [TreeNode]$root
+    [TreeNode]hidden $root = $null
 
     BinarySearchTree([int[]]$values) {
         foreach ($value in $values) {
@@ -60,79 +105,36 @@ Class BinarySearchTree {
         }
     }
 
-    Insert([int]$value) {
-        if ($null -eq $this.root) {
+    [void] Insert([int]$value) {
+        if (-not $this.root) {
             $this.root = [TreeNode]::new($value)
+            return
         }
-        else {
-            $this.Insert($value, $this.root)
-        }
-
-    }
-    
-    Insert([int]$value, [TreeNode]$base) {
-        if ($value -le $base.data) {
-            if ($null -eq $base.left) {
-                $base.left = [TreeNode]::new($value)
-                return
-            }
-            $this.Insert($value, $base.left)
-        }
-        else {
-            if ($null -eq $base.right) {
-                $base.right = [TreeNode]::new($value)
-                return
-            }       
-            $this.Insert($value, $base.right)     
-        }
+        $this.root.Insert($value)
     }
 
-    [TreeNode] GetData() {
-        return $this.root
-    }
+    [TreeNode] GetData() { return $this.root }
 
     [boolean] Search([int]$value) {
-        return $this.Inorder() -Contains $value
+        return ($this.root) ? $this.root.Search($value) : $false
     }
 
-    [int[]] Inorder() {
-        return $this.Traverse($this.root, "in", [System.Collections.ArrayList]@())
-    }
+    [int[]] Inorder() { return $this.Traverse("in") }
+    [int[]] PreOrder() { return $this.Traverse("pre") }
+    [int[]] PostOrder() { return $this.Traverse("post") }
 
-    [int[]] PreOrder() {
-        return $this.Traverse($this.root, "pre", [System.Collections.ArrayList]@())
-    }
-
-    [int[]] PostOrder() {
-        return $this.Traverse($this.root, "post", [System.Collections.ArrayList]@())
-    }
-
-    [System.Collections.ArrayList] Traverse(
-        [TreeNode]$base, [string]$order,
-        [System.Collections.ArrayList]$values) {
-        
-        if ($order -eq "pre") {
-            $values.Add($base.data)
+    hidden [int[]] Traverse([string]$order) {
+        $result = @()
+        if ($this.root) {        
+            $this.root.Traverse($order, [ref]$result)
         }
-        if ($null -ne $base.left) {
-            $values = $this.Traverse($base.left, $order, $values)
-        }
-        if ($order -eq "in") {
-            $values.Add($base.data)
-        }
-        if ($null -ne $base.right) {
-            $values = $this.Traverse($base.right, $order, $values)
-        }
-        if ($order -eq "post") {
-            $values.Add($base.data)
-        }
-        return $values
+        return $result
     }
 
     [string] ToString() {
         <#
         .DESCRIPTION
-        Tostring method to help print out the tree in a nice format for viewing
+        ToString method to help print out the tree in a nice format for viewing
         Adapt from : https://stackoverflow.com/questions/4965335/how-to-print-binary-tree-diagram-in-java
         #>
         $textBuilder = [System.Text.StringBuilder]::new()
