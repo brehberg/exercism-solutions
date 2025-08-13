@@ -21,6 +21,9 @@ CLASS zcl_phone_number DEFINITION
     METHODS extract_digits
       IMPORTING !number       TYPE string
       RETURNING VALUE(digits) TYPE digits.
+    METHODS allowed
+      IMPORTING digit       TYPE digit
+      RETURNING VALUE(flag) TYPE abap_bool.
 
 ENDCLASS.
 
@@ -39,13 +42,17 @@ CLASS zcl_phone_number IMPLEMENTATION.
     DATA allowed TYPE RANGE OF digit.
     allowed = VALUE #(
       ( sign = 'I' option = 'BT' low = 2 high = 9 ) ).
-    IF lines( digits ) <> 10 OR
-        digits[ 1 ] NOT IN allowed OR
-        digits[ 4 ] NOT IN allowed.
+    IF lines( digits ) <> 10
+        OR NOT allowed( digits[ 1 ] )
+        OR NOT allowed( digits[ 4 ] ).
       RAISE EXCEPTION TYPE cx_parameter_invalid.
     ENDIF.
 
     result = concat_lines_of( digits ).
+  ENDMETHOD.
+
+  METHOD allowed.
+    flag = boolc( digit >= 2 AND digit <= 9 ).
   ENDMETHOD.
 
   METHOD extract_digits.
