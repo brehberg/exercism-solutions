@@ -9,10 +9,9 @@ defmodule ArmstrongNumber do
   each raised to the power of the number of digits.
   """
   @spec valid?(integer) :: boolean
-  def valid?(number), do: expand(I.digits(number)) == number
+  def valid?(number), do: number |> I.digits() |> compute() == number
 
   @doc false
-  @spec expand([integer]) :: non_neg_integer
-  defp expand(digits), do:
-    digits |> Enum.map(&I.pow(&1, length(digits))) |> Enum.sum()
+  @spec compute([integer]) :: integer
+  defp compute(digits), do: digits |> Enum.map(&I.pow(&1, length(digits))) |> Enum.sum()
 end
