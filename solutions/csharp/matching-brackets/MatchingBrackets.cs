@@ -16,16 +16,16 @@ public static class MatchingBrackets
         var closerNeeded = new Stack();
         foreach (var c in input)
         {
-            if (matches.ContainsValue(c))
+            if (matches.ContainsKey(c))
+            {
+                // opening bracket was found, add matching closing value to the stack
+                closerNeeded.Push(matches[c]);
+            }
+            else if (matches.ContainsValue(c))
             {
                 // closing bracket was found, is it the next expected value on stack?
                 if (closerNeeded.Count == 0 || (char)closerNeeded.Pop() != c)
                     return false;
-            }
-            else if (matches.ContainsKey(c))
-            {
-                // opening bracket was found, add matching closing brack to the stack
-                closerNeeded.Push(matches[c]);
             }
         }
         return closerNeeded.Count == 0;
