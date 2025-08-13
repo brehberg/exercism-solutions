@@ -19,18 +19,20 @@ Return: "secret"
 Class SimpleCipher {
     [ValidateNotNullOrEmpty()] [string]$_key
     [ValidateNotNullOrEmpty()] [int[]]hidden $offsets
-    [int]hidden $min = [System.Text.Encoding]::UTF8.GetBytes("a")[0]
-    [int]hidden $max = [System.Text.Encoding]::UTF8.GetBytes("z")[0]
+    [int]static $min = [System.Text.Encoding]::UTF8.GetBytes("a")[0]
+    [int]static $max = [System.Text.Encoding]::UTF8.GetBytes("z")[0]
 
     SimpleCipher() {
-        $random = (Get-Random -Count 105 -Minimum $this.min -Maximum $this.max)
-        $this._key = -join ($random.forEach({ [char]$_ }))
-        $this.offsets = [System.Text.Encoding]::UTF8.GetBytes($this._key).forEach({ $_ - $this.min })
+        # generate a truly random key of at least 100 lowercase characters in length
+        $length = Get-Random -Minimum 100 -Maximum 151
+        $random = (Get-Random -Count $length -Minimum ([SimpleCipher]::min) -Maximum ([SimpleCipher]::max + 1))
+        $this._key = [System.Text.Encoding]::UTF8.GetString($random)
+        $this.offsets = $random.forEach({ $_ - [SimpleCipher]::min })
     }
 
     SimpleCipher([string]$key) {
         $this._key = $key.ToLower()
-        $this.offsets = [System.Text.Encoding]::UTF8.GetBytes($this._key).forEach({ $_ - $this.min })
+        $this.offsets = [System.Text.Encoding]::UTF8.GetBytes($this._key).forEach({ $_ - [SimpleCipher]::min })
     }
 
     [string] Encode([string]$text) {
@@ -39,8 +41,8 @@ Class SimpleCipher {
         # shift the byte value for each letter to the right based on offsets from key
         for ($i = 0; $i -lt $values.Count; $i++) {
             $values[$i] += $this.offsets[$i % $this.offsets.Count]
-            if ($values[$i] -gt $this.max ) {
-                $values[$i] -= ($this.max - $this.min + 1)
+            if ($values[$i] -gt [SimpleCipher]::max ) {
+                $values[$i] -= ([SimpleCipher]::max - [SimpleCipher]::min + 1)
             }
         }        
         return [System.Text.Encoding]::UTF8.GetString($values)
@@ -52,8 +54,8 @@ Class SimpleCipher {
         # shift the byte value for each letter to the left based on offsets from key
         for ($i = 0; $i -lt $values.Count; $i++) {     
             $values[$i] -= $this.offsets[$i % $this.offsets.Count]
-            if ($values[$i] -lt $this.min ) {
-                $values[$i] += ($this.max - $this.min + 1)
+            if ($values[$i] -lt [SimpleCipher]::min ) {
+                $values[$i] += ([SimpleCipher]::max - [SimpleCipher]::min + 1)
             }
         }
         return [System.Text.Encoding]::UTF8.GetString($values)
