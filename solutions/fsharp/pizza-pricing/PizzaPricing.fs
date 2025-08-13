@@ -16,14 +16,14 @@ let rec pizzaPrice (pizza: Pizza): int =
     | ExtraToppings pizza -> 2 + pizzaPrice pizza
 
 let orderPrice(pizzas: Pizza list): int = 
-    let rec computeOrderPrice(pizzas: Pizza list, totalPrice: int): int =
+    let rec computeOrderPrice pizzas totalPrice =
         match pizzas with
         | [] -> totalPrice
-        | pizza::rest -> computeOrderPrice(rest, totalPrice + pizzaPrice pizza)
+        | pizza::rest -> computeOrderPrice rest totalPrice + pizzaPrice pizza
 
     let basePrice = 
         match pizzas.Length with
         | 1 -> 3
         | 2 -> 2
         | _ -> 0
-    computeOrderPrice(pizzas, basePrice)
+    computeOrderPrice pizzas basePrice
