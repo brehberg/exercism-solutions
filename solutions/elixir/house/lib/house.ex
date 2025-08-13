@@ -12,8 +12,8 @@ defmodule House do
     ~s(the dog that worried),
     ~s(the cat that killed),
     ~s(the rat that ate),
-    ~s(the malt that lay),
-    ~s(in the house that Jack built.\n)
+    ~s(the malt that lay in),
+    ~s(the house that Jack built.\n)
   ]
 
   @doc """
@@ -28,6 +28,5 @@ defmodule House do
 
   @doc false
   @spec prepare_verse(integer) :: [String.t()]
-  defp prepare_verse(1), do: [@prefix, ~s(the house that Jack built.\n)]
   defp prepare_verse(n), do: [@prefix | Enum.drop(@parts, length(@parts) - n)]
 end
