@@ -29,15 +29,17 @@ main() {
     local unit="$2"
     local half="$3"
     local next="$4"
-    local -i digit="$((number / value))"
 
-    case "${digit}" in
-    # [digit]) Value ;;
-    [123]) roman+="${unit}" ;;
-    [4]) roman+="${unit}${half}" ;;
-    [5678]) roman+="${half}" ;;
-    [9]) roman+="${unit}${next}" ;;
-    *) echo 0 ;;
+    case $((number / value)) in
+    1) roman+="${unit}" ;;
+    2) roman+="${unit}${unit}" ;;
+    3) roman+="${unit}${unit}${unit}" ;;
+    4) roman+="${unit}${half}" ;;
+    5) roman+="${half}" ;;
+    6) roman+="${half}${unit}" ;;
+    7) roman+="${half}${unit}${unit}" ;;
+    8) roman+="${half}${unit}${unit}${unit}" ;;
+    9) roman+="${unit}${next}" ;;
     esac
     number=$((number % value))
   }
