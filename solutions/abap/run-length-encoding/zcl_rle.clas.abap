@@ -53,9 +53,12 @@ CLASS zcl_rle IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD decode.
+    CHECK input IS NOT INITIAL.
 
+    DATA(total) = count( val = input regex = '\d*.' ).
     DATA(n) = 0.
-    DO.
+
+    DO total TIMES.
       n += 1.
       DATA(substr) = match( val = input
                             regex = '\d*.'
