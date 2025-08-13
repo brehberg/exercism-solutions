@@ -40,11 +40,9 @@ class RaceTrack {
     }
 
     public boolean canFinishRace(NeedForSpeed car) {
-        while (car.distanceDriven() < distance) {
-            if (car.batteryDrained())
-                return false;
+        while (!car.batteryDrained()) {
             car.drive();
         }
-        return true;
+        return car.distanceDriven() >= distance;
     }
 }
