@@ -9,17 +9,20 @@ defmodule Bob do
   """
   @spec hey(String.t()) :: String.t()
   def hey(input) do
+    trimmed = String.trim(input)
+
     cond do
-      nothing?(input) -> "Fine. Be that way!"
-      question?(input) and yell?(input) -> "Calm down, I know what I'm doing!"
-      yell?(input) -> "Whoa, chill out!"
-      question?(input) -> "Sure."
+      nothing?(trimmed) -> "Fine. Be that way!"
+      yell_question?(trimmed) -> "Calm down, I know what I'm doing!"
+      yell?(trimmed) -> "Whoa, chill out!"
+      question?(trimmed) -> "Sure."
       true -> "Whatever."
     end
   end
 
   @doc false
-  defp yell?(str), do: String.upcase(str) == str and String.match?(str, ~r/[A-ZУХОДИ]/)
-  defp question?(str), do: String.trim(str) |> String.ends_with?("?")
-  defp nothing?(str), do: String.trim(str) == ""
+  defp question?(str), do: String.ends_with?(str, "?")
+  defp yell?(str), do: String.upcase(str) == str and String.downcase(str) != str
+  defp yell_question?(str), do: question?(str) and yell?(str)
+  defp nothing?(str), do: str == ""
 end
