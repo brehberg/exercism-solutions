@@ -1,9 +1,26 @@
+// @ts-check
+
+/**
+ * @typedef {'mercury' |
+ *           'venus' |
+ *           'earth' |
+ *           'mars' |
+ *           'jupiter' |
+ *           'saturn' |
+ *           'uranus' |
+ *           'neptune'}  Planet;
+ */
+
 /**
  * Given a planet and an age in seconds, calculate how old someone would be
+ *
+ * @param {Planet} planet
+ * @param {number} seconds in seconds
+ * @returns {number} age in years on planet
  */
 export const age = (planet, seconds) => {
   /**
-   * @type{Record<string,number>}
+   * @type {Record<Planet,number>}
    */
   const ORBITAL_PERIOD = {
     mercury: 0.2408467,
@@ -15,5 +32,6 @@ export const age = (planet, seconds) => {
     uranus: 84.016846,
     neptune: 164.79132,
   };
-  return Math.round((seconds / 31557600 / ORBITAL_PERIOD[planet]) * 100) / 100;
+  const EARTH_YEAR = 31557600; // seconds per earth year
+  return Number((seconds / EARTH_YEAR / ORBITAL_PERIOD[planet]).toFixed(2));
 };
