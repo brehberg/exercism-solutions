@@ -1,6 +1,5 @@
 defmodule BinarySearchTree do
   @moduledoc false
-  import Enum, only: [concat: 2]
   @type bst_node :: %{data: any, left: bst_node | nil, right: bst_node | nil}
 
   @doc """
@@ -21,6 +20,6 @@ defmodule BinarySearchTree do
   Traverses the Binary Search Tree in order and returns a list of each node's data.
   """
   @spec in_order(bst_node) :: [any]
-  def in_order(tree) when is_nil(tree), do: []
-  def in_order(tree), do: concat(in_order(tree.left), [tree.data | in_order(tree.right)])
+  def in_order(nil), do: []
+  def in_order(tree), do: in_order(tree.left) ++ [tree.data] ++ in_order(tree.right)
 end
