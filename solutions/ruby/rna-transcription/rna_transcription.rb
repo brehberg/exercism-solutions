@@ -8,6 +8,6 @@ class Complement
   private_constant :DNA2RNA
 
   def self.of_dna(dna)
-    dna.map_char { |nucleotide| DNA2RNA[nucleotide] }.join
+    dna.chars.map { |nucleotide| DNA2RNA[nucleotide] }.join
   end
 end
