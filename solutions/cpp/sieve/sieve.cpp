@@ -7,10 +7,15 @@ namespace sieve
 
     vector<int> primes(int limit)
     {
-        vector<int> primes;
+        if (limit < 2)
+        {
+            return vector<int>{};
+        }
+
+        vector<int> primes{2};
         vector<bool> marked(limit + 1);
 
-        for (int i = 2; i <= limit; i++)
+        for (int i = 3; i <= limit; i += 2)
         {
             if (marked[i])
             {
