@@ -15,6 +15,6 @@ class CastleDinner
 
   # Replace the drink
   def self.replace_drink(drink)
-    check_drink?(drink) ? drink : REPLACEMENT_DRINK
+    check_drink?(drink) || REPLACEMENT_DRINK
   end
 end
