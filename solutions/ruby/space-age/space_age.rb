@@ -15,36 +15,10 @@ class SpaceAge
     @earth_age = seconds / EARTH_YEAR_IN_SECONDS.to_f
   end
 
-  def on_mercury
-    return @earth_age / ORBITAL_PERIOD[:mercury]
-  end
-
-  def on_venus
-    return @earth_age / ORBITAL_PERIOD[:venus]
-  end
-
-  def on_earth
-    return @earth_age / ORBITAL_PERIOD[:earth]
-  end
-
-  def on_mars
-    return @earth_age / ORBITAL_PERIOD[:mars]
-  end
-
-  def on_jupiter
-    return @earth_age / ORBITAL_PERIOD[:jupiter]
-  end
-
-  def on_saturn
-    return @earth_age / ORBITAL_PERIOD[:saturn]
-  end
-
-  def on_uranus
-    return @earth_age / ORBITAL_PERIOD[:uranus]
-  end
-
-  def on_neptune
-    return @earth_age / ORBITAL_PERIOD[:neptune]
+  ORBITAL_PERIOD.each do |planet, planetary_period|
+    define_method "on_#{planet}" do
+      @earth_age / planetary_period
+    end
   end
 
   private_constant :ORBITAL_PERIOD
