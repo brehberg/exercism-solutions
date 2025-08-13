@@ -9,18 +9,14 @@
 .globl  is_leap_year
 
 is_leap_year:
-    rem     $t0,    $a0,    4
-    beqz    $t0,    __test_100
     li      $v0,    0
-    j       __done
-__test_100:
+    rem     $t0,    $a0,    4
+    bnez    $t0,    __done
     rem     $t0,    $a0,    100
-    beqz    $t0,    __test_400
-    li      $v0,    1    
-    j       __done
-__test_400:
+    bnez    $t0,    __set_true
     rem     $t0,    $a0,    400
     bnez    $t0,    __done
+__set_true:
     li      $v0,    1
 __done:
     jr      $ra
