@@ -3,13 +3,11 @@ class Translation
   private_constant :STOP_CODON
 
   def self.of_rna(strand)
-    proteins = []
-    chunk_every(strand, 3).each do |chunk|
-      protein = of_codon(chunk)
-      break if protein == STOP_CODON
-      proteins.append(protein)
+    strand.chars.each_slice(3).with_object([]) do |chunk, result|
+      protein = of_codon(chunk.join)
+      return result if protein == STOP_CODON
+      result << protein
     end
-    return proteins
   end
 
   private
@@ -36,11 +34,6 @@ class Translation
       raise InvalidCodonError
     end
   end
-
-  def self.chunk_every(string, size)
-    (0..(string.length - 1) / size).map { |i| string[i * size, size] }
-  end
 end
 
-class InvalidCodonError < StandardError
-end
+class InvalidCodonError < StandardError; end
