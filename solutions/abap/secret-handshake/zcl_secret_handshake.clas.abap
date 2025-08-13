@@ -10,10 +10,12 @@ CLASS zcl_secret_handshake DEFINITION
 
   PROTECTED SECTION.
   PRIVATE SECTION.
-    DATA my_code TYPE x LENGTH 1.
+    TYPES hex_code TYPE x LENGTH 1.
+    DATA my_code TYPE hex_code.
     DATA my_commands TYPE string_table.
+    
     METHODS secret
-      IMPORTING num    TYPE x
+      IMPORTING num    TYPE hex_code
                 action TYPE string.
     METHODS reverse_table
       IMPORTING input TYPE string_table
