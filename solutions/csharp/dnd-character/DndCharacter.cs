@@ -3,24 +3,18 @@ using System.Linq;
 
 public class DndCharacter
 {
-    public int Strength { get; }
-    public int Dexterity { get; }
-    public int Constitution { get; }
-    public int Intelligence { get; }
-    public int Wisdom { get; }
-    public int Charisma { get; }
+    public int Strength { get; } = Ability();
+    public int Dexterity { get; } = Ability();
+    public int Constitution { get; } = Ability();
+    public int Intelligence { get; } = Ability();
+    public int Wisdom { get; } = Ability();
+    public int Charisma { get; } = Ability();
     public int Hitpoints { get; }
 
     private static Random rng = new Random();
 
     private DndCharacter()
     {
-        Strength = Ability();
-        Dexterity = Ability();
-        Constitution = Ability();
-        Intelligence = Ability();
-        Wisdom = Ability();
-        Charisma = Ability();
         Hitpoints = 10 + Modifier(Constitution);
     }
 
