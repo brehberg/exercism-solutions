@@ -10,7 +10,13 @@ ENDCLASS.
 CLASS zcl_reverse_string IMPLEMENTATION.
 
   METHOD reverse_string.
-    result = reverse( input ).
+    " solution without using built-in function reverse()
+    DATA offset TYPE i.
+    offset = strlen( input )  - 1.
+    WHILE offset >= 0.
+      result = result && input+offset(1).
+      offset = offset - 1.
+    ENDWHILE.
   ENDMETHOD.
 
 ENDCLASS.
