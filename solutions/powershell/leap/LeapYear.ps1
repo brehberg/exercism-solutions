@@ -26,10 +26,6 @@ function Test-LeapYear {
     #>
     param( [int]$year )
 
-    if ($year % 100 -eq 0) {
-        return ($year % 400 -eq 0)
-    }
-    else {
-        return ($year % 4 -eq 0)
-    }
+    if ($year % 100) { return !($year % 4) }
+    else { return !($year % 400) }
 }
