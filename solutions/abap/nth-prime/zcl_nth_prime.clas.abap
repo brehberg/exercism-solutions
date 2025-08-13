@@ -49,7 +49,11 @@ CLASS zcl_nth_prime IMPLEMENTATION.
 
   METHOD determine_limit.
     " prime(n) < n*(log n + log (log n)), for n >= 6
-    limit = floor( n * ( log( n ) + log( log( n ) ) ) ).
+    " limit = floor( n * ( log( n ) + log( log( n ) ) ) ).
+
+    " function ABAP.builtin.log is not available on Exercism
+    " using below to find a limit with reasonable runtime instead
+    limit = floor( n * sqrt( n ) ).
   ENDMETHOD.
 
   METHOD get_candidates.
