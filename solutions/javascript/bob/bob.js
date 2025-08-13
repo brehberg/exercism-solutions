@@ -2,17 +2,20 @@
 
 // Bob is a lackadaisical teenager. He likes to think that he's very cool.
 // And he definitely doesn't get excited about things. That wouldn't be cool.
-
-// Bob returns a string that only ever answers one of five things.
 const reply = {
   default: "Whatever.",
   question: "Sure.",
   yelling: "Whoa, chill out!",
-  yellingQuestion: "Calm down, I know what I'm doing!",
+  escalate: "Calm down, I know what I'm doing!",
   silence: "Fine. Be that way!",
 };
 
-export const hey = (/** @type {string} */ message) => {
+/**
+ * Hey returns a string that only ever answers one of five things.
+ * @param {string} message
+ * @return {string} response
+ */
+export const hey = (message) => {
   const isSilence = !/\S/.test(message);
   if (isSilence) return reply.silence;
 
@@ -20,7 +23,7 @@ export const hey = (/** @type {string} */ message) => {
   const isQuestion = /\?\s*$/.test(message);
 
   return isYelling && isQuestion
-    ? reply.yellingQuestion
+    ? reply.escalate
     : isYelling
     ? reply.yelling
     : isQuestion
