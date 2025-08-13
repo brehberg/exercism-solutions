@@ -1,4 +1,12 @@
 defmodule RnaTranscription do
+  @moduledoc false
+  @dna_to_rna %{
+    ?G => ?C,
+    ?C => ?G,
+    ?T => ?A,
+    ?A => ?U
+  }
+
   @doc """
   Transcribes a character list representing DNA nucleotides to RNA
 
@@ -8,18 +16,5 @@ defmodule RnaTranscription do
   'UGAC'
   """
   @spec to_rna([char]) :: [char]
-  def to_rna(dna), do: transcribe(dna, [])
-
-  @doc false
-  @spec transcribe([char], [char]) :: [char]
-  defp transcribe([], final), do: final
-
-  defp transcribe([nucleotide | rest], final) do
-    case nucleotide do
-      ?G -> transcribe(rest, final ++ 'C')
-      ?C -> transcribe(rest, final ++ 'G')
-      ?T -> transcribe(rest, final ++ 'A')
-      ?A -> transcribe(rest, final ++ 'U')
-    end
-  end
+  def to_rna(dna), do: dna |> Enum.map(&@dna_to_rna[&1])
 end
