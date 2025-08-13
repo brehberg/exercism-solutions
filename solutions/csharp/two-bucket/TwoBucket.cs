@@ -42,13 +42,12 @@ public class TwoBucket
             moves += 1;
         }
 
-        var result = new TwoBucketResult
+        return new TwoBucketResult
         {
             Moves = moves,
             GoalBucket = first.Amount == goal ? first.Name : second.Name,
             OtherBucket = first.Amount == goal ? second.Amount : first.Amount
         };
-        return result;
     }
 
     private bool IsValid(int goal)
