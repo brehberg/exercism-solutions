@@ -17,8 +17,8 @@ CLASS zcl_rna_transcription DEFINITION
     " mapping of each DNA nucleotide to its RNA complement
     TYPES:
       BEGIN OF mapping,
-        dna TYPE char1,
-        rna TYPE char1,
+        dna TYPE c LENGTH 1,
+        rna TYPE c LENGTH 1,
       END OF mapping.
     CLASS-DATA dna_to_rna TYPE HASHED TABLE OF mapping WITH UNIQUE KEY dna.
 ENDCLASS.
