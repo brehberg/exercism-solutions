@@ -13,7 +13,6 @@ public class LogLevels {
     }
 
     public static String reformat(String logLine) {
-        return String.format("%s (%s)",
-                message(logLine), logLevel(logLine));
+        return message(logLine) + " (" + logLevel(logLine) + ")";
     }
 }
