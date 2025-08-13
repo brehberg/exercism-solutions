@@ -1,5 +1,15 @@
 #!/usr/bin/env bash
 
+distance() {
+  # use Bash Calculator sqrt() to compute the distance from center
+  echo "scale=4; sqrt($1*$1+$2*$2)" | bc
+}
+
+less_than() {
+  # use bc again to check if the distance is less than given number
+  [[ $(bc <<< "$2 <= $1") -eq 1 ]] && exit 0 || exit 1
+}
+
 # validate command line arguments given as two numbers
 if [[ $# -lt 2 ]]; then
   echo "$0 error: not enough arguments"
@@ -16,17 +26,13 @@ if ! [[ $2 =~ $re ]]; then
   exit 2
 fi
 
-# Bash Calculator sqrt() to compute the distance from center
-x=$1
-y=$2
-dist=$(echo "scale=4; sqrt($x*$x+$y*$y)" | bc)
+d=$(distance "$@")
 
-# use bc again to compare the distance with different rings
-if [[ $(bc <<< "$dist <= 1") -eq 1 ]]; then
+if (less_than 1 "$d"); then
   echo 10 # inner circle
-elif [[ $(bc <<< "$dist <= 5") -eq 1 ]]; then
+elif (less_than 5 "$d"); then
   echo 5 # middle circle
-elif [[ $(bc <<< "$dist <= 10") -eq 1 ]]; then
+elif (less_than 10 "$d"); then
   echo 1 # outer circle
 else
   echo 0 # missed target
