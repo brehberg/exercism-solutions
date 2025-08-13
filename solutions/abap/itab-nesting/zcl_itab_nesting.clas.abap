@@ -51,32 +51,49 @@ CLASS zcl_itab_nesting DEFINITION
 
   PROTECTED SECTION.
   PRIVATE SECTION.
+    DATA all_albums TYPE SORTED TABLE OF albums_type WITH NON-UNIQUE KEY artist_id.
+    DATA all_songs TYPE SORTED TABLE OF songs_type WITH NON-UNIQUE KEY artist_id album_id.
+
+    METHODS nest_albums_for_artist
+      IMPORTING single        TYPE artists_type
+      RETURNING VALUE(albums) TYPE artist_album_nested_type-albums.
+    METHODS nest_songs_for_album
+      IMPORTING single       TYPE albums_type
+      RETURNING VALUE(songs) TYPE album_song_nested_type-songs.
+
 ENDCLASS.
 
 CLASS zcl_itab_nesting IMPLEMENTATION.
 
   METHOD perform_nesting.
 
-    LOOP AT artists REFERENCE INTO DATA(artist).
-      " create new line in nested data for each artist
-      APPEND CORRESPONDING #( artist->* ) TO nested_data
-        ASSIGNING FIELD-SYMBOL(<artist>).
+    " convert to sorted tables for optimized access
+    all_albums = CONV #( albums ).
+    all_songs = CONV #( songs ).
 
-      LOOP AT albums REFERENCE INTO DATA(album)
-        WHERE artist_id = <artist>-artist_id.
-        " add the albums for this artist to the new line
-        APPEND CORRESPONDING #( album->* ) TO <artist>-albums
-          ASSIGNING FIELD-SYMBOL(<album>).
+    nested_data = VALUE #( FOR artist IN artists
+      ( artist_id = artist-artist_id
+        artist_name = artist-artist_name
+        albums = nest_albums_for_artist( artist ) ) ).
 
-        LOOP AT songs REFERENCE INTO DATA(song)
-          WHERE artist_id = <artist>-artist_id
-            AND album_id = <album>-album_id.
-          " add songs for this artist album to the new line
-          APPEND CORRESPONDING #( song->* ) TO <album>-songs.
+  ENDMETHOD.
 
-        ENDLOOP. " songs
-      ENDLOOP. " albums
-    ENDLOOP. " artists
+  METHOD nest_albums_for_artist.
+
+    albums = VALUE #( FOR album IN all_albums
+      WHERE ( artist_id = single-artist_id )
+      ( album_id = album-album_id
+        album_name = album-album_name
+        songs = nest_songs_for_album( album ) ) ).
+
+  ENDMETHOD.
+
+  METHOD nest_songs_for_album.
+
+    songs = VALUE #( FOR song IN all_songs
+      WHERE ( artist_id = single-artist_id AND album_id = single-album_id )
+      ( song_id = song-song_id
+        song_name = song-song_name ) ).
 
   ENDMETHOD.
 
