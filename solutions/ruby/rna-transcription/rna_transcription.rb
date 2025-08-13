@@ -8,10 +8,6 @@ class Complement
   private_constant :DNA2RNA
 
   def self.of_dna(dna)
-    rna = ""
-    dna.each_char do |nucleotide|
-      rna << DNA2RNA[nucleotide]
-    end
-    return rna
+    dna.map_char { |nucleotide| DNA2RNA[nucleotide] }.join
   end
 end
