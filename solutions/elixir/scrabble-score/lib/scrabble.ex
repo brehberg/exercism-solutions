@@ -9,6 +9,7 @@ defmodule Scrabble do
     8 => ~w(J X),
     10 => ~w(Q Z)
   }
+  @letter_map = transform(@letter_values)
 
   @doc """
   Calculate the scrabble score for the word.
@@ -26,7 +27,7 @@ defmodule Scrabble do
 
   @doc false
   @spec transform(%{integer => [String.t()]}) :: %{String.t() => integer}
-  def transform(input) do
+  defp transform(input) do
     # Transforms given Scrabble score format to a new one.
     for {value, letters} <- input,
         letter <- letters,
