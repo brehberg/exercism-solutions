@@ -22,7 +22,7 @@ CLASS zcl_difference_of_squares IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD ret_sum_of_squares.
-    sum_of_squares = ( num + 3 * num ** 2 + 2 * num ** 3 ) / 6.
+    sum_of_squares = ( num + 3 * ( num ** 2 ) + 2 * ( num ** 3 ) ) / 6.
   ENDMETHOD.
 
   METHOD ret_square_of_sum.
