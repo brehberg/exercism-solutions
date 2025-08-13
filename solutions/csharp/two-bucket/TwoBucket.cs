@@ -51,16 +51,13 @@ public class TwoBucket
 
     private bool isValid(int goal)
     {
-        // bool isDivisibleBy(int n) => year % n == 0;
+        int gcd(int a, int b) => b == 0 ? a : gcd(b, a % b);
         var factor = gcd(first.Size, second.Size);
         return goal <= Math.Max(first.Size, second.Size) &&
             (factor == 1 || goal % factor == 0);
     }
 
-    private int gcd(int a, int b) => b == 0 ? a : gcd(b, a % b);
-
-    private SingleBucket first;
-    private SingleBucket second;
+    private SingleBucket first, second;
 
     private class SingleBucket(Bucket name, int size)
     {
