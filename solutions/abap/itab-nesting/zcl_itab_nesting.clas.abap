@@ -51,8 +51,10 @@ CLASS zcl_itab_nesting DEFINITION
 
   PROTECTED SECTION.
   PRIVATE SECTION.
-    DATA all_albums TYPE SORTED TABLE OF albums_type WITH NON-UNIQUE KEY artist_id.
-    DATA all_songs TYPE SORTED TABLE OF songs_type WITH NON-UNIQUE KEY artist_id album_id.
+    TYPES sorted_albums TYPE SORTED TABLE OF albums_type WITH NON-UNIQUE KEY artist_id.
+    TYPES sorted_songs TYPE SORTED TABLE OF songs_type WITH NON-UNIQUE KEY artist_id album_id.
+    DATA all_albums TYPE sorted_albums.
+    DATA all_songs TYPE sorted_songs.
 
     METHODS nest_albums_for_artist
       IMPORTING single        TYPE artists_type
