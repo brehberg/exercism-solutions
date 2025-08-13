@@ -17,6 +17,6 @@ defmodule Hamming do
 
   @doc false
   defp do_hamming([], [], count), do: count
-  defp do_hamming([_c | rest1], [_c | rest2], count), do: do_hamming(rest1, rest2, count)
+  defp do_hamming([c | rest1], [c | rest2], count), do: do_hamming(rest1, rest2, count)
   defp do_hamming([_ | rest1], [_ | rest2], count), do: do_hamming(rest1, rest2, count + 1)
 end
