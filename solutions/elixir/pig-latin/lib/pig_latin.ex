@@ -14,20 +14,20 @@ defmodule PigLatin do
 
   # If a word begins with a vowel sound, add an "ay" sound to the end of the word
   @spec translate_word(word :: String.t()) :: String.t()
-  def translate_word(<<first::binary-size(1), rest::binary>>) when first in @vowels,
+  defp translate_word(<<first::binary-size(1), rest::binary>>) when first in @vowels,
     do: first <> rest <> @suffix
 
   # If a word begins with either "x" or "y" followed by a vowel sound,
   # add an "ay" sound to the end of the word
-  def translate_word(<<first::binary-size(1), next::binary-size(1), rest::binary>>)
+  defp translate_word(<<first::binary-size(1), next::binary-size(1), rest::binary>>)
       when first in @maybe and next not in @vowels,
       do: first <> next <> rest <> @suffix
 
   # If a word starts with a "qu", move it to the end of the word.
-  def translate_word(<<@unique, rest::binary>>),
+  defp translate_word(<<@unique, rest::binary>>),
     do: translate_word(rest <> @unique)
 
   # If a word begins with a consonant sound, move it to the end of the word
-  def translate_word(<<first::binary-size(1), rest::binary>>),
+  defp translate_word(<<first::binary-size(1), rest::binary>>),
     do: translate_word(rest <> first)
 end
