@@ -24,10 +24,10 @@ defmodule PigLatin do
       do: first <> next <> rest <> @suffix
 
   # If a word starts with a "qu", move it to the end of the word.
-  def translate_word(<<@unique, rest::binary>> = phrase),
+  def translate_word(<<@unique, rest::binary>>),
     do: translate_word(rest <> @unique)
 
   # If a word begins with a consonant sound, move it to the end of the word
-  def translate_word(<<first::binary-size(1), rest::binary>> = phrase),
+  def translate_word(<<first::binary-size(1), rest::binary>>),
     do: translate_word(rest <> first)
 end
