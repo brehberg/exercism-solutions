@@ -17,8 +17,8 @@ Return: "secret"
 #>
 
 Class SimpleCipher {
-    [ValidateNotNullOrEmpty()] $_key
-    [int[]]hidden $offsets
+    [ValidateNotNullOrEmpty()] [string]$_key
+    [ValidateNotNullOrEmpty()] [int[]]hidden $offsets
     [int]hidden $min = [System.Text.Encoding]::UTF8.GetBytes("a")[0]
     [int]hidden $max = [System.Text.Encoding]::UTF8.GetBytes("z")[0]
 
@@ -29,17 +29,16 @@ Class SimpleCipher {
     }
 
     SimpleCipher([string]$key) {
-        $this._key = $key
+        $this._key = $key.ToLower()
         $this.offsets = [System.Text.Encoding]::UTF8.GetBytes($this._key).forEach({ $_ - $this.min })
     }
 
     [string] Encode([string]$text) {
-        $values = [System.Text.Encoding]::UTF8.GetBytes($text)
+        $values = [System.Text.Encoding]::UTF8.GetBytes($text.ToLower())
 
         # shift the byte value for each letter to the right based on offsets from key
         for ($i = 0; $i -lt $values.Count; $i++) {
-            $j = $i % $this.offsets.Count
-            $values[$i] += $this.offsets[$j]
+            $values[$i] += $this.offsets[$i % $this.offsets.Count]
             if ($values[$i] -gt $this.max ) {
                 $values[$i] -= ($this.max - $this.min + 1)
             }
@@ -48,12 +47,11 @@ Class SimpleCipher {
     }
 
     [string] Decode([string]$text) {
-        $values = [System.Text.Encoding]::UTF8.GetBytes($text)
+        $values = [System.Text.Encoding]::UTF8.GetBytes($text.ToLower())
 
         # shift the byte value for each letter to the left based on offsets from key
         for ($i = 0; $i -lt $values.Count; $i++) {     
-            $j = $i % $this.offsets.Count
-            $values[$i] -= $this.offsets[$j]
+            $values[$i] -= $this.offsets[$i % $this.offsets.Count]
             if ($values[$i] -lt $this.min ) {
                 $values[$i] += ($this.max - $this.min + 1)
             }
