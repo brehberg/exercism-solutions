@@ -5,7 +5,7 @@ defmodule School do
   Each student is in a grade.
   """
 
-  @type school :: any()
+  @type school :: %{(grade :: integer) => names :: [String.t()]}
 
   @doc """
   Create a new, empty school.
@@ -42,6 +42,7 @@ defmodule School do
   def roster(school) do
     school
     |> Map.keys()
+    |> Enum.sort()
     |> Enum.map(&grade(school, &1))
     |> List.flatten()
   end
