@@ -50,19 +50,19 @@ CLASS zcl_triangle IMPLEMENTATION.
 
   METHOD is_equilateral.
     is_valid( side_a = side_a side_b = side_b side_c = side_c ).
-    result = xsdbool( side_a = side_b AND side_b = side_c ).
+    result = boolc( side_a = side_b AND side_b = side_c ).
   ENDMETHOD.
 
   METHOD is_isosceles.
     is_valid( side_a = side_a side_b = side_b side_c = side_c ).
-    result = xsdbool( side_a = side_b OR
-                      side_b = side_c OR
-                      side_a = side_c ).
+    result = boolc( side_a = side_b OR
+                    side_b = side_c OR
+                    side_a = side_c ).
   ENDMETHOD.
 
   METHOD is_scalene.
     is_valid( side_a = side_a side_b = side_b side_c = side_c ).
-    result = xsdbool( NOT is_isosceles(
+    result = boolc( NOT is_isosceles(
         side_a = side_a
         side_b = side_b
         side_c = side_c ) ).
