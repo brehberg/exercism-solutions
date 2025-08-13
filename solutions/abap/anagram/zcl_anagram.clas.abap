@@ -13,7 +13,9 @@ CLASS zcl_anagram DEFINITION
 
   PROTECTED SECTION.
   PRIVATE SECTION.
-    TYPES sorted_chars TYPE SORTED TABLE OF c WITH NON-UNIQUE KEY table_line.
+    TYPES:
+      char         TYPE c LENGTH 1,
+      sorted_chars TYPE SORTED TABLE OF char WITH NON-UNIQUE KEY table_line.
     DATA: base_word  TYPE string,
           base_chars TYPE sorted_chars.
     METHODS is_anagram
