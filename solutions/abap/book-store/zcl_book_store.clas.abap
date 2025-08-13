@@ -115,11 +115,12 @@ CLASS zcl_book_store IMPLEMENTATION.
     ENDLOOP.
 
     " optimize discount on 4 book bundles for each pair of 3 and 5 bundles
-    WHILE result[ size = 3 ]-count > 0 AND result[ size = 5 ]-count > 0.
+    DO nmin( val1 = result[ size = 3 ]-count
+             val2 = result[ size = 5 ]-count ) TIMES.
       result[ size = 4 ]-count += 2.
       result[ size = 3 ]-count -= 1.
       result[ size = 5 ]-count -= 1.
-    ENDWHILE.
+    ENDDO.
   ENDMETHOD.
-  
+
 ENDCLASS.
