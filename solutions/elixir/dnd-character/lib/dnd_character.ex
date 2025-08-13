@@ -28,7 +28,7 @@ defmodule DndCharacter do
   """
   @spec ability :: pos_integer()
   def ability,
-    do: to_list(1..4) |> map(fn _ -> random(@die6) end) |> sort() |> tl() |> sum()
+    do: for(_ <- 1..4, do: random(@die6)) |> sort() |> drop(1) |> sum()
 
   @doc """
   This character has, among other things, six abilities;
