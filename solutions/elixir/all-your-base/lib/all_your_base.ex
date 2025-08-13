@@ -7,8 +7,9 @@ defmodule AllYourBase do
   """
 
   @spec convert(list, integer, integer) :: {:ok, list} | {:error, String.t()}
-  def convert(_, _, output_base) when output_base < 2, do: {:error, "output base must be >= 2"}
   def convert(_, input_base, _) when input_base < 2, do: {:error, "input base must be >= 2"}
+  def convert(_, _, output_base) when output_base < 2, do: {:error, "output base must be >= 2"}
+  
 
   def convert(digits, input_base, output_base) do
     if valid_digits?(digits, input_base) do
