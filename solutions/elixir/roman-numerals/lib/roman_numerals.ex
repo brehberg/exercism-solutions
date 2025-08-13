@@ -1,27 +1,26 @@
 defmodule RomanNumerals do
   @moduledoc false
-  import Enum, only: [reverse: 1]
-  @values [{1, ~w(I V X)}, {10, ~w(X L C)}, {100, ~w(C D M)}]
+  @values [~w(M D C), ~w(C L X), ~w(X V I)]
 
   @doc """
   Convert the number to a roman number.
   """
   @spec numeral(pos_integer) :: String.t()
   def numeral(number),
-    do: build(@values) |> reverse() |> cypher(number, "")
+    do: build(100, @values) |> cypher(number, "")
 
   @doc false
-  @spec build([{integer, [String.t()]}]) :: [{integer, String.t()}]
-  defp build([]), do: []
+  @spec build(integer, [[String.t()]]) :: [{integer, String.t()}]
+  defp build(_, []), do: []
 
-  defp build([{value, [one, five, ten]} | rest]) do
+  defp build(value, [[ten, five, one] | rest]) do
     [
-      {value, one},
-      {value * 4, one <> five},
-      {value * 5, five},
+      {value * 10, ten},
       {value * 9, one <> ten},
-      {value * 10, ten} | build(rest)
-    ]
+      {value * 5, five},
+      {value * 4, one <> five},
+      {value, one}
+    ] ++ build(div(value, 10), rest)
   end
 
   @doc false
