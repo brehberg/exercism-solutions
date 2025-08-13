@@ -8,18 +8,16 @@ namespace allergies
 {
     using namespace std;
 
-    class Allergy_test
+    class allergy_test
     {
     private:
         unordered_set<string> allergies;
 
     public:
-        Allergy_test(unordered_set<string>);
+        allergy_test(int score);
         bool is_allergic_to(string allergen);
-        unordered_set<string> get_allergies();
+        const unordered_set<string> get_allergies();
     };
-
-    Allergy_test allergy_test(int score);
 } // namespace allergies
 
 #endif // ALLERGIES_H

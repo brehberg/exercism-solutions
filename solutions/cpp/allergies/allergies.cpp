@@ -4,7 +4,7 @@ namespace allergies
 {
     using namespace std;
 
-    string allergens[] = {
+    static const string allergens[8] = {
         "eggs",
         "peanuts",
         "shellfish",
@@ -15,30 +15,25 @@ namespace allergies
         "cats",
     };
 
-    Allergy_test allergy_test(int score)
+    allergy_test::allergy_test(int score)
     {
-        unordered_set<string> allergies;
         int value = 1;
         for (const string &allergen : allergens)
         {
-            if ((score & value) > 0)
+            if (score & value)
             {
                 allergies.insert(allergen);
             }
             value = value << 1;
         }
-        return {allergies};
     }
 
-    Allergy_test::Allergy_test(unordered_set<string> allergies)
-        : allergies{allergies} {}
-
-    bool Allergy_test::is_allergic_to(string allergen)
+    bool allergy_test::is_allergic_to(string allergen)
     {
         return allergies.find(allergen) != allergies.end();
     }
 
-    unordered_set<string> Allergy_test::get_allergies()
+    const unordered_set<string> allergy_test::get_allergies()
     {
         return allergies;
     }
