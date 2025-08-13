@@ -28,11 +28,14 @@ Function Get-Raindrops() {
     Param(
         [int]$Rain
     )
+    $Drops = [ordered]@{
+        3 = "Pling";
+        5 = "Plang";
+        7 = "Plong";
+    }
     [string] $Sound = $null
-
-    if ($Rain % 3 -eq 0) { $Sound = "$($Sound)Pling" }
-    if ($Rain % 5 -eq 0) { $Sound = "$($Sound)Plang" }
-    if ($Rain % 7 -eq 0) { $Sound = "$($Sound)Plong" }
-
-    return [String]::IsNullOrEmpty($Sound) ? $Rain : $Sound
+    foreach ($Factor in $Drops.keys) {
+        if ($Rain % $Factor -eq 0) { $Sound += $Drops.$Factor }
+    }
+    return [String]::IsNullOrEmpty($Sound) ? [string]$Rain : $Sound
 }
