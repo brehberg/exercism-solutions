@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 public enum Schedule
 {
-    Teenth,
-    First,
-    Second,
-    Third,
-    Fourth,
+    Teenth = 13,
+    First = 1,
+    Second = 8,
+    Third = 15,
+    Fourth = 22,
     Last
 }
 
@@ -21,22 +21,13 @@ public class Meetup
 
     public DateTime Day(DayOfWeek dayOfWeek, Schedule schedule) =>
         schedule != Schedule.Last
-            ? adjustDayInWeek(new DateTime(year, month, initialDay[schedule]), dayOfWeek, 1)
-            : adjustDayInWeek(new DateTime(year, month, DateTime.DaysInMonth(year, month)), dayOfWeek, -1);
+            ? adjustDayInWeek(dayOfWeek, new DateTime(year, month, (int)schedule), 1)
+            : adjustDayInWeek(dayOfWeek, new DateTime(year, month, DateTime.DaysInMonth(year, month)), -1);
 
-    private DateTime adjustDayInWeek(DateTime guess, DayOfWeek dayOfWeek, int direction) =>
-        guess.DayOfWeek == dayOfWeek ? guess
+    private DateTime adjustDayInWeek(DayOfWeek dayOfWeek, DateTime guess, int direction) =>
+        dayOfWeek == guess.DayOfWeek ? guess
             : guess.AddDays(((int)dayOfWeek - (int)guess.DayOfWeek + 7 * direction) % 7);
 
-    private int month { get; }
-    private int year { get; }
-
-    private static readonly Dictionary<Schedule, int> initialDay = new()
-    {
-        {Schedule.Teenth, 13},
-        {Schedule.First, 1},
-        {Schedule.Second, 8},
-        {Schedule.Third, 15},
-        {Schedule.Fourth, 22},
-    };
+    private readonly int month;
+    private readonly int year;
 }
