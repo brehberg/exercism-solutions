@@ -59,9 +59,12 @@ def categorize_dish(dish_name, dish_ingredients):
         ("KETO", KETO),
         ("OMNIVORE", OMNIVORE),
     ]
+    category = "UNKNOWN"
     for category_name, category_items in food_categories:
         if dish_ingredients <= category_items:
-            return f"{dish_name}: {category_name}"
+            category = category_name
+            break
+    return f"{dish_name}: {category}"
 
 
 def tag_special_ingredients(dish):
