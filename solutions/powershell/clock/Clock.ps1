@@ -22,22 +22,22 @@
 #>
 
 class Clock {
-    [int]$minutes = 0
-    [int]hidden $perHour = 60
-    [int]hidden $perDay = 1440
+    [int]hidden $minutes = 0
+    [int]static $perHour = 60
+    [int]static $perDay = 1440
 
     Clock([int]$hours, [int]$mins) {
-        $this.Add($hours * $this.perHour + $mins)
+        $this.Add($hours * [Clock]::perHour + $mins)
     }
 
     [Clock] Add([int]$mins) {                        
-        $this.minutes = (($this.minutes + $mins) % $this.perDay + $this.perDay) % $this.perDay
+        $this.minutes = (($this.minutes + $mins) % [Clock]::perDay + [Clock]::perDay) % [Clock]::perDay
         return $this
     }
 
     [string] ToString() {
-        $Hours = [Math]::Floor($this.minutes / $this.perHour)
-        return ("{0:D2}:{1:D2}" -f [int]$Hours, ($this.minutes % $this.perHour))
+        $Hours = [int][Math]::Floor($this.minutes / [Clock]::perHour)
+        return ("{0:D2}:{1:D2}" -f $Hours, ($this.minutes % [Clock]::perHour))
     }
 
     [bool] Equals($other) {
