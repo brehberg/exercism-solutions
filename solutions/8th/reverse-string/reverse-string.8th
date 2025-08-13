@@ -1,0 +1,4 @@
+: reverse \ s -- s
+  s:len 2 n:/mod nip
+  ( s:len I n:1- swap I n:- s:<> ) swap times
+;
