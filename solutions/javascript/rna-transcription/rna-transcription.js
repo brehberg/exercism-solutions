@@ -14,8 +14,5 @@ export const toRna = (dna) => {
     T: "A",
     A: "U",
   };
-  return dna
-    .split("")
-    .map((nucleotide) => DNA2RNA[nucleotide])
-    .join("");
+  return [...dna].reduce((rna, nucleotide) => rna + DNA2RNA[nucleotide], "");
 };
