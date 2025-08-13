@@ -12,7 +12,7 @@ number_type <- function(n) {
     if (n == 1) {
         return("deficient")
     }
-    possible <- 1:(n - 1)
+    possible <- 1:(n / 2)
     aliquot_sum <- sum(possible[n %% possible == 0])
 
     ifelse(aliquot_sum > n, "abundant",
