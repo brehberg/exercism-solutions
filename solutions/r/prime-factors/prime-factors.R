@@ -6,17 +6,17 @@ prime_factors <- function(number) {
         return(c())
     }
 
-    primes <- c()
+    factors <- c()
     prime <- 2
-    n <- number
+    remaining <- number
 
-    while (n / prime >= prime) {
-        if (n %% prime == 0) {
-            n <- n / prime
-            primes <- c(prime, primes)
+    while (remaining / prime >= prime) {
+        if (remaining %% prime == 0) {
+            remaining <- remaining / prime
+            factors <- c(factors, prime)
         } else {
             prime <- prime + 1
         }
     }
-    rev(c(n, primes))
+    c(factors, remaining)
 }
