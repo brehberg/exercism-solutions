@@ -1,9 +1,8 @@
 (module
   (func (export "score") (param $x f32) (param $y f32) (result i32)
-    local.get $x
-    call $square ;; call the square function on `x`
-    local.get $y
-    call $square ;; call the square function on `y`
+    
+    (call $square (local.get $x)) ;; call the square function on `x`    
+    (call $square (local.get $y)) ;; call the square function on `y`
 
     f32.add  ;; add up both numbers
     f32.sqrt ;; calculate the square root
@@ -29,20 +28,18 @@
                           2   ;; d == 8 => (outer circle)
                           2   ;; d == 9 => (outer circle)
                           2   ;; d == 10 => (outer circle)
-                          3)) ;; else => (missed target)
-          (i32.const 10) ;; Score for inner circle
-          (return))
-        (i32.const 5) ;; Score for middle circle
-        (return))
-      (i32.const 1) ;; Score for outer circle
-      (return))
-    (i32.const 0) ;; Score for missed target  
+                          3)  ;; else => (missed target)
+          ) 
+          (return (i32.const 10)) ;; Score for inner circle
+        )
+        (return (i32.const 5)) ;; Score for middle circle
+      )
+      (return (i32.const 1)) ;; Score for outer circle
+    )
+    (return (i32.const 0)) ;; Score for missed target  
   )
 
   (func $square (param $n f32) (result f32)
-    ;; load `n` onto the stack twice
-    local.get $n
-    local.get $n
-    f32.mul ;; multiply one number by the other
+    (f32.mul (local.get $n) (local.get $n)) ;; multiply one number by itself
   )
 )
