@@ -7,6 +7,7 @@ defmodule RPNCalculatorInspection do
      returned by the calculator is as expected.
   """
   import Task, only: [async: 1, await: 2]
+  import Process, only: [flag: 2]
 
   @type reliability_check :: %{input: String.t(), pid: pid}
   @type check_result :: %{String.t() => :ok | :error | :timeout}
@@ -25,7 +26,7 @@ defmodule RPNCalculatorInspection do
   def await_reliability_check_result(%{pid: pid, input: input}, results) do
     receive do
       {:EXIT, ^pid, :normal} -> Map.put(results, input, :ok)
-      {:EXIT, ^pid, _} -> Map.put(results, input, :error)
+      {:EXIT, ^pid, _reason} -> Map.put(results, input, :error)
     after
       100 -> Map.put(results, input, :timeout)
     end
@@ -38,15 +39,12 @@ defmodule RPNCalculatorInspection do
   def reliability_check(_calculator, []), do: %{}
 
   def reliability_check(calculator, inputs) do
-    old_trap_exit_flag = Process.flag(:trap_exit, true)
+    old_trap_exit_flag = flag(:trap_exit, true)
 
-    results =
-      inputs
-      |> Enum.map(&start_reliability_check(calculator, &1))
-      |> Enum.reduce(%{}, &await_reliability_check_result(&1, &2))
-
-    Process.flag(:trap_exit, old_trap_exit_flag)
-    results
+    inputs
+    |> Enum.map(&start_reliability_check(calculator, &1))
+    |> Enum.reduce(%{}, &await_reliability_check_result/2)
+    |> tap(fn _ -> flag(:trap_exit, old_trap_exit_flag) end)
   end
 
   @doc """
