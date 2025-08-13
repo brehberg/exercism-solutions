@@ -48,8 +48,7 @@ export function scale2d(sx, sy) {
  */
 export function composeTransform(f, g) {
   return function (/** @type {number} */ x, /** @type {number} */ y) {
-    const pair = f(x, y);
-    return g(pair[0], pair[1]);
+    return g(...f(x, y));
   };
 }
 
@@ -69,9 +68,8 @@ export function memoizeTransform(f) {
     if (x === lastX && y === lastY) {
       return result;
     }
-    result = f(x, y);
     lastX = x;
     lastY = y;
-    return result;
+    return (result = f(x, y));
   };
 }
