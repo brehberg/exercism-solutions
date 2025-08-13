@@ -1,6 +1,16 @@
 #!/usr/bin/env bash
 #
-# Description of function
+# Convert a positive integer into a string representation of that
+# integer in roman numeral form.
+#
+# ARGS
+# $1 number - The number to turn into roman numeral
+#
+# EXAMPLE
+# bash roman_numerals.sh 1
+# return: 'I'
+# bash roman_numerals.sh 3999
+# return: 'MMMCMXCIX'
 set -eo pipefail
 
 validate_args() {
@@ -22,13 +32,13 @@ main() {
   validate_args "$@" || exit 1
 
   local -i number="$1"
+  local -i value=1000
   local roman=""
 
   append_literals() {
-    local -i value="$1"
-    local unit="$2"
-    local half="$3"
-    local next="$4"
+    local unit="$1"
+    local half="$2"
+    local full="$3"
 
     case $((number / value)) in
     1) roman+="${unit}" ;;
@@ -39,15 +49,16 @@ main() {
     6) roman+="${half}${unit}" ;;
     7) roman+="${half}${unit}${unit}" ;;
     8) roman+="${half}${unit}${unit}${unit}" ;;
-    9) roman+="${unit}${next}" ;;
+    9) roman+="${unit}${full}" ;;
     esac
     number=$((number % value))
+    value=$((value / 10))
   }
 
-  append_literals 1000 "M"
-  append_literals 100 "C" "D" "M"
-  append_literals 10 "X" "L" "C"
-  append_literals 1 "I" "V" "X"
+  append_literals "M"
+  append_literals "C" "D" "M"
+  append_literals "X" "L" "C"
+  append_literals "I" "V" "X"
 
   echo "${roman}"
 }
