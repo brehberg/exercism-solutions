@@ -30,7 +30,5 @@ static class LogLine
     }
 
     public static string OutputForShortLog(LogLevel logLevel, string message)
-    {
-        return $"{(int)logLevel}:{message}";
-    }
+        => $"{(int)logLevel}:{message}";
 }
