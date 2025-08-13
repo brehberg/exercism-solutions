@@ -16,7 +16,7 @@
   (reduce + 0 (subvec birds 0 n)))
 
 (defn busy-days [birds]
-  (count (filter #(<= 5 %) birds)))
+  (count (filter #(>= % 5) birds)))
 
 (def odd-pattern (cycle [1 0]))
 (defn odd-week? [birds]
