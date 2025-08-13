@@ -1,8 +1,9 @@
-static NEIGBOUR_OFFSETS: &'static [(i32, i32)] = &[
+static NEIGBOUR_OFFSETS: &[(i32, i32)] = &[
     (-1, -1),
     (0, -1),
     (1, -1),
     (-1, 0),
+    // (0, 0),
     (1, 0),
     (-1, 1),
     (0, 1),
@@ -27,7 +28,7 @@ pub fn annotate(minefield: &[&str]) -> Vec<String> {
                             .count()
                         {
                             0 => ' ',
-                            n => ('0' as u8 + n as u8) as char,
+                            n => (b'0' + n as u8) as char,
                         }
                     }
                 })
