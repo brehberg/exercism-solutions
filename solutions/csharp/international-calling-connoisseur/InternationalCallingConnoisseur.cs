@@ -33,7 +33,7 @@ public static class DialingCodes
     // Get the country name matching a dialing code
     public static string GetCountryNameFromDictionary(
         Dictionary<int, string> existingDictionary, int countryCode) =>
-            CheckCodeExists(existingDictionary, countryCode) ? existingDictionary[countryCode] : "";
+            existingDictionary.GetValueOrDefault(countryCode, "");
 
     // Check that a country exists in the dictionary
     public static bool CheckCodeExists(Dictionary<int, string> existingDictionary, int countryCode) =>
@@ -62,11 +62,11 @@ public static class DialingCodes
     public static string FindLongestCountryName(Dictionary<int, string> existingDictionary)
     {
         var longestName = "";
-        foreach (KeyValuePair<int, string> country in existingDictionary)
+        foreach (var countryName in existingDictionary.Values)
         {
-            if (country.Value.Length > longestName.Length)
+            if (countryName.Length > longestName.Length)
             {
-                longestName = country.Value;
+                longestName = countryName;
             }
         }
         return longestName;
