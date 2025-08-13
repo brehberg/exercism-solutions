@@ -1,5 +1,4 @@
 export function isLeap(year: number): boolean {
-  const is_divisble = (n: number): boolean => { return year % n == 0 }
-
-  return is_divisble(4) && !is_divisble(100) || is_divisble(400)
+  const isDivisbleBy = (n: number): boolean => { return year % n == 0 }
+  return isDivisbleBy(4) && !isDivisbleBy(100) || isDivisbleBy(400)
 }
