@@ -25,27 +25,27 @@ main() {
   local roman=""
 
   append_literals() {
-    local value="$1"
-    local pattern="$2"
-    while ((number >= value)); do
-      number=$((number - value))
-      roman+="${pattern}"
-    done
+    local -i value="$1"
+    local unit="$2"
+    local half="$3"
+    local next="$4"
+    local -i digit="$((number / value))"
+
+    case "${digit}" in
+    # [digit]) Value ;;
+    [123]) roman+="${unit}" ;;
+    [4]) roman+="${unit}${half}" ;;
+    [5678]) roman+="${half}" ;;
+    [9]) roman+="${unit}${next}" ;;
+    *) echo 0 ;;
+    esac
+    number=$((number % value))
   }
 
   append_literals 1000 "M"
-  append_literals 900 "CM"
-  append_literals 500 "D"
-  append_literals 400 "CD"
-  append_literals 100 "C"
-  append_literals 90 "XC"
-  append_literals 50 "L"
-  append_literals 40 "XL"
-  append_literals 10 "X"
-  append_literals 9 "IX"
-  append_literals 5 "V"
-  append_literals 4 "IV"
-  append_literals 1 "I"
+  append_literals 100 "C" "D" "M"
+  append_literals 10 "X" "L" "C"
+  append_literals 1 "I" "V" "X"
 
   echo "${roman}"
 }
