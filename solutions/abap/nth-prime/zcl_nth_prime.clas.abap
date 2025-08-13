@@ -67,11 +67,11 @@ CLASS zcl_nth_prime IMPLEMENTATION.
     DATA(next) = list[ 1 ].
     DATA(remaining) = VALUE integers( ( LINES OF list FROM 2 ) ).
 
-    " remove all odd multiples of next prime starting from that prime squared
-    TYPES sorted_integers TYPE SORTED TABLE OF i WITH UNIQUE KEY table_line.
-    DATA(multiples) = VALUE sorted_integers( LET limit = list[ lines( list ) ] IN
-      FOR i = next * next THEN i + next * 2 WHILE i < limit ( i ) ).
-    remaining = FILTER #( remaining EXCEPT IN multiples WHERE table_line = table_line ).
+    " remove all multiples of next prime from the remaining candidates
+    LOOP AT remaining INTO DATA(value).
+      CHECK value MOD next = 0.
+      DELETE remaining.
+    ENDLOOP.
 
     result = sieve( list = remaining primes = VALUE #( BASE primes ( next ) ) ).
   ENDMETHOD.
