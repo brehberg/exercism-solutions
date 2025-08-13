@@ -4,18 +4,21 @@ class Bob
 
   def self.hey(message)
     # Bob returns a string that only ever answers one of five things.
-    return SILENCE_REPLY if message.is_silence?
-    return YELLING_QUESTION_REPLY if message.is_yelling_question?
-    return YELLING_REPLY if message.is_yelling?
-    return QUESTION_REPLY if message.is_question?
-    return DEFAULT_REPLY
+    return REPLY[:silence] if message.is_silence?
+    return REPLY[:yelling_question] if message.is_yelling_question?
+    return REPLY[:yelling] if message.is_yelling?
+    return REPLY[:question] if message.is_question?
+    return REPLY[:default]
   end
 
-  DEFAULT_REPLY = "Whatever."
-  QUESTION_REPLY = "Sure."
-  YELLING_REPLY = "Whoa, chill out!"
-  YELLING_QUESTION_REPLY = "Calm down, I know what I'm doing!"
-  SILENCE_REPLY = "Fine. Be that way!"
+  REPLY = {
+    default: "Whatever.",
+    question: "Sure.",
+    yelling: "Whoa, chill out!",
+    yelling_question: "Calm down, I know what I'm doing!",
+    silence: "Fine. Be that way!",
+  }
+  private_constant :REPLY
 end
 
 class String
