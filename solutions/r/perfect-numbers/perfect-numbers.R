@@ -9,28 +9,13 @@ number_type <- function(n) {
     if (n < 1) {
         stop("Classification is only possible for natural numbers.")
     }
-    factors <- c()
-    possible <- 1
-    done <- n
-
-    while (possible < done - 1) {
-        if (n %% possible == 0) {
-            done <- n / possible
-            if (possible == done || done == n) {
-                factors <- append(factors, possible)
-            } else {
-                factors <- append(factors, c(possible, done))
-            }
-        }
-        possible <- possible + 1
+    if (n == 1) {
+        return("deficient")
     }
-    aliquot_sum <- sum(factors)
+    possible <- 1:(n - 1)
+    aliquot_sum <- sum(possible[n %% possible == 0])
 
-    if (aliquot_sum > n) {
-        "abundant"
-    } else if (aliquot_sum < n) {
-        "deficient"
-    } else {
-        "perfect"
-    }
+    ifelse(aliquot_sum > n, "abundant",
+        ifelse(aliquot_sum < n, "deficient", "perfect")
+    )
 }
