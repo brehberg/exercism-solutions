@@ -7,28 +7,14 @@
  * @return {string} ciphertext
  */
 export const encode = (input) => {
-  let result = "";
-  if (!input) return result;
-
-  const encode_pairs = (/** @type {number} */ n, /** @type {string} */ c) => {
-    return n === 1 ? c : String(n) + c;
+  const encode_pairs = (
+    /** @type {string} */ match,
+    /** @type {string} */ p1
+  ) => {
+    return `${match.length}${p1}`;
   };
 
-  let prev = input[0];
-  let count = 1;
-
-  for (let i = 1; i < input.length; i++) {
-    const char = input[i];
-    if (char === prev) {
-      count += 1;
-      continue;
-    }
-    result += encode_pairs(count, prev);
-    prev = char;
-    count = 1;
-  }
-
-  return result + encode_pairs(count, prev);
+  return input.replace(/(.)\1+/g, encode_pairs);
 };
 
 /**
@@ -38,15 +24,13 @@ export const encode = (input) => {
  * @return {string} plaintext
  */
 export const decode = (input) => {
-  let result = "";
-  if (!input) return result;
+  const decode_groups = (
+    /** @type {string} */ _match,
+    /** @type {number} */ p1,
+    /** @type {string} */ p2
+  ) => {
+    return p2.repeat(p1);
+  };
 
-  const groups = input.match(/\d*./g) || [];
-  for (const group of groups) {
-    const offset = group.length - 1;
-    const count = !offset ? 1 : Number(group.slice(0, offset));
-    result += group.slice(offset).repeat(count);
-  }
-
-  return result;
+  return input.replace(/(\d+)(.)/g, decode_groups);
 };
