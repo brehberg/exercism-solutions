@@ -4,26 +4,21 @@ namespace binary_search
 {
     using namespace std;
 
-    size_t find(const vector<int> list, const int key)
+    size_t find(const vector<int> &list, const int key)
     {
-        int low = 0;
-        int high = list.size() - 1;
+        int low = 0, high = list.size() - 1;
 
         while (low <= high)
         {
-            int mid = (low + high) / 2;
-            if (list[mid] > key)
-            {
+            size_t mid = low + (high - low) / 2;
+            int value = list[mid];
+
+            if (value > key)
                 high = mid - 1;
-            }
-            else if (list[mid] < key)
-            {
+            else if (value < key)
                 low = mid + 1;
-            }
             else
-            {
                 return mid;
-            }
         }
         throw domain_error("not found");
     }
