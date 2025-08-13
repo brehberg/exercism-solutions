@@ -17,11 +17,11 @@ main() {
     local -i shiftkey="$2"
 
     rotate_char() {
-        local -i start in out
+        local -i start input output
         start=$(printf "%d" "'$1")
-        in=$(printf "%d" "'$2")
-        out=$((start + ((in + shiftkey - start) % 26)))
-        printf %b "\x$(printf %x ${out})"
+        input=$(printf "%d" "'$2")
+        output=$((start + ((input + shiftkey - start) % 26)))
+        printf %b "\x$(printf %x ${output})"
     }
 
     local ciphertext=""
