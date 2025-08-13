@@ -1,8 +1,17 @@
 #!/usr/bin/env bash
 
-if ! [[ $# == 1 ]]; then
-  echo "Usage: error_handling.sh <person>"
-  exit 1
-fi
+validate_arguments() {
+  if ! [[ $# == 1 ]]; then
+    echo "Usage: ${0##*/} <person>"
+    exit 1
+  fi
+}
 
-echo "Hello, $1"
+main() {
+  validate_arguments "$@"
+
+  local name="$1"
+  echo "Hello, $name"
+}
+
+main "$@"
