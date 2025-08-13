@@ -1,7 +1,7 @@
-function triangle(n)
-    if n < 0
-        throw(DomainError(n, "n cannot be negative"))
-    end
+function triangle(n:Int)
+    n < 0 && throw(DomainError(n, "n cannot be negative"))
+    n == 0 && return []
+
     result = []
     i = 0
     while i <= (n - 1)
