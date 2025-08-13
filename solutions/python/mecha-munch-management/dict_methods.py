@@ -54,10 +54,10 @@ def send_to_store(cart, aisle_mapping):
     :return: dict - fulfillment dictionary ready to send to store.
     """
 
-    fulfillment_cart = {}
-    for item, qty in reversed(sorted(cart.items())):
-        fulfillment_cart[item] = [qty] + aisle_mapping[item]
-    return fulfillment_cart
+    return {
+        item: [qty, *aisle_mapping[item]]
+        for item, qty in reversed(sorted(cart.items()))
+    }
 
 
 def update_store_inventory(fulfillment_cart, store_inventory):
@@ -68,9 +68,9 @@ def update_store_inventory(fulfillment_cart, store_inventory):
     :return: dict - store_inventory updated.
     """
 
-    for item, [item_qty, _, _] in fulfillment_cart.items():
-        store_qty = store_inventory[item][0]
+    for item, [item_qty, *_] in fulfillment_cart.items():
+        [store_qty, *_] = store_inventory[item]
         store_inventory[item][0] = (
-            "Out of Stock" if item_qty >= store_qty else store_qty - item_qty
+            "Out of Stock" if (qty := store_qty - item_qty) <= 0 else qty
         )
     return store_inventory
