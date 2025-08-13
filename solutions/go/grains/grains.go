@@ -8,16 +8,16 @@ import "errors"
 var ErrInvalidNumber = errors.New("square must be between 1 and 64 (inclusive)")
 
 // Square returns how many grains were on a given square
-func Square(number int) (uint64, error) {
+func Square(number int) (start uint64, e error) {
 	if number < 1 || number > 64 {
-		return 0, ErrInvalidNumber
+		e = ErrInvalidNumber
+		return
 	}
-	start := uint64(1)
+	start = 1
 	return start << (number - 1), nil
 }
 
-// Returns the total number of grains on the chessboard
-func Total() uint64 {
-	var total uint64
+// Total returns the total number of grains on the chessboard
+func Total() (total uint64) {
 	return total - 1
 }
