@@ -35,46 +35,33 @@ sortByCoolness cards =
 
 compareCoolFactor : Card -> Card -> Order
 compareCoolFactor card1 card2 =
-    if card1.shiny then
-        if card2.shiny then
-            compare card2.power card1.power
-
-        else
+    case ( card1.shiny, card2.shiny ) of
+        ( True, False ) ->
             LT
 
-    else if card2.shiny then
-        GT
+        ( False, True ) ->
+            GT
 
-    else if isMorePowerful card1 card2 then
-        LT
-
-    else if isMorePowerful card2 card1 then
-        GT
-
-    else
-        EQ
+        _ ->
+            compare card2.power card1.power
 
 
 compareShinyPower : Card -> Card -> Order
 compareShinyPower card1 card2 =
-    if isMorePowerful card1 card2 then
-        GT
+    case compare card1.power card2.power of
+        EQ ->
+            case ( card1.shiny, card2.shiny ) of
+                ( True, False ) ->
+                    GT
 
-    else if isMorePowerful card2 card1 then
-        LT
+                ( False, True ) ->
+                    LT
 
-    else if card1.shiny then
-        if card2.shiny then
-            EQ
+                _ ->
+                    EQ
 
-        else
-            GT
-
-    else if card2.shiny then
-        LT
-
-    else
-        EQ
+        byPower ->
+            byPower
 
 
 expectedWinner : Card -> Card -> String
