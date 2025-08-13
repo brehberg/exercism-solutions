@@ -18,18 +18,20 @@ local function modifier(input)
   return math.floor((input - 10) / 2)
 end
 
+local abilities = {
+  "strength", "dexterity", "constitution", 
+  "intelligence", "wisdom", "charisma"
+}
+
 function Character:new(name)
-  local con_score = ability(roll_dice())
-  return {
-    name = name,
-    strength = ability(roll_dice()),
-    dexterity = ability(roll_dice()),
-    constitution = con_score,
-    intelligence = ability(roll_dice()),
-    wisdom = ability(roll_dice()),
-    charisma = ability(roll_dice()),
-    hitpoints = 10 + modifier(con_score)
-  }
+  local newObj = { name = name }    
+  for _, a in ipairs(abilities) do
+    newObj[a] = ability(roll_dice())
+  end
+  newObj.hitpoints = 10 + modifier(newObj.constitution)
+
+  self.__index = self
+  return setmetatable(newObj, self)
 end
 
 return {
