@@ -9,20 +9,15 @@ public class DndCharacter
     public int Intelligence { get; } = Ability();
     public int Wisdom { get; } = Ability();
     public int Charisma { get; } = Ability();
-    public int Hitpoints { get; }
+    public int Hitpoints => 10 + Modifier(Constitution);
 
-    private static Random rng = new Random();
+    private static readonly Random rng = new Random();
 
-    private DndCharacter()
-    {
-        Hitpoints = 10 + Modifier(Constitution);
-    }
-
-    public static int Ability()
-    {
-        var rolls = Enumerable.Repeat(0, 4).Select(_ => rng.Next(1, 7)).ToArray();
-        return rolls.Sum() - rolls.Min();
-    }
+    public static int Ability() => Enumerable.Repeat(0, 4)
+                                             .Select(_ => rng.Next(1, 7))
+                                             .OrderByDescending(d => d)
+                                             .Take(3)
+                                             .Sum();
 
     public static int Modifier(int score) => score / 2 - 5;
 
