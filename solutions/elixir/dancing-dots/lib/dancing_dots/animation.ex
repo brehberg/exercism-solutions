@@ -13,6 +13,7 @@ defmodule DancingDots.Animation do
       @behaviour DancingDots.Animation
 
       @doc "Provide a default implementation of the init/1 callback"
+      @impl DancingDots.Animation
       def init(opts), do: {:ok, opts}
       defoverridable init: 1
     end
