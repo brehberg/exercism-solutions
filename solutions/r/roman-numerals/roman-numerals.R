@@ -1,5 +1,7 @@
-# raindrops returns a string that contains sounds corresponding to factors.
+# Given a number, convert it into a roman numeral.
 roman <- function(arabic) {
+  stopifnot(arabic >= 1 && arabic <= 3999)
+
   literals <- c(
     M = 1000, CM = 900,
     D = 500, CD = 400,
@@ -12,11 +14,11 @@ roman <- function(arabic) {
 
   roman <- c()
   for (label in names(literals)) {
-    while (arabic >= literals[label]) {
+    value <- literals[label]
+    while (arabic >= value) {
       roman <- append(roman, label)
-      arabic <- arabic - literals[label]
+      arabic <- arabic - value
     }
   }
-
   paste(roman, collapse = "")
 }
