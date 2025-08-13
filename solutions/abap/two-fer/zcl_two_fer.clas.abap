@@ -10,12 +10,10 @@ ENDCLASS.
 CLASS zcl_two_fer IMPLEMENTATION.
 
   METHOD two_fer.
-    DATA name TYPE string VALUE 'you'.
-    IF input IS NOT INITIAL.
-      name = input.
-    ENDIF.
+    DATA(name) = COND string(
+      WHEN input IS INITIAL
+      THEN 'you' ELSE input ).
     result = |One for { name }, one for me.|.
-
   ENDMETHOD.
 
 ENDCLASS.
