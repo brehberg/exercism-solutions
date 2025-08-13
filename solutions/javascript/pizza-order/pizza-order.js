@@ -11,6 +11,9 @@
  * @returns {number} the price of the pizza
  */
 export function pizzaPrice(pizza, ...extras) {
+  /**
+   * @type {Record<Pizza|Extra, number>}
+   */
   const PRICE = {
     Margherita: 7,
     Caprese: 9,
@@ -21,15 +24,15 @@ export function pizzaPrice(pizza, ...extras) {
 
   /**
    * @param {number} total price of the pizza
-   * @param {Extra[]} remaining extras to add
+   * @param {Extra[]} remaining list of extras
    *
    * @returns {number} the price of the pizza
    */
-  function determinePrice(total, remaining) {
-    const [extra, ...rest] = remaining;
-    return extra ? determinePrice(total + PRICE[extra], rest) : total;
+  function determinePrice(total, ...[extra, ...rest]) {
+    return !extra ? total : determinePrice(total + PRICE[extra], ...rest);
   }
-  return determinePrice(PRICE[pizza], extras);
+
+  return determinePrice(PRICE[pizza], ...extras);
 }
 
 /**
