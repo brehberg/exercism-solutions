@@ -18,17 +18,13 @@ static class SavingsAccount
         }
     }
 
-    public static decimal Interest(decimal balance)
-    {
+    public static decimal Interest(decimal balance) =>
         // Calculate the interest
-        return balance * (decimal)(InterestRate(balance) / 100);
-    }
+        balance * (decimal)(InterestRate(balance) / 100);
 
-    public static decimal AnnualBalanceUpdate(decimal balance)
-    {
+    public static decimal AnnualBalanceUpdate(decimal balance) =>
         // Calculate the annual balance update
-        return balance + Interest(balance);
-    }
+        balance + Interest(balance);
 
     public static int YearsBeforeDesiredBalance(decimal balance, decimal targetBalance)
     {
