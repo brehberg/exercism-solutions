@@ -4,24 +4,26 @@
 // And he definitely doesn't get excited about things. That wouldn't be cool.
 
 // Bob returns a string that only ever answers one of five things.
-const defaultReply = "Whatever.";
-const questionReply = "Sure.";
-const yellingReply = "Whoa, chill out!";
-const yellingQuestionReply = "Calm down, I know what I'm doing!";
-const silenceReply = "Fine. Be that way!";
+const reply = {
+  default: "Whatever.",
+  question: "Sure.",
+  yelling: "Whoa, chill out!",
+  yellingQuestion: "Calm down, I know what I'm doing!",
+  silence: "Fine. Be that way!",
+};
 
 export const hey = (/** @type {string} */ message) => {
-  const isSilence = message?.match(/\S/) === null;
-  if (isSilence) return silenceReply;
+  const isSilence = !/\S/.test(message);
+  if (isSilence) return reply.silence;
 
-  const isYelling = message.match(/[A-Z]/) && !message.match(/[a-z]/);
-  const isQuestion = message.match(/\?\s*$/) !== null;
+  const isYelling = /[A-Z]/.test(message) && !/[a-z]/.test(message);
+  const isQuestion = /\?\s*$/.test(message);
 
   return isYelling && isQuestion
-    ? yellingQuestionReply
+    ? reply.yellingQuestion
     : isYelling
-    ? yellingReply
+    ? reply.yelling
     : isQuestion
-    ? questionReply
-    : defaultReply;
+    ? reply.question
+    : reply.default;
 };
