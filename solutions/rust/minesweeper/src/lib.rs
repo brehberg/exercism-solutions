@@ -1,4 +1,4 @@
-static NEIGBOUR_OFFSETS: &[(i32, i32)] = &[
+static NEIGHBORS: &[(i32, i32)] = &[
     (-1, -1),
     (0, -1),
     (1, -1),
@@ -13,18 +13,18 @@ static NEIGBOUR_OFFSETS: &[(i32, i32)] = &[
 pub fn annotate(minefield: &[&str]) -> Vec<String> {
     let rows = minefield.len() as i32;
     (0..rows)
-        .map(|y| {
-            let cols = minefield[y as usize].len() as i32;
+        .map(|r| {
+            let cols = minefield[r as usize].len() as i32;
             (0..cols)
-                .map(|x| {
-                    if minefield[y as usize].as_bytes()[x as usize] == b'*' {
+                .map(|c| {
+                    if minefield[r as usize].as_bytes()[c as usize] == b'*' {
                         '*'
                     } else {
-                        match NEIGBOUR_OFFSETS
+                        match NEIGHBORS
                             .iter()
-                            .map(|&(dx, dy)| (x + dx, y + dy))
-                            .filter(|&(x, y)| (0 <= x && x < cols) && (0 <= y && y < rows))
-                            .filter(|&(x, y)| minefield[y as usize].as_bytes()[x as usize] == b'*')
+                            .map(|&(row_offset, col_offset)| (r + row_offset, c + col_offset))
+                            .filter(|&(r, c)| (0 <= r && r < rows) && (0 <= c && c < cols))
+                            .filter(|&(r, c)| minefield[r as usize].as_bytes()[c as usize] == b'*')
                             .count()
                         {
                             0 => ' ',
