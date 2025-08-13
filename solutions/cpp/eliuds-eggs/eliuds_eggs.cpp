@@ -7,8 +7,8 @@ namespace chicken_coop
         unsigned int count{0};
         while (encoded)
         {
-            count += encoded & 1;
-            encoded >>= 1;
+            encoded &= (encoded - 1);
+            count++;
         }
         return count;
     }
