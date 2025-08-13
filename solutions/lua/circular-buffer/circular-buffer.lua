@@ -1,17 +1,10 @@
-local CircularBuffer = {}
-CircularBuffer.__index = CircularBuffer
+local CircularBuffer = {capacity = 0, values = {}}
 
 function CircularBuffer:new(size)
-    local self =
-        setmetatable(
-        {
-            capacity = size,
-            values = {}
-        },
-        CircularBuffer
-    )
+    local newObj = {capacity = size or 0}
+    self.__index = self
     self:clear()
-    return self
+    return setmetatable(newObj, self)
 end
 
 function CircularBuffer:read()
