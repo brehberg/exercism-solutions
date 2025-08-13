@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 public enum YachtCategory
@@ -43,29 +44,24 @@ public static class YachtGame
 
     private static int checkFourOfAKind(int[] dice)
     {
-        var groupOfMostDice = dice.GroupBy(die => die).OrderByDescending(g => g.Count()).First();
-        return groupOfMostDice.Count() < 4 ? 0 : groupOfMostDice.Key * 4;
+        var groupOfMostDice = dice.GroupBy(die => die).largestGroup();
+        return groupOfMostDice.Count() >= 4 ? groupOfMostDice.Key * 4 : 0;
     }
 
     private static int checkFullHouse(int[] dice)
     {
         var groupsOfDice = dice.GroupBy(die => die);
         if (groupsOfDice.Count() != 2) return 0;
-        var groupOfMostDice = groupsOfDice.OrderByDescending(g => g.Count()).First();
-        return groupOfMostDice.Count() == 3 ? dice.Sum() : 0;
+        return groupsOfDice.largestGroup().Count() == 3 ? dice.Sum() : 0;
     }
 
-    private static int checkStraight(int[] dice, int start)
-    {
-        Array.Sort(dice);
-        foreach (var die in dice)
-        {
-            if (die != start++) return 0;
-        }
-        return 30; // a straight is worth 30 points if all required dice values are present
-    }
+    private static int checkStraight(int[] dice, int start) =>
+        dice.OrderBy(die => die).SequenceEqual(Enumerable.Range(start, 5)) ? 30 : 0;
 
     private static int sumForValue(int[] dice, int value) =>
         dice.Where(die => die == value).Sum();
+
+    private static IGrouping<T, T> largestGroup<T>(this IEnumerable<IGrouping<T, T>> groups) =>
+        groups.OrderByDescending(g => g.Count()).First();
 }
 
