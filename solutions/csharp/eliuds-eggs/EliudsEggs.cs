@@ -6,7 +6,7 @@ public static class EliudsEggs
         while (encodedCount > 0)
         {
             count += encodedCount & 1;
-            encodedCount = encodedCount >>> 1;
+            encodedCount >>>= 1;
         }
         return count;
     }
