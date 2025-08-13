@@ -10,10 +10,10 @@ class Minesweeper
     end
   end
 
-  private def mine_count(r, c)
-    ([r - 1, 0].max..[r + 1, @minefield.size - 1].min).sum do |r|
-      ([c - 1, 0].max..[c + 1, @minefield[0].size - 1].min).count do |c|
-        @minefield[r][c] == '*'
+  private def mine_count(row, col)
+    ([row - 1, 0].max..[row + 1, @minefield.size - 1].min).sum do |row|
+      ([col - 1, 0].max..[col + 1, @minefield[0].size - 1].min).count do |col|
+        @minefield[row][col] == '*'
       end
     end.to_s.tr("0", " ")
   end
