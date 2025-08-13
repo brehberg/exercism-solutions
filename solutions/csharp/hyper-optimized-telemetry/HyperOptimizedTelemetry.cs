@@ -41,6 +41,9 @@ public static class TelemetryBuffer
 
     public static long FromBuffer(byte[] buffer)
     {
+        if (buffer.Length < 9)
+            throw new ArgumentException("unexpected buffer length");
+
         return buffer[0] switch
         {
             bufferTypeInt16 => BitConverter.ToInt16(buffer, 1),
