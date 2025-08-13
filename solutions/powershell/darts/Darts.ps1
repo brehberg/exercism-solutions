@@ -22,13 +22,15 @@ Function Invoke-Darts() {
         [Double]$X,
         [Double]$Y
     )    
-    [int] $points = 0
+    $Values = [ordered]@{
+        1  = 10; # inner circle
+        5  = 5; # middle circle
+        10 = 1; # outer circle
+    }
     [double] $dist = [Math]::Sqrt($X * $X + $Y * $Y)
-    switch ($dist) {
-        { $_ -le 1 } { $points = 10; Break }
-        { $_ -le 5 } { $points = 5; Break }
-        { $_ -le 10 } { $points = 1; Break }
-        Default { $points = 0 }
+    [int] $points = 0
+    foreach ($ring in $Values.keys) {
+        if ($dist -le $ring) { $points = $Values.$ring; Break }
     }
     return $points
 }
