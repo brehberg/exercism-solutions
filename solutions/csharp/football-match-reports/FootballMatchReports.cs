@@ -16,8 +16,8 @@ public static class PlayAnalyzer
             10 => "striker",
             11 => "right wing",
 
-            // Raise an alert if an unknown shirt number is encountered
-            _ => throw new ArgumentOutOfRangeException($"Unknown shirt number {shirtNum}"),
+            // Handle unknown shirt numbers
+            _ => "UNKNOWN",
         };
     }
 
@@ -36,7 +36,7 @@ public static class PlayAnalyzer
             // Report on club managers
             Manager { Club: null } manager => $"{manager.Name}",
             Manager manager => $"{manager.Name} ({manager.Club})",
-            _ => throw new ArgumentException(),
+            _ => "",
         };
     }
 }
