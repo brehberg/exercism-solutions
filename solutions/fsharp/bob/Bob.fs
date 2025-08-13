@@ -1,5 +1,7 @@
 module Bob
 
+open System
+
 let response (input: string): string = 
     let defaultReply = "Whatever."
     let questionReply = "Sure."
@@ -11,15 +13,15 @@ let response (input: string): string =
         input = input.ToUpper() && input <> input.ToLower()
 
     let isQuestion(): bool =
-        input.TrimEnd() |> Seq.last = '?'
+        input.TrimEnd().EndsWith('?')
     
     let isSilence(): bool =
-        input.Trim() = ""
+        String.IsNullOrWhiteSpace(input)
 
     if isSilence() then 
         silenceReply
     else match isShouting(), isQuestion() with
             | (true, true) -> shoutingQuestionReply
-            | (true, false) -> shoutingReply
-            | (false, true) -> questionReply
+            | (true, _) -> shoutingReply
+            | (_, true) -> questionReply
             | _ -> defaultReply
