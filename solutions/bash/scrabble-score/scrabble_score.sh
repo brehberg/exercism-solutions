@@ -14,23 +14,22 @@ main() {
   validate_arguments "$@" || exit 1
 
   parse_word() {
-    local word="$1"
-    word=$(echo "${word}" | tr '[:lower:]' '[:upper:]')
-    echo "${word}" | grep -o .
+    local word="${1^^}"        # uppercase input
+    echo "${word}" | grep -o . # split letters
   }
 
   score_letter() {
     local letter="$1"
 
     case "${letter}" in
-      # Letter)                              Value ;;
-      A | E | I | O | U | L | N | R | S | T) echo 1 ;;
-      D | G) echo 2 ;;
-      B | C | M | P) echo 3 ;;
-      F | H | V | W | Y) echo 4 ;;
-      K) echo 5 ;;
-      J | X) echo 8 ;;
-      Q | Z) echo 10 ;;
+      # Letter)     Value ;;
+      [AEIOULNRST]) echo 1 ;;
+      [DG]) echo 2 ;;
+      [BCMP]) echo 3 ;;
+      [FHVWY]) echo 4 ;;
+      [K]) echo 5 ;;
+      [JX]) echo 8 ;;
+      [QZ]) echo 10 ;;
       *) echo 0 ;;
     esac
   }
