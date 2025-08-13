@@ -10,7 +10,7 @@ namespace sieve
         vector<int> primes;
         vector<bool> list(limit + 1);
 
-        for (int i = 2; i < limit; i++)
+        for (int i = 2; i <= limit; i++)
         {
             if (!list[i])
             {
