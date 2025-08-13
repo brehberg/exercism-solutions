@@ -42,13 +42,16 @@ defmodule TakeANumberDeluxe do
     end
   end
 
-  @doc "Report machine state"
+  @doc """
+  Report machine state
+  Queue new numbers
+  Serve next queued number
+  """
   @impl GenServer
   def handle_call(:report_state, _from, state) do
     {:reply, state, state, state.auto_shutdown_timeout}
   end
 
-  @doc "Queue new numbers"
   @impl GenServer
   def handle_call(:queue_number, _from, state) do
     case TANDState.queue_new_number(state) do
@@ -57,7 +60,6 @@ defmodule TakeANumberDeluxe do
     end
   end
 
-  @doc "Serve next queued number"
   @impl GenServer
   def handle_call({:serve_next, priority}, _from, state) do
     case TANDState.serve_next_queued_number(state, priority) do
