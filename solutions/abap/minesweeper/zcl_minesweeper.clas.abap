@@ -32,7 +32,7 @@ CLASS zcl_minesweeper IMPLEMENTATION.
     result = VALUE #(
       FOR line IN input INDEX INTO row
       " build output string for each row by checking every column
-      ( REDUCE #( INIT out TYPE string
+      ( REDUCE #( INIT out = ``
           FOR col = 0 WHILE col < strlen( line )
           NEXT out = out && COND #(
             WHEN line+col(1) = bomb THEN bomb
