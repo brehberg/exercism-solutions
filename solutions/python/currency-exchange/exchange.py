@@ -1,3 +1,6 @@
+"""Functions for a currency calculator to help at currency exchanges."""
+
+
 def exchange_money(budget, exchange_rate):
     """
     :param budget: float - amount of money you are planning to exchange.
@@ -52,4 +55,5 @@ def exchangeable_value(budget, exchange_rate, spread, denomination):
     :return: int - maximum value you can get.
     """
     actual_rate = exchange_rate + exchange_rate * (spread / 100.0)
-    return get_number_of_bills(exchange_money(budget, actual_rate), denomination) * denomination
+    actual_money = exchange_money(budget, actual_rate)
+    return get_number_of_bills(actual_money, denomination) * denomination
