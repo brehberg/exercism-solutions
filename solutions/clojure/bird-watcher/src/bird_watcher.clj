@@ -18,6 +18,6 @@
 (defn busy-days [birds]
   (count (filter #(<= 5 %) birds)))
 
-(def odd-pattern [1 0 1 0 1 0 1])
+(def odd-pattern (cycle [1 0]))
 (defn odd-week? [birds]
   (= birds odd-pattern))
