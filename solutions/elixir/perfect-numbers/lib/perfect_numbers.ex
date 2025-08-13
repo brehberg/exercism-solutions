@@ -13,14 +13,14 @@ defmodule PerfectNumbers do
   def classify(number) when number < 1,
     do: {:error, "Classification is only possible for natural numbers."}
 
-  def classify(number),
-    do: number |> aliquot_sum({1, number}, []) |> classify(number)
+  def classify(number)
+    do: number |> aliquot_sum({1, number}, []) |> classifier(number)
 
   @doc false
-  @spec classify(sum :: integer, number :: integer) :: {:ok, atom}
-  defp classify(sum, n) when sum == n, do: {:ok, :perfect}
-  defp classify(sum, n) when sum > n, do: {:ok, :abundant}
-  defp classify(sum, n) when sum < n, do: {:ok, :deficient}
+  @spec classifier(sum :: integer, number :: integer) :: {:ok, atom}
+  defp classifier(sum, n) when sum == n, do: {:ok, :perfect}
+  defp classifier(sum, n) when sum > n, do: {:ok, :abundant}
+  defp classifier(sum, n) when sum < n, do: {:ok, :deficient}
 
   @doc false
   @spec aliquot_sum(integer, {integer, integer}, []) :: integer
