@@ -32,23 +32,15 @@ defmodule SimpleCipher do
   """
   @spec encode(text :: String.t(), key :: String.t()) :: String.t()
   def encode(plaintext, key) do
-    offsets = compute_offsets(plaintext, key)
+    offsets = compute_offsets(key, String.length(plaintext))
     plaintext |> apply_shift(offsets, &shift/1)
   end
 
-  @spec shift({char, integer}) :: String.t()
-  defp shift({value, offset}) do
-    case value + offset > ?z do
-      true -> [value + offset - 26]
-      false -> [value + offset]
-    end
-  end
-
-  @spec compute_offsets(String.t(), String.t()) :: [integer]
-  defp compute_offsets(text, key) do
-    String.length(text)
-    |> generate_key(key)
-    |> String.to_charlist()
+  @spec compute_offsets(String.t(), integer) :: [integer]
+  defp compute_offsets(key, length) do
+    String.to_charlist(key)
+    |> Stream.cycle()
+    |> Enum.take(length)
     |> Enum.map(&(&1 - ?a))
   end
 
@@ -57,6 +49,14 @@ defmodule SimpleCipher do
     String.to_charlist(text)
     |> Enum.zip(offsets)
     |> Enum.map_join(&fun.(&1))
+  end
+
+  @spec shift({char, integer}) :: String.t()
+  defp shift({value, offset}) do
+    case value + offset > ?z do
+      true -> [value + offset - 26]
+      false -> [value + offset]
+    end
   end
 
   @doc """
@@ -71,7 +71,7 @@ defmodule SimpleCipher do
   """
   @spec decode(text :: String.t(), key :: String.t()) :: String.t()
   def decode(ciphertext, key) do
-    offsets = compute_offsets(ciphertext, key)
+    offsets = compute_offsets(key, String.length(ciphertext))
     ciphertext |> apply_shift(offsets, &unshift/1)
   end
 
@@ -86,14 +86,8 @@ defmodule SimpleCipher do
   @doc """
   Generate a random key of a given length. It should contain lowercase letters only.
   """
-  @spec generate_key(integer, String.t()) :: String.t()
-  def generate_key(length, fragment \\ "")
-
-  def generate_key(length, "") do
+  @spec generate_key(integer) :: String.t()
+  def generate_key(length) do
     for _ <- 1..length, into: "", do: <<Enum.random(?a..?z)>>
-  end
-
-  def generate_key(length, part) do
-    String.duplicate(part, div(length, String.length(part)) + 1)
   end
 end
