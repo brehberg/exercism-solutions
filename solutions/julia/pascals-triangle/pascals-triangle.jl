@@ -1,16 +1,9 @@
-function triangle(n:Int)
+function triangle(n::Int)
     n < 0 && throw(DomainError(n, "n cannot be negative"))
-    n == 0 && return []
 
-    result = []
-    i = 0
-    while i <= (n - 1)
-        row = Int[]
-        for j = 0:i
-            push!(row, binomial(i, j))
-        end
-        push!(result, row)
-        i += 1
+    function generate_row(i::Int)
+        return [binomial(i, j) for j in 0:i]
     end
-    result
+
+    return [generate_row(i) for i in 0:n-1]
 end
