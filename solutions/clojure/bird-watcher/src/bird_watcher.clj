@@ -19,4 +19,4 @@
   (count (filter #(>= % 5) birds)))
 
 (defn odd-week? [birds]
-  (= birds (cycle [1 0])))
+  (= birds (take (count birds) (cycle [1 0]))))
