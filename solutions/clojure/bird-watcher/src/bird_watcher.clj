@@ -4,7 +4,7 @@
   [0 2 5 3 7 8 4])
 
 (defn today [birds]
-  (peek birds))
+  (last birds))
 
 (defn inc-bird [birds]
   (conj (pop birds) (inc (today birds))))
