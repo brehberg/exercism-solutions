@@ -27,6 +27,10 @@ class NeedForSpeed {
         }
     }
 
+    public int maximumDriveDistance() {
+        return speed * (int) Math.floor(batteryLevel / batteryDrain);
+    }
+
     public static NeedForSpeed nitro() {
         return new NeedForSpeed(50, 4);
     }
@@ -40,9 +44,6 @@ class RaceTrack {
     }
 
     public boolean canFinishRace(NeedForSpeed car) {
-        while (!car.batteryDrained()) {
-            car.drive();
-        }
-        return car.distanceDriven() >= distance;
+        return car.maximumDriveDistance() >= distance;
     }
 }
