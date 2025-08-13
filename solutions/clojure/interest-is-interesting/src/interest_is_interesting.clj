@@ -6,11 +6,9 @@
         (< balance 5000) 1.621
         :else 2.475))
 
-(defn absolute-value [n] (max n (- n)))
-
 (defn calc-percent-value [percentage value]
   (-> percentage
-      absolute-value
+      abs
       (/ 100.0)
       bigdec
       (* value)))
@@ -26,4 +24,4 @@
       (-> tax-free-percentage
           (calc-percent-value balance)
           (* 2.0)
-          (int))))
+          int)))
