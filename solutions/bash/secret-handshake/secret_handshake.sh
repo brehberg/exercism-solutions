@@ -18,12 +18,13 @@ main() {
     local -a handshake
 
     reverse_handshake() {
-        local -i length=${#handshake[@]}
+        local -i i j
+        local temp
 
-        for ((i = 0; i < length / 2; ++i)); do
-            local temp="${handshake[i]}"
-            handshake[i]="${handshake[length - i - 1]}"
-            handshake[length - i - 1]="${temp}"
+        for ((i = 0, j = ${#handshake[@]} - 1; i < j; i++, j--)); do
+            temp="${handshake[i]}"
+            handshake[i]="${handshake[j]}"
+            handshake[j]="${temp}"
         done
     }
 
@@ -32,11 +33,7 @@ main() {
         local action=$2
 
         if ((code & mask)); then
-            if [[ $action == reverse ]]; then
-                reverse_handshake
-            else
-                handshake+=("${action}")
-            fi
+            [[ $action == reverse ]] && reverse_handshake || handshake+=("${action}")
         fi
     }
 
@@ -46,10 +43,8 @@ main() {
     secret 0x08 "jump"
     secret 0x10 "reverse"
 
-    echo "$(
-        IFS=,
-        echo "${handshake[*]}"
-    )"
+    local IFS=,
+    echo "${handshake[*]}"
 }
 
 main "$@"
