@@ -1,17 +1,11 @@
 % Return the value of a color band
-color_code("black", 0).
-color_code("brown", 1).
-color_code("red", 2).
-color_code("orange", 3).
-color_code("yellow", 4).
-color_code("green", 5).
-color_code("blue", 6).
-color_code("violet", 7).
-color_code("grey", 8).
-color_code("white", 9).
+color_code(Color, Code) :-
+    colors(Colors),
+    nth0(Code, Colors, Color), !.
 
 % Better Be Right Or Your Great Big Values Go Wrong
-colors([
-    "black", "brown", "red", "orange", "yellow",
-    "green", "blue", "violet", "grey","white"
-]).
+colors(Colors) :-
+    Colors = [
+        "black", "brown", "red", "orange", "yellow",
+        "green", "blue", "violet", "grey","white"
+    ].
