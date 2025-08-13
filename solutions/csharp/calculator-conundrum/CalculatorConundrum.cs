@@ -1,33 +1,30 @@
 using System;
+using static SimpleOperation;
 
 public static class SimpleCalculator
 {
     public static string Calculate(int operand1, int operand2, string operation)
     {
-        int result = 0;
-        switch (operation)
+        try
         {
-            // Implement the calculator operations
-            case "+":
-                result = SimpleOperation.Addition(operand1, operand2);
-                break;
-            case "*":
-                result = SimpleOperation.Multiplication(operand1, operand2);
-                break;
-            case "/":
-                // Handle errors when dividing by zero
-                try { result = SimpleOperation.Division(operand1, operand2); }
-                catch (System.DivideByZeroException) { return "Division by zero is not allowed."; }
-                break;
+            int result = operation switch
+            {
+                // Implement the calculator operations
+                "+" => Addition(operand1, operand2),
+                "*" => Multiplication(operand1, operand2),
+                "/" => Division(operand1, operand2),
 
-            // Handle illegal operations
-            case "":
-                throw new ArgumentException();
-            case null:
-                throw new ArgumentNullException();
-            default:
-                throw new ArgumentOutOfRangeException();
+                // Handle illegal operations
+                "" => throw new ArgumentException(),
+                null => throw new ArgumentNullException(),
+                _ => throw new ArgumentOutOfRangeException(),
+            };
+            return $"{operand1} {operation} {operand2} = {result}";
         }
-        return $"{operand1} {operation} {operand2} = {result}";
+        // Handle errors when dividing by zero
+        catch (DivideByZeroException)
+        {
+            return "Division by zero is not allowed.";
+        }
     }
 }
