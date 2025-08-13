@@ -1,28 +1,35 @@
 package anagram
 
 import (
-	"reflect"
 	"sort"
 	"strings"
 )
 
+func sorted(word string) string {
+	chars := []rune(word)
+	sort.Slice(chars, func(i, j int) bool {
+		return chars[i] < chars[j]
+	})
+	return string(chars)
+}
+
 // Detect returns all candidates that are anagrams of, but not equal to, 'subject'.
-func Detect(subject string, candidates []string) []string {
+func Detect(subject string, candidates []string) (anagrams []string) {
 	base := strings.ToLower(subject)
-
-	base_letters := strings.Split(base, "")
-	sort.Strings(base_letters)
-
-	var anagrams []string
+	base_letters := sorted(base)
 
 	for _, candidate := range candidates {
+		if len(base) != len(candidate) {
+			continue
+		}
 		word := strings.ToLower(candidate)
-		word_letters := strings.Split(word, "")
-		sort.Strings(word_letters)
-
-		if base != word && reflect.DeepEqual(base_letters, word_letters) {
+		if base == word {
+			continue
+		}
+		word_letters := sorted(word)
+		if base_letters == word_letters {
 			anagrams = append(anagrams, candidate)
 		}
 	}
-	return anagrams
+	return
 }
