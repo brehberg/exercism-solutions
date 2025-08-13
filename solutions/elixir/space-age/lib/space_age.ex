@@ -8,7 +8,8 @@ defmodule SpaceAge do
           | :saturn
           | :uranus
           | :neptune
-  def years_on_earth(seconds), do: seconds / 31557600
+  @doc false
+  defp years_on_earth(seconds), do: seconds / 31557600
   @doc """
   Return the number of years a person that has lived for 'seconds' seconds is
   aged on 'planet', or an error if 'planet' is not a planet.
