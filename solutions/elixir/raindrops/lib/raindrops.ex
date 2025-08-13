@@ -12,13 +12,16 @@ defmodule Raindrops do
     just pass the number's digits straight through.
   """
   @spec convert(pos_integer) :: String.t()
-  def convert(number) do
-    sound = Enum.map_join(@raindrops, &sound(&1, number))
-    if sound == "", do: to_string(number), else: sound
-  end
+  def convert(number),
+    do: Enum.map_join(@raindrops, &sound(&1, number)) |> check(number)
 
   @doc false
-  @spec(sound({integer, String.t()}, pos_integer) :: String.t())
-  defp sound({factor, value}, n) when rem(n, factor) == 0, do: value
-  defp sound(_, _), do: ""
+  @spec sound({integer, String.t()}, pos_integer) :: String.t()
+  defp sound({factor, _}, n) when rem(n, factor) != 0, do: ""
+  defp sound({_, string}, _), do: string
+
+  @doc false
+  @spec check(String.t(), pos_integer) :: String.t()
+  defp check("", number), do: to_string(number)
+  defp check(string, _), do: string
 end
