@@ -7,14 +7,14 @@
  * @return {string} ciphertext
  */
 export const encode = (input) => {
-  const encode_pairs = (
+  const encodedPair = (
     /** @type {string} */ match,
     /** @type {string} */ p1
   ) => {
     return `${match.length}${p1}`;
   };
 
-  return input.replace(/(.)\1+/g, encode_pairs);
+  return input.replace(/(.)\1+/g, encodedPair);
 };
 
 /**
@@ -24,7 +24,7 @@ export const encode = (input) => {
  * @return {string} plaintext
  */
 export const decode = (input) => {
-  const decode_groups = (
+  const decodedGroup = (
     /** @type {string} */ _match,
     /** @type {number} */ p1,
     /** @type {string} */ p2
@@ -32,5 +32,5 @@ export const decode = (input) => {
     return p2.repeat(p1);
   };
 
-  return input.replace(/(\d+)(.)/g, decode_groups);
+  return input.replace(/(\d+)(.)/g, decodedGroup);
 };
