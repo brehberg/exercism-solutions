@@ -13,7 +13,7 @@ defmodule ResistorColorTrio do
   def label(colors), do: value(colors) |> format(:ohms)
 
   @doc false
-  @spec label(number) :: {number, :ohms | :kiloohms | :megaohms | :gigaohms}
+  @spec label(number, atom) :: {number, :ohms | :kiloohms | :megaohms | :gigaohms}
   defp format(r, :ohms) when r >= 1000, do: format(r / 1000, :kiloohms)
   defp format(r, :kiloohms) when r >= 1000, do: format(r / 1000, :megaohms)
   defp format(r, :megaohms) when r >= 1000, do: format(r / 1000, :gigaohms)
