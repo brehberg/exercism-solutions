@@ -32,6 +32,6 @@ namespace heaven
         bool shoot_buster();
     };
 
-    bool in_the_same_system(Vessel, Vessel);
-    std::string get_older_bob(Vessel, Vessel);
+    bool in_the_same_system(Vessel &, Vessel &);
+    std::string get_older_bob(Vessel &, Vessel &);
 } // namespace heaven

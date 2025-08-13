@@ -5,15 +5,11 @@ using namespace std;
 namespace heaven
 {
     Vessel::Vessel(string name, int gen, System system)
-    {
-        bob = name;
-        generation = gen;
-        current_system = system;
-    }
+        : bob{name}, generation{gen}, current_system{system} {}
 
     Vessel Vessel::replicate(string name)
     {
-        return Vessel(name, generation + 1, current_system);
+        return {move(name), generation + 1, current_system};
     }
 
     void Vessel::make_buster()
@@ -31,13 +27,13 @@ namespace heaven
         return true;
     }
 
-    bool in_the_same_system(Vessel prime, Vessel other)
+    bool in_the_same_system(Vessel &prime, Vessel &other)
     {
         return (prime.current_system == other.current_system);
     }
 
-    string get_older_bob(Vessel prime, Vessel other)
+    string get_older_bob(Vessel &prime, Vessel &other)
     {
-        return (prime.generation < other.generation) ? prime.bob : other.bob;
+        return (prime.generation <= other.generation) ? prime.bob : other.bob;
     }
 } // namespace heaven
