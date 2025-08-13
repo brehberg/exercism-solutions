@@ -18,6 +18,6 @@ class Temperature
 
   # Get the number of missing sensors
   def number_missing_sensors(number_of_sensors)
-    (SENSORS_PER_UNIT - number_of_sensors % SENSORS_PER_UNIT) % SENSORS_PER_UNIT
+    (SENSORS_PER_UNIT - number_of_sensors) % SENSORS_PER_UNIT
   end
 end
