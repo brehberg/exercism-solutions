@@ -32,7 +32,7 @@ defmodule ScaleGenerator do
   # Find index in scale of given tonic irrespective of case
   @spec start([String.t()], String.t()) :: integer
   defp start(scale, tonic),
-    do: Enum.find_index(scale, &(&1 =~ Regex.compile!("#{tonic}$", "i")))
+    do: Enum.find_index(scale, &(&1 == String.capitalize(tonic)))
 
   @doc """
   The chromatic scale is a musical scale with thirteen pitches, each a semitone
@@ -104,8 +104,10 @@ defmodule ScaleGenerator do
   """
   @spec scale(tonic :: String.t(), pattern :: String.t()) :: list(String.t())
   def scale(tonic, pattern) do
+    chromatic = find_chromatic_scale(tonic)
+
     [0 | String.graphemes(pattern)]
     |> Enum.scan(&(&2 + @semitones[&1]))
-    |> Enum.map(&Enum.at(find_chromatic_scale(tonic), &1))
+    |> Enum.map(&Enum.at(chromatic, &1))
   end
 end
