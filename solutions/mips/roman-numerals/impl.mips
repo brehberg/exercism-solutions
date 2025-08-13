@@ -1,0 +1,49 @@
+# | Register | Usage        | Type    | Description                   |
+# | -------- | ------------ | ------- | ----------------------------- |
+# | `$a0`    | input        | integer | given number                  |
+# | `$a1`    | input/output | address | null-terminated result string |
+# | `$t0-9`  | temporary    | any     | for temporary storage         |
+
+# store one byte in places pointed to by $t1 and advance $t1
+.macro store (%byte)
+        li      $t9, %byte
+        sb      $t9, 0($t1)
+        addi    $t1, $t1, 1
+.end_macro
+
+# store literals and reduce number $t0 by corresponding values
+.macro digit (%unit, %half, %full, %val, %val4, %val5, %val9)
+        blt     $t0, %val9, _l5
+        store   %unit           # digit was 9
+        store   %full
+        sub     $t0, $t0, %val9
+        j       _out
+_l5:        
+        blt     $t0, %val5, _l4
+        store   %half           # digit was 5-8
+        sub     $t0, $t0, %val5
+        j       _l1             # check for more 1s
+_l4:
+        blt     $t0, %val4, _l1
+        store   %unit           # digit was 4
+        store   %half
+        sub     $t0, $t0, %val4
+        j       _out
+_l1:
+        blt     $t0, %val, _out
+        store   %unit           # digit was 1-3
+        sub     $t0, $t0, %val
+        j       _l1             # check for more 1s
+_out:
+.end_macro
+
+.globl roman
+roman:
+        move    $t0, $a0
+        move    $t1, $a1
+        digit   'M', 'A', 'B', 1000, 4000, 5000, 9000
+        digit   'C', 'D', 'M', 100, 400, 500, 900
+        digit   'X', 'L', 'C', 10, 40, 50, 90
+        digit   'I', 'V', 'X', 1, 4, 5, 9
+        sb      $0, 0($t1)
+        jr      $ra
