@@ -2,28 +2,28 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-public struct Coord
+public readonly struct Coord
 {
     public Coord(ushort x, ushort y)
     {
         X = x;
         Y = y;
     }
-    public ushort X { get; } = 0;
-    public ushort Y { get; } = 0;
+    public ushort X { get; }
+    public ushort Y { get; }
 }
-public struct Side
+public readonly struct Side
 {
     public Side(Coord a, Coord b)
     {
         A = a;
         B = b;
     }
-    public Coord A { get; } = new Coord();
-    public Coord B { get; } = new Coord();
+    public Coord A { get; }
+    public Coord B { get; }
     public float Length() => (B.X - A.X) * 2 + (B.Y - A.Y) * 2;
 }
-public struct Plot
+public readonly struct Plot
 {
     public Plot(Coord w, Coord x, Coord y, Coord z)
     {
@@ -38,10 +38,8 @@ public struct Plot
         LongestSide = sides.OrderByDescending((s => s.Length())).First();
     }
 
-    public (Coord, Coord, Coord, Coord) Coordinates { get; } =
-        (new Coord(), new Coord(), new Coord(), new Coord());
-    public Side LongestSide { get; } =
-        new Side(new Coord(), new Coord());
+    public (Coord, Coord, Coord, Coord) Coordinates { get; init; }
+    public Side LongestSide { get; }
 
     public bool hasLongerSide(Plot plot) =>
         this.LongestSide.Length() > plot.LongestSide.Length();
