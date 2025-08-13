@@ -19,23 +19,16 @@ pub fn add(
   student student: String,
   grade grade: Int,
 ) -> Result(School, Nil) {
-  case school |> roster |> list.contains(any: student) {
+  case school |> roster |> list.contains(student) {
     True -> Error(Nil)
-    _ -> Ok(school |> add_new_student_and_sort(grade, student))
+    _ -> Ok(add_student_and_sort(school, grade, student))
   }
 }
 
-fn add_new_student_and_sort(
-  to school: School,
-  grade grade: Int,
-  student new_student: String,
-) -> School {
-  let existing = case school |> dict.get(grade) {
-    Ok(students) -> students
-    _ -> []
-  }
-  let students = [new_student, ..existing] |> list.sort(by: string.compare)
-  school |> dict.insert(for: grade, insert: students)
+fn add_student_and_sort(school: School, grade: Int, new: String) -> School {
+  let existing = school |> dict.get(grade) |> result.unwrap(or: [])
+  let students = [new, ..existing] |> list.sort(by: string.compare)
+  dict.insert(into: school, for: grade, insert: students)
 }
 
 pub fn grade(school: School, desired_grade: Int) -> List(String) {
