@@ -1,0 +1,9 @@
+: eggCount  \ n -- n
+  0 >r                 \ initialize the count on the r-stack
+    repeat
+      dup 
+      1 band r+        \ add least significant bit to count
+      1 shr            \ and shift the input number right
+    while
+  drop r>              \ drop number and get count from r-stack
+;
