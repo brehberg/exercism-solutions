@@ -4,11 +4,7 @@
 #   [1, 2, 3] | array_add           # => 6
 
 def array_add:
-  if length == 0 then
-    0
-  else
-    first + (.[1:]|array_add)
-  end;
+  if length == 0 then 0 else first + (.[1:]|array_add) end;
 
 # Reverse the input array, and return the result in a new array.
 #
@@ -16,11 +12,7 @@ def array_add:
 #   [1, 2, 3] | array_reverse       # => [3, 2, 1]
 
 def array_reverse:
-  if length == 0 then
-    []
-  else
-    [last] + (.[:-1]|array_reverse)
-  end;
+  if length == 0 then . else (.[1:]|array_reverse) + [first] end;
 
 # Run the filter `f` for each element of the input array,
 # and return the outputs in a new array.
@@ -29,8 +21,4 @@ def array_reverse:
 #   [1, 2, 3] | array_map(. + 1)    # => [2, 3, 4]
 
 def array_map(f):
-  if length == 0 then
-    []
-  else
-    [first|f] + (.[1:]|array_map(f))
-  end;
+  if length == 0 then . else [first|f] + (.[1:]|array_map(f)) end;
