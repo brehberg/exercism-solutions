@@ -23,6 +23,8 @@ CLASS zcl_crypto_square IMPLEMENTATION.
 
     DATA(clean) = normalize( plain_text ).
     DATA(max) = strlen( clean ).
+    CHECK max > 0.
+
     DATA(cols) = ceil( sqrt( max ) ).
     DATA(rows) = max / cols.
     DATA(start) = 0.
