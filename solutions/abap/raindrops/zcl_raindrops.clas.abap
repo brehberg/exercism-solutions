@@ -13,7 +13,7 @@ CLASS zcl_raindrops DEFINITION
 
   PROTECTED SECTION.
   PRIVATE SECTION.
-    CLASS-DATA sounds TYPE table_of_strings.
+    CLASS-DATA sounds TYPE STANDARD TABLE OF string WITH EMPTY KEY.
     DATA number TYPE i.
     METHODS divisible_by
       IMPORTING divisor     TYPE i
