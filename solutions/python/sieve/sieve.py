@@ -7,6 +7,8 @@ def primes(limit):
     :param limit: int - given limit to find primes less than.
     :return: list - sorted list of prime numbers.
     """
-    numbers = set(range(2, limit + 1))
-    marked = {m for n in numbers for m in range(n * n, limit + 1, n)}
-    return sorted(numbers - marked)
+    if limit < 2:
+        return []
+    numbers = set(range(3, limit + 1, 2))
+    multiples = {m for n in numbers for m in range(n * n, limit + 1, 2 * n)}
+    return [2] + sorted(numbers - multiples)
