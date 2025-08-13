@@ -1,5 +1,8 @@
 let isLeapYear = (year) => {
-    let isDivisibleBy = n => year % n == 0
+    let isDivisibleBy = n => 
+        year mod n == 0
 
-    isDivisibleBy(4)
+    isDivisibleBy(4) && 
+        !isDivisibleBy(100) || 
+        isDivisibleBy(400)
 }
