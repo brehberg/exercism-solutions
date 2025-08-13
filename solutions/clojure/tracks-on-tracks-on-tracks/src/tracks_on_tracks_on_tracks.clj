@@ -31,7 +31,9 @@
   of languages."
   []
   (defn add-both [lang-list lang1 lang2]
-    (add-language (add-language lang-list lang1) lang2))
+    (-> lang-list 
+        (add-language lang1)
+        (add-language lang2))) 
   (count-languages
    (add-both
     (remove-language
