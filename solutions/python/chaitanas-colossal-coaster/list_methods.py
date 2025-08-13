@@ -10,8 +10,7 @@ def add_me_to_the_queue(express_queue, normal_queue, ticket_type, person_name):
     :param person_name: str - name of person to add to a queue.
     :return: list - the (updated) queue the name was added to.
     """
-    EXPRESS = 1
-    queue = express_queue if ticket_type == EXPRESS else normal_queue
+    queue = express_queue if ticket_type == 1 else normal_queue
     queue.append(person_name)
     return queue
 
