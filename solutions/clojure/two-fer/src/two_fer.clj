@@ -2,5 +2,5 @@
 
 (defn two-fer [& [name]]
   (str "One for "
-       (if (nil? name) "you" name)
+       (or name "you")
        ", one for me."))
