@@ -1,13 +1,20 @@
 (ns robot-name)
 
-(def letters (map char (range 65 91)))
-(def numbers (range 100 1000))
+(def ^:private letters (map char (range 65 91)))
+(def ^:private numbers (range 100 1000))
+
+(def ^:private used-names (atom #{}))
 
 (defn- generate-name []
-  (str
-   (rand-nth letters)
-   (rand-nth letters)
-   (rand-nth numbers)))
+  (let [potential-name (str
+                        (rand-nth letters)
+                        (rand-nth letters)
+                        (rand-nth numbers))]
+    (if (@used-names potential-name)
+      (recur)
+      (do
+        (swap! used-names conj potential-name)
+        potential-name))))
 
 (defn robot []
   (atom {:name (generate-name)}))
