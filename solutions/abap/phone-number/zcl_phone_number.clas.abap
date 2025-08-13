@@ -49,6 +49,20 @@ CLASS zcl_phone_number IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD extract_digits.
+    " hard-coded local types to make FIND with REGEX work on Exercism
+    TYPES: BEGIN OF submatch_result,
+             offset TYPE i,
+             length TYPE i,
+           END OF submatch_result.
+    TYPES submatch_result_tab TYPE STANDARD TABLE OF submatch_result WITH DEFAULT KEY.
+    TYPES: BEGIN OF match_result,
+             line       TYPE i,
+             offset     TYPE i,
+             length     TYPE i,
+             submatches TYPE submatch_result_tab,
+           END OF match_result.
+    TYPES match_result_tab TYPE STANDARD TABLE OF match_result WITH DEFAULT KEY.
+
     " determine all numeric characters in the given string
     FIND ALL OCCURRENCES OF REGEX '\d' IN number
       RESULTS DATA(matches).
