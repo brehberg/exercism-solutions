@@ -8,7 +8,7 @@ let interestRate (balance: decimal): single =
     | _ -> 2.475f
 
 let interest (balance: decimal): decimal =
-   balance * (decimal)(interestRate balance / 100f)
+   balance * decimal(interestRate balance / 100f)
 
 let annualBalanceUpdate(balance: decimal): decimal =
    balance + interest balance
@@ -16,4 +16,4 @@ let annualBalanceUpdate(balance: decimal): decimal =
 let amountToDonate(balance: decimal) (taxFreePercentage: float): int =
    match balance with
    | b when b < 0.00m -> 0
-   | _ -> (int)(balance * (decimal)(taxFreePercentage / 50.0))
+   | _ -> int(balance * decimal(taxFreePercentage / 50.0))
