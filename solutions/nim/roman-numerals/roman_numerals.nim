@@ -3,19 +3,20 @@ import std/strutils
 const numerals = block:
   const maxNumeral = 3999
   const literals = [
-      (1000, "M", "", ""),
-      (100, "C", "D", "M"),
-      (10, "X", "L", "C"),
-      (1, "I", "V", "X"),
+      ("M", "", ""),
+      ("C", "D", "M"),
+      ("X", "L", "C"),
+      ("I", "V", "X"),
   ]
 
   func toRomanNumeral(n: int): string = 
     var remaining = n
+    var value = 1000
 
-    for (value, unit, half, next) in literals:
+    for (unit, half, next) in literals:
       var digit = remaining div value
-      case digit:      
-        of 1, 2, 3: 
+      case digit:
+        of 0, 1, 2, 3: 
           result.add unit.repeat(digit)
         of 4: 
           result.add unit & half
@@ -26,6 +27,7 @@ const numerals = block:
         else:
           continue
       remaining = remaining mod value
+      value = int(value / 10)
 
   func generateNumerals: array[maxNumeral + 1, string] =
     for n in 1..maxNumeral:
