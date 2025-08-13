@@ -1,4 +1,6 @@
 defmodule PerfectNumbers do
+  @moduledoc false
+
   @doc """
   Determine the aliquot sum of the given `number`, by summing all the factors
   of `number`, aside from `number` itself.
@@ -13,7 +15,7 @@ defmodule PerfectNumbers do
   def classify(number) when number < 1,
     do: {:error, "Classification is only possible for natural numbers."}
 
-  def classify(number)
+  def classify(number),
     do: number |> aliquot_sum({1, number}, []) |> classifier(number)
 
   @doc false
