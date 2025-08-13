@@ -1,6 +1,6 @@
 defmodule IsbnVerifier do
   @moduledoc false
-  @value_capture ~r/(\d)(\d)(\d)(\d)(\d)(\d)(\d)(\d)(\d)(\d+)/
+  @isbn10_regex ~r/^(\d-?){9}(\d|X)$/
 
   @doc """
     Checks if a string is a valid ISBN-10 identifier
@@ -15,23 +15,26 @@ defmodule IsbnVerifier do
 
   """
   @spec isbn?(String.t()) :: boolean
-  def isbn?(isbn),
-    do: Regex.scan(@value_capture, clean(isbn), capture: :all_but_first) |> valid?()
+  def isbn?(isbn) do
+    case isbn =~ @isbn10_regex do
+      false -> false
+      _ -> valid?(isbn)
+    end
+  end
 
   @doc false
-  @spec clean(String.t()) :: String.t()
-  defp clean(input), do: input |> String.replace(~r/X$/, "10") |> String.replace("-", "")
+  @spec valid?(Sting.t()) :: boolean
+  defp valid?(values) do
+    values
+    |> String.replace("-", "")
+    |> String.graphemes()
+    |> Enum.zip(10..1)
+    |> Enum.reduce(0, &compute/2)
+    |> rem(11) == 0
+  end
 
   @doc false
-  @spec valid?([[Sting.t()]]) :: boolean
-  defp valid?([]), do: false
-  defp valid?([values]) when length(values) != 10, do: false
-  defp valid?([values]), do: Enum.map(values, &String.to_integer/1) |> compute() == 0
-
-  @doc false
-  @spec compute([integer], integer, integer) :: integer
-  defp compute(digits, multiple \\ 10, accumulator \\ 0)
-  defp compute([], _, result), do: rem(result, 11)
-  defp compute([last], _n, acc), do: compute([], 0, acc + last)
-  defp compute([next | rest], n, acc), do: compute(rest, n - 1, acc + next * n)
+  @spec compute({String.t(), integer}, integer) :: integer
+  defp compute({"X", 1}, sum), do: 10 + sum
+  defp compute({s, n}, sum), do: String.to_integer(s) * n + sum
 end
