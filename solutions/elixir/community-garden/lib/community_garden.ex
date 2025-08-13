@@ -11,9 +11,8 @@ defmodule CommunityGarden do
   Open the garden
   """
   @spec start(GenServer.options()) :: Agent.on_start()
-  def start(opts \\ []) do
-    Agent.start(fn -> %{plots: [], next: 1} end, opts)
-  end
+  def start(opts \\ []),
+    do: Agent.start(fn -> %{plots: [], next: 1} end, opts)
 
   @doc """
   List the registrations
@@ -25,30 +24,26 @@ defmodule CommunityGarden do
   Register plots to a person
   """
   @spec register(pid, String.t()) :: %Plot{}
-  def register(pid, register_to) do
-    Agent.update(pid, &register_next_plot(&1, register_to))
-    Agent.get(pid, &hd(&1.plots))
-  end
+  def register(pid, register_to),
+    do: Agent.get_and_update(pid, &register_next_plot(&1, register_to))
 
   @doc false
-  @spec register_next_plot(Agent.state(), String.t()) :: Agent.state()
-  defp register_next_plot(%{plots: plots, next: next}, name) do
-    %{plots: [%Plot{plot_id: next, registered_to: name} | plots], next: next + 1}
+  @spec register_next_plot(Agent.state(), String.t()) :: {%Plot{}, Agent.state()}
+  defp register_next_plot(%{plots: existing, next: id}, name) do
+    new_plot = %Plot{plot_id: id, registered_to: name}
+    {new_plot, %{plots: [new_plot | existing], next: id + 1}}
   end
 
   @doc """
   Release plots
   """
   @spec release(pid, integer) :: :ok
-  def release(pid, plot_id) do
-    Agent.update(pid, &release_by_id(&1, plot_id))
-  end
+  def release(pid, plot_id), do: Agent.update(pid, &release_by_id(&1, plot_id))
 
   @doc false
   @spec release_by_id(Agent.state(), integer) :: Agent.state()
-  defp release_by_id(%{plots: plots} = state, id) do
-    %{state | plots: Enum.reject(plots, &(&1.plot_id == id))}
-  end
+  defp release_by_id(%{plots: plots} = state, id),
+    do: %{state | plots: Enum.reject(plots, &(&1.plot_id == id))}
 
   @doc """
   Get a registered plot
@@ -63,7 +58,5 @@ defmodule CommunityGarden do
 
   @doc false
   @spec return_by_id([%Plot{}], integer) :: %Plot{}
-  defp return_by_id(plots, id) do
-    Enum.find(plots, &(&1.plot_id == id))
-  end
+  defp return_by_id(plots, id), do: Enum.find(plots, &(&1.plot_id == id))
 end
