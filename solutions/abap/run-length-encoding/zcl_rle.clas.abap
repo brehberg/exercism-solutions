@@ -54,21 +54,24 @@ CLASS zcl_rle IMPLEMENTATION.
 
   METHOD decode.
     CHECK input IS NOT INITIAL.
+    DATA(str) = input.
 
-    DATA(total) = count( val = input regex = '\d*.' ).
-    DATA(n) = 0.
+    CONSTANTS chunk TYPE string VALUE `\d*.`.
+    DATA(total) = count( val = str regex = chunk ).
 
     DO total TIMES.
-      n += 1.
-      DATA(substr) = match( val = input
-                            regex = '\d*.'
-                            occ = n ).
+      DATA(substr) = match( val = str regex = chunk ).
       IF substr IS INITIAL.
         RETURN.
       ENDIF.
       result = |{ result }{ decode_match( substr ) }|.
-    ENDDO.
 
+      " remove previous match from beginning of input string
+      DATA(pos) = find( val = str regex = chunk ) + strlen( substr ).
+      IF pos > 0.
+        str = str+pos.
+      ENDIF.
+    ENDDO.
   ENDMETHOD.
 
   METHOD decode_match.
