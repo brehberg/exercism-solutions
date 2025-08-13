@@ -4,6 +4,8 @@ Public Module Leap
             Function(n As Integer) As Boolean
                 Return (year Mod n) = 0
             End Function
-        Return IsDivisibleBy(4) and not IsDivisibleBy(100) or IsDivisibleBy(400)
+        Return IsDivisibleBy(4) AndAlso 
+            Not IsDivisibleBy(100) OrElse 
+            IsDivisibleBy(400)
     End Function
 End Module
