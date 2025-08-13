@@ -14,11 +14,10 @@
     (return (global.get $colorsPos) (global.get $colorsLen))
   )
 
-  ;; Called each time a module is initialized
-  ;; Can be used to populate globals similar to a constructor
+  ;; Called each time the module is initialized to populate globals
   (func $initialize
-    (global.set $colorsEnd (i32.add (i32.const 1)
-      (i32.add (global.get $colorsPos) (global.get $colorsLen))))
+    (i32.add (global.get $colorsPos) (global.get $colorsLen))
+    (global.set $colorsEnd (i32.add (i32.const 1)))
   )
   (start $initialize)
 
@@ -42,8 +41,8 @@
           (local.set $value (i32.add (local.get $value) (i32.const 1)))
         )  
         (else  ;; check if current color matches input          
-          (local.set $match (i32.eq (local.get $char)
-            (i32.load8_u (local.get $i))))
+          (i32.load8_u (local.get $i))
+          (local.set $match (i32.eq (local.get $char)))
           (local.set $i (i32.add (local.get $i) (i32.const 1)))
         )
       )  
