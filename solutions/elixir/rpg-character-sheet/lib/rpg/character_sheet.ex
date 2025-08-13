@@ -41,7 +41,7 @@ defmodule RPG.CharacterSheet do
   @doc """
   Combine previous steps into one
   """
-  @spec run() :: %{:name => String.t(), :class => String.t(), :level => integer()}
+  @spec run() :: %{name: String.t(), class: String.t(), level: integer()}
   def run() do
     welcome()
 
