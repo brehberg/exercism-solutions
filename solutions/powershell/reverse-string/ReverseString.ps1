@@ -24,7 +24,5 @@ Function Get-ReverseString {
         [Parameter(Position = 1, ValueFromPipeline = $true)]
         [string]$Forward
     )
-    [char[]]$characters = $Forward.ToCharArray()
-    [array]::Reverse($characters)    
-    return -join ($characters)
+    -join $Forward[$Forward.Length..0]
 }
