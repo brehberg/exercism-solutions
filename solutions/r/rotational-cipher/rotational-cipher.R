@@ -1,21 +1,14 @@
 # Given a plaintext and amount to shift by, return a rotated string.
 rotate <- function(text, key) {
-    ascii <- list(
-        a = utf8ToInt("a"),
-        z = utf8ToInt("z"),
-        A = utf8ToInt("A"),
-        Z = utf8ToInt("Z")
-    )
-
     do_shift <- function(c, n, start, base = 26) {
         start + (c + n - start) %% base
     }
 
     shift <- Vectorize(function(code) {
         if (intToUtf8(code) %in% letters) {
-            do_shift(code, key, ascii$a)
+            do_shift(code, key, utf8ToInt("a"))
         } else if (intToUtf8(code) %in% LETTERS) {
-            do_shift(code, key, ascii$A)
+            do_shift(code, key, utf8ToInt("A"))
         } else {
             code
         }
