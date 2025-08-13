@@ -16,6 +16,6 @@ class Library
 
   # Decrypt text
   def self.decrypt_text(text : String) : String
-    text.chars.each.map { |c| decrypt_character(c) || c }.join
+    text.each_char.map { |c| decrypt_character(c) || c }.join
   end
 end
