@@ -15,11 +15,11 @@ defmodule Chessboard do
   Transform the rank range into a list of ranks
   """
   @spec ranks :: list(integer)
-  def ranks, do: rank_range |> Enum.to_list()
+  def ranks, do: rank_range() |> Enum.to_list()
 
   @doc """
   Transform the file range into a list of files
   """
   @spec files :: list(String.t())
-  def files, do: file_range |> Enum.map(&<<&1>>)
+  def files, do: file_range() |> Enum.map(&<<&1>>)
 end
