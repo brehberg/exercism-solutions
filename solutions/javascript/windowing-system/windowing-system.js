@@ -52,17 +52,19 @@ export class ProgramWindow {
    */
   resize(newSize) {
     // The minimum allowed height or width is 1.
-    this.size.width = newSize.width < 1 ? 1 : newSize.width;
-    this.size.height = newSize.height < 1 ? 1 : newSize.height;
-
+    const MINIMUM_SIZE = 1;
     // The maximum height and width depend on the position of the window,
     // the edges of the window cannot move past the edges of the screen.
-    if (this.size.width + this.position.x > this.screenSize.width) {
-      this.size.width = this.screenSize.width - this.position.x;
-    }
-    if (this.size.height + this.position.y > this.screenSize.height) {
-      this.size.height = this.screenSize.height - this.position.y;
-    }
+    this.size.resize(
+      Math.min(
+        Math.max(newSize.width, MINIMUM_SIZE),
+        this.screenSize.width - this.position.x
+      ),
+      Math.min(
+        Math.max(newSize.height, MINIMUM_SIZE),
+        this.screenSize.height - this.position.y
+      )
+    );
   }
 
   /**
@@ -72,18 +74,18 @@ export class ProgramWindow {
    */
   move(newPosition) {
     // The smallest position is 0 for both x and y.
-    this.position.x = newPosition.x < 0 ? 0 : newPosition.x;
-    this.position.y = newPosition.y < 0 ? 0 : newPosition.y;
-
+    const MINIMUM_POSITION = 0;
     // The maximum position in either direction depends on the size of
     // the window. The edges cannot move past the edges of the screen.
-    this.position.x = Math.max(
-      this.position.x,
-      this.screenSize.width - this.size.width
-    );
-    this.position.y = Math.max(
-      this.position.y,
-      this.screenSize.height - this.size.height
+    this.position.move(
+      Math.min(
+        Math.max(newPosition.x, MINIMUM_POSITION),
+        this.screenSize.width - this.size.width
+      ),
+      Math.min(
+        Math.max(newPosition.y, MINIMUM_POSITION),
+        this.screenSize.height - this.size.height
+      )
     );
   }
 }
