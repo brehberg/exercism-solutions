@@ -16,11 +16,8 @@ Public Module MatchingBrackets
                 closerNeeded.Push(closer)
             ElseIf matches.ContainsValue(c) Then
                 ' closing bracket was found, is it the next expected value on stack?
-                If Not closerNeeded.Any() Then
-                    Return False
-                ElseIf closerNeeded.Pop() <> c Then
-                    Return False
-                End IF
+                If Not closerNeeded.Any() Then Return False
+                If closerNeeded.Pop() <> c Then Return False
             End If
         Next
 
