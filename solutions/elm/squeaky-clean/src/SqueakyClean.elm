@@ -1,6 +1,5 @@
 module SqueakyClean exposing (clean, clean1, clean2, clean3, clean4)
 
-import Json.Decode exposing (value)
 import Regex
 
 
