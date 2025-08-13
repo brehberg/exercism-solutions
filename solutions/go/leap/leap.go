@@ -7,14 +7,9 @@ package leap
 // except every year that is evenly divisible by 100
 // unless the year is also evenly divisible by 400.
 func IsLeapYear(year int) bool {
-	if year%400 == 0 {
-		return true
-	}
 	if year%100 == 0 {
-		return false
+		return year%400 == 0
+	} else {
+		return year%4 == 0
 	}
-	if year%4 == 0 {
-		return true
-	}
-	return false
 }
