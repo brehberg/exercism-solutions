@@ -1,7 +1,5 @@
 export const parallelLetterFrequency = (texts) => {
-  let frequencies = {};
-
-  const letterFrequency = (text) => {
+  const letterFrequency = (frequencies, text) => {
     return new Promise((resolve) => {
       for (const [letter] of text.toLowerCase().match(/\p{Letter}/gu) || []) {
         frequencies[letter] = (frequencies[letter] || 0) + 1;
@@ -11,6 +9,7 @@ export const parallelLetterFrequency = (texts) => {
   };
 
   // Promises provide concurency but not true parallelism
-  Promise.all(texts.map((text) => letterFrequency(text)));
-  return frequencies;
+  const result = {};
+  Promise.all(texts.map((text) => letterFrequency(result, text)));
+  return new Promise((resolve) => resolve(result));
 };
