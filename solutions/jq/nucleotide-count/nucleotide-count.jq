@@ -1,5 +1,5 @@
 def validate:
-  if .|test("[^ACGT]") then "Invalid nucleotide in strand"|halt_error end;
+  if test("[^ACGT]") then "Invalid nucleotide in strand"|halt_error end;
 
 .strand
 | validate
