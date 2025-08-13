@@ -1,5 +1,4 @@
 defmodule LinkedList do
-  alias Tuple, as: T
   @opaque t :: tuple()
 
   defguardp is_empty(list) when list == {}
@@ -14,13 +13,15 @@ defmodule LinkedList do
   Push an item onto a LinkedList
   """
   @spec push(t, any()) :: t
-  def push(list, elem), do: {elem, list}
+  def push(list, element), do: {element, list}
 
   @doc """
   Counts the number of elements in a LinkedList
   """
   @spec count(t) :: non_neg_integer()
-  def count({size, _}), do: size
+  def count(list), do: count_acc(list, 0)
+  defp count_acc(list, size) when is_empty(list), do: size
+  defp count_acc({_, rest}, size), do: count_acc(rest, size + 1)
 
   @doc """
   Determine if a LinkedList is empty
@@ -34,45 +35,41 @@ defmodule LinkedList do
   """
   @spec peek(t) :: {:ok, any()} | {:error, :empty_list}
   def peek(list) when is_empty(list), do: {:error, :empty_list}
-  def peek({elem, _rest}), do: {:ok, elem}
+  def peek({element, _}), do: {:ok, element}
 
   @doc """
   Get tail of a LinkedList
   """
   @spec tail(t) :: {:ok, t} | {:error, :empty_list}
   def tail(list) when is_empty(list), do: {:error, :empty_list}
-  def tail({_elem, rest}), do: {:ok, rest}
+  def tail({_, rest}), do: {:ok, rest}
 
   @doc """
   Remove the head from a LinkedList
   """
   @spec pop(t) :: {:ok, any(), t} | {:error, :empty_list}
   def pop(list) when is_empty(list), do: {:error, :empty_list}
-  def pop({elem, rest}), do: {:ok, elem, rest}
+  def pop({element, rest}), do: {:ok, element, rest}
 
   @doc """
   Construct a LinkedList from a stdlib List
   """
   @spec from_list(list()) :: t
-  def from_list(list), do: from_list_acc(list, {})
-  defp from_list_acc([], list), do: list
-  defp from_list_acc([first, rest], list)
-    from_list_acc(rest, {first, list})
-  end
+  def from_list([]), do: {}
+  def from_list([first | rest]), do: {first, from_list(rest)}
 
   @doc """
   Construct a stdlib List LinkedList from a LinkedList
   """
   @spec to_list(t) :: list()
-  def to_list({_, data}) do
-    data |> T.to_list() |> tl() |> Enum.reverse()
-  end
+  def to_list({}), do: []
+  def to_list({first, rest}), do: [first | to_list(rest)]
 
   @doc """
   Reverse a LinkedList
   """
   @spec reverse(t) :: t
-  def reverse(list) do
-    list |> to_list() |> Enum.reverse() |> from_list()
-  end
+  def reverse(list), do: reverse_acc(list, {})
+  defp reverse_acc({}, list), do: list
+  defp reverse_acc({first, rest}, list), do: reverse_acc(rest, {first, list})
 end
