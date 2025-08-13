@@ -42,17 +42,15 @@ defmodule RPG.CharacterSheet do
   Combine previous steps into one
   """
   @spec run() :: %{:name => String.t(), :class => String.t(), :level => integer()}
-  def run(),
-    do:
-      if(welcome() == :ok,
-        do:
-          IO.inspect(
-            %{
-              name: ask_name(),
-              class: ask_class(),
-              level: ask_level()
-            },
-            label: "Your character"
-          )
-      )
+  def run() do
+    welcome()
+
+    sheet = %{
+      name: ask_name(),
+      class: ask_class(),
+      level: ask_level()
+    }
+
+    IO.inspect(sheet, label: "Your character")
+  end
 end
