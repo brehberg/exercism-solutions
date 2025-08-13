@@ -1,5 +1,7 @@
 defmodule RobotSimulator do
-  defstruct [facing: :north, x: 0, y: 0]
+  defstruct facing: :north, x: 0, y: 0
+  defguard is_direction(direction) when direction in [:north, :east, :south, :west]
+  defguard is_position(x, y) when is_integer(x) and is_integer(y)
 
   @type robot() :: %RobotSimulator{facing: direction(), x: integer(), y: integer()}
   @type direction() :: :north | :east | :south | :west
@@ -11,14 +13,9 @@ defmodule RobotSimulator do
   Valid directions are: `:north`, `:east`, `:south`, `:west`
   """
   @spec create(direction, position) :: robot() | {:error, String.t()}
-  def create(direction \\ :north, position \\ {0, 0})
-
-  def create(direction, _) when direction not in [:north, :east, :south, :west],
-    do: {:error, "invalid direction"}
-
-  def create(direction, {x, y}) when is_integer(x) and is_integer(y),
-    do: %RobotSimulator{facing: direction, x: x, y: y}
-
+  def create(), do: %RobotSimulator{}
+  def create(dir, _) when not is_direction(dir), do: {:error, "invalid direction"}
+  def create(dir, {x, y}) when is_position(x, y), do: %RobotSimulator{facing: dir, x: x, y: y}
   def create(_, _), do: {:error, "invalid position"}
 
   @doc """
