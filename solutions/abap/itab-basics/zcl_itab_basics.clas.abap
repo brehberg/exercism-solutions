@@ -51,8 +51,7 @@ CLASS zcl_itab_basics IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD add_to_itab.
-    updated_data = initial_data.
-    APPEND VALUE #( group = 'A' number = 19 description = 'Group A-4' ) TO updated_data.
+    updated_data = VALUE #( BASE initial_data ( group = 'A' number = 19 description = 'Group A-4' ) ).
   ENDMETHOD.
 
   METHOD sort_itab.
