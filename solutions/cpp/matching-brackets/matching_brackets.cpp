@@ -1,34 +1,35 @@
 #include "matching_brackets.h"
-#include <map>
-#include <stack>
 #include <algorithm>
+#include <stack>
+#include <unordered_map>
 
 namespace matching_brackets
 {
     using namespace std;
 
-    map<char, char> matches = {
+    const unordered_map<char, char> matches = {
         {'[', ']'},
         {'{', '}'},
-        {'(', ')'}};
+        {'(', ')'},
+    };
 
-    bool check(string input)
+    // determine if matching bracket map contains the specified char value
+    const auto find_value(char value)
     {
-        stack<char> closer_needed;
+        return find_if(matches.begin(), matches.end(), [value](const auto &mo)
+                       { return mo.second == value; });
+    };
 
-        auto find_value = [](char c)
-        {
-            // determine if matching bracket map contains the specified char value
-            return find_if(matches.begin(), matches.end(), [c](const auto &mo)
-                           { return mo.second == c; });
-        };
+    bool check(string const &input)
+    {
+        stack<char> closer_needed{};
 
         for (auto &c : input)
         {
             if (matches.find(c) != matches.end())
             {
                 // opening bracket was found, add matching closing value to the stack
-                closer_needed.push(matches[c]);
+                closer_needed.push(matches.at(c));
             }
             else if (find_value(c) != matches.end())
             {
