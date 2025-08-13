@@ -11,7 +11,7 @@ export const encode = (input) => {
   if (!input) return result;
 
   const encode_pairs = (/** @type {number} */ n, /** @type {string} */ c) => {
-    return n === 1 ? c : n + c;
+    return n === 1 ? c : String(n) + c;
   };
 
   let prev = input[0];
@@ -28,7 +28,7 @@ export const encode = (input) => {
     count = 1;
   }
 
-  return (result += encode_pairs(count, prev));
+  return result + encode_pairs(count, prev);
 };
 
 /**
