@@ -10,7 +10,7 @@
   (conj (pop birds) (inc (today birds))))
 
 (defn day-without-birds? [birds]
-  (boolean (some #(= 0 %) birds)))
+  (boolean (some zero? birds)))
 
 (defn n-days-count [birds n]
   (reduce + 0 (subvec birds 0 n)))
