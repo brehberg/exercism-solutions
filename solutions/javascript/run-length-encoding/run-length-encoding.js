@@ -6,14 +6,8 @@
  * @param {string} input plaintext
  * @return {string} ciphertext
  */
-export const encode = (input) => {
-  const encodedPair = (
-    /** @type {string} */ match,
-    /** @type {string} */ char
-  ) => `${match.length}${char}`;
-
-  return input.replace(/(.)\1+/g, encodedPair);
-};
+export const encode = (input) =>
+  input.replace(/(.)\1+/g, (match, char) => `${match.length}${char}`);
 
 /**
  * Decode returns a string that has been reconstructed from the input into its original form.
@@ -21,12 +15,5 @@ export const encode = (input) => {
  * @param {string} input ciphertext
  * @return {string} plaintext
  */
-export const decode = (input) => {
-  const decodedGroup = (
-    /** @type {string} */ _match,
-    /** @type {number} */ count,
-    /** @type {string} */ char
-  ) => char.repeat(count);
-
-  return input.replace(/(\d+)(.)/g, decodedGroup);
-};
+export const decode = (input) =>
+  input.replace(/(\d+)(.)/g, (_, count, char) => char.repeat(count));
