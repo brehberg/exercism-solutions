@@ -6,7 +6,7 @@ using Position = (int row, int col);
 public class SpiralMatrix
 {
     // sequence of directions to fill the matrix in clockwise order
-    private enum Direction
+    private enum Direction : int
     {
         Right,
         Down,
@@ -34,7 +34,7 @@ public class SpiralMatrix
                 next.row < 0 ||     // position beyond first row, turn right instead
                 spiral[next.row, next.col] > 0) // position is filled, turn instead
             {
-                dir = (Direction)(((int)dir + 1) % 4);
+                dir = nextDirection(dir);
             }
             pos = adjustPosition(pos, dir);
         }
@@ -50,4 +50,6 @@ public class SpiralMatrix
         Direction.Up => (pos.row - 1, pos.col),    // move up to previous row
         _ => throw new ArgumentException("invalid direction"),
     };
+
+    private static Direction nextDirection(Direction dir) => (Direction)(((int)dir + 1) % 4);
 }
