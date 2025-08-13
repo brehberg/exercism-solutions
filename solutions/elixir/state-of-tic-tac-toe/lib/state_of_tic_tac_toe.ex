@@ -5,8 +5,8 @@ defmodule StateOfTicTacToe do
   @initial_state %{?X => [], ?O => [], ?. => []}
   @magic_square [[2, 7, 6], [9, 5, 1], [4, 3, 8]]
 
-  @extra_X_msg ~s(Wrong turn order: X went twice)
-  @extra_O_msg ~s(Wrong turn order: O started)
+  @extra_x_msg ~s(Wrong turn order: X went twice)
+  @extra_o_msg ~s(Wrong turn order: O started)
   @both_win_msg ~s(Impossible board: game should have ended after the game was won)
 
   @doc """
@@ -24,8 +24,8 @@ defmodule StateOfTicTacToe do
     state = @initial_state |> Map.merge(convert(board))
 
     cond do
-      extra_X?(state) -> {:error, @extra_X_msg}
-      extra_O?(state) -> {:error, @extra_O_msg}
+      extra_x?(state) -> {:error, @extra_x_msg}
+      extra_o?(state) -> {:error, @extra_o_msg}
       both_win?(state) -> {:error, @both_win_msg}
       winner?(state[?X]) -> {:ok, :win}
       winner?(state[?O]) -> {:ok, :win}
@@ -37,19 +37,20 @@ defmodule StateOfTicTacToe do
   # Determine the "magic square" values for each player's moves
   @spec convert(String.t()) :: board_state()
   defp convert(board) do
-    String.split(board, "\n", trim: true)
+    board
+    |> String.split("\n", trim: true)
     |> Enum.with_index()
     |> Enum.flat_map(&convert_row/1)
-    |> Enum.group_by(&elem(&1, 0), &move_value(&1))
+    |> Enum.group_by(&elem(&1, 0), &magic_value/1)
   end
 
   @spec convert_row({String.t(), integer}) :: [move]
   defp convert_row({row, n}) do
-    String.to_charlist(row) |> Enum.with_index(&{&1, n, &2})
+    row |> String.to_charlist() |> Enum.with_index(&{&1, n, &2})
   end
 
-  @spec move_value(move) :: integer
-  defp move_value({_, row, col}) do
+  @spec magic_value(move) :: integer
+  defp magic_value({_, row, col}) do
     @magic_square |> Enum.at(row) |> Enum.at(col)
   end
 
@@ -62,11 +63,11 @@ defmodule StateOfTicTacToe do
   @spec both_win?(board_state) :: boolean
   defp both_win?(state), do: winner?(state[?X]) && winner?(state[?O])
 
-  @spec extra_X?(board_state) :: boolean
-  defp extra_X?(state), do: length(state[?X]) - length(state[?O]) > 1
+  @spec extra_x?(board_state) :: boolean
+  defp extra_x?(state), do: length(state[?X]) - length(state[?O]) > 1
 
-  @spec extra_O?(board_state) :: boolean
-  defp extra_O?(state), do: length(state[?X]) < length(state[?O])
+  @spec extra_o?(board_state) :: boolean
+  defp extra_o?(state), do: length(state[?X]) < length(state[?O])
 
   # Generate all possible sublists with n elements from given list
   @spec combination(integer, list) :: [list]
