@@ -1,7 +1,9 @@
 defmodule Atbash do
   @moduledoc false
   import List, only: [keyfind: 3]
-  @plain_cipher Enum.zip(?a..?z, ?z..?a)
+  @cipher Enum.zip(?a..?z, ?z..?a)
+  @to_cipher [from: 0, to: 1]
+  @from_cipher [from: 1, to: 0]
   @group_size 5
 
   @doc """
@@ -15,7 +17,7 @@ defmodule Atbash do
   @spec encode(String.t()) :: String.t()
   def encode(plaintext) do
     prepare(plaintext)
-    |> Enum.map(&translate(&1, 0, 1))
+    |> Enum.map(&translate(&1, @to_cipher))
     |> Enum.chunk_every(@group_size)
     |> Enum.join(" ")
   end
@@ -25,13 +27,13 @@ defmodule Atbash do
   """
   @spec decode(String.t()) :: String.t()
   def decode(ciphertext) do
-    prepare(ciphertext) |> Enum.map_join(&translate(&1, 1, 0))
+    prepare(ciphertext) |> Enum.map_join(&translate(&1, @from_cipher))
   end
 
   @doc false
-  @spec translate(char, from_position :: integer, to_position :: integer) :: [char]
-  defp translate(n, _, _) when n in ?1..?9, do: [n]
-  defp translate(c, from, to), do: [@plain_cipher |> keyfind(c, from) |> elem(to)]
+  @spec translate(char, keyword) :: [char]
+  defp translate(n, _) when n in ?1..?9, do: [n]
+  defp translate(c, from: a, to: b), do: [@cipher |> keyfind(c, a) |> elem(b)]
 
   @doc false
   @spec prepare(String.t()) :: String.t()
