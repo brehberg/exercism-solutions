@@ -5,9 +5,8 @@ public class SecurityPassMaker
     public string GetDisplayName(TeamSupport support) => support switch
     {
         // Only designate principal security team members as priority personnel
-        SecurityIntern or SecurityJunior or PoliceLiaison => support.Title,
-        // Customize the display name for the security team
-        Security => $"{support.Title} Priority Personnel",
+        Security when support.GetType() == typeof(Security)
+            => $"{support.Title} Priority Personnel",
         // Get display name for a member of the support team as long as they are staff members
         Staff => support.Title,
         _ => "Too Important for a Security Pass",
