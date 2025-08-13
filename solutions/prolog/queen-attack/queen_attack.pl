@@ -9,7 +9,10 @@ create((DimX, DimY)) :-
 %
 % The attack/2 predicate succeeds if a queen positioned on ToTuple is 
 % vulnerable to an attack by another queen positioned on FromTuple.
-attack((X, _), (X, _)) :- !.
-attack((_, Y), (_, Y)) :- !.
-attack((FromX, FromY), (ToX, ToY)):-
-	abs(FromX - ToX) =:= abs(FromY - ToY).
+attack((X, _), (X, _)).
+attack((_, Y), (_, Y)).
+attack((FromX, FromY), (ToX, ToY)) :-
+	create((FromX, FromY)),
+	create((ToX, ToY)),
+	abs(FromX - ToX) =:= abs(FromY - ToY), 
+	\+ (FromX == ToX, FromY == ToY).
