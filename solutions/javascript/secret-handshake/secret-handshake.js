@@ -1,3 +1,5 @@
+//@ts-check
+
 //
 // Determine the actions of a secret handshake based on the binary
 // representation of the given `code`.
@@ -13,11 +15,12 @@ const ACTIONS = new Map(
   })
 );
 
-export const commands = (code) => {
+export const commands = (/** @type {number} */ code) => {
   const handshake = [];
 
-  ACTIONS.forEach((action, bit) => {
-    if ((code & bit) === Number(bit)) {
+  ACTIONS.forEach((action, key) => {
+    const binary = Number(key);
+    if ((code & binary) === binary) {
       if (action === "reverse") {
         handshake.reverse();
       } else {
