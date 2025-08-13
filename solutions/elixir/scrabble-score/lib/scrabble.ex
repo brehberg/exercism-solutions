@@ -9,7 +9,6 @@ defmodule Scrabble do
     8 => ~w(J X),
     10 => ~w(Q Z)
   }
-  @letter_map = transform(@letter_values)
 
   @doc """
   Calculate the scrabble score for the word.
