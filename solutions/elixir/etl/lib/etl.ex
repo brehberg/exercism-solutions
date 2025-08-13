@@ -14,9 +14,11 @@ defmodule ETL do
     %{"a" => 1, "d" => 2, "e" => 1, "g" => 2}
   """
   @spec transform(old_map) :: new_map
-  def transform(input), do: input |> Enum.flat_map(&convert/1) |> Map.new()
-
-  @doc false
-  @spec convert({integer, [String.t()]}) :: [{String.t(), integer}]
-  defp convert({value, letters}), do: letters |> Enum.map(&{downcase(&1), value})
+  def transform(input) do
+    for {value, letters} <- input,
+        letter <- letters,
+        into: %{} do
+      &{downcase(letter), value}
+    end
+  end
 end
