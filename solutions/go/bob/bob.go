@@ -8,34 +8,35 @@ import "strings"
 
 // Hey returns a string that only ever answers one of five things.
 func Hey(remark string) string {
-	remark = strings.Trim(remark, " \t\n\r")
+	remark = strings.TrimSpace(remark)
+
+	if isSilence(remark) {
+		return "Fine. Be that way!"
+	}
+
+	yelling := isYelling(remark)
+	question := isQuestion(remark)
 
 	switch {
-	case is_silence(remark):
-		return "Fine. Be that way!"
-	case is_yelling_question(remark):
+	case yelling && question:
 		return "Calm down, I know what I'm doing!"
-	case is_yelling(remark):
+	case yelling:
 		return "Whoa, chill out!"
-	case is_question(remark):
+	case question:
 		return "Sure."
 	default:
 		return "Whatever."
 	}
 }
 
-func is_yelling(str string) bool {
+func isYelling(str string) bool {
 	return str == strings.ToUpper(str) && str != strings.ToLower(str)
 }
 
-func is_question(str string) bool {
-	return str[len(str)-1] == '?'
+func isQuestion(str string) bool {
+	return strings.HasSuffix(str, "?")
 }
 
-func is_yelling_question(str string) bool {
-	return is_yelling(str) && is_question(str)
-}
-
-func is_silence(str string) bool {
+func isSilence(str string) bool {
 	return str == ""
 }
