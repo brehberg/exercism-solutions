@@ -77,12 +77,14 @@ export class ProgramWindow {
 
     // The maximum position in either direction depends on the size of
     // the window. The edges cannot move past the edges of the screen.
-    if (this.size.width + this.position.x > this.screenSize.width) {
-      this.position.x = this.screenSize.width - this.size.width;
-    }
-    if (this.size.height + this.position.y > this.screenSize.height) {
-      this.position.y = this.screenSize.height - this.size.height;
-    }
+    this.position.x = Math.max(
+      this.position.x,
+      this.screenSize.width - this.size.width
+    );
+    this.position.y = Math.max(
+      this.position.y,
+      this.screenSize.height - this.size.height
+    );
   }
 }
 
@@ -94,7 +96,7 @@ export class ProgramWindow {
  * @returns {ProgramWindow} instance after the changes were applied
  */
 export function changeWindow(programWindow) {
-  programWindow.resize(new Size(400, 300));
   programWindow.move(new Position(100, 150));
+  programWindow.resize(new Size(400, 300));
   return programWindow;
 }
