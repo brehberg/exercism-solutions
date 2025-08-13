@@ -8,8 +8,8 @@ type factor struct {
 	bit   int8
 }
 
-var factors = []factor{{3, 0b1}, {5, 0b10}, {7, 0b100}}
-var raindrops = []string{"", "Pling", "Plang", "PlingPlang",
+var factors = [3]factor{{3, 0b1}, {5, 0b10}, {7, 0b100}}
+var raindrops = [8]string{"", "Pling", "Plang", "PlingPlang",
 	"Plong", "PlingPlong", "PlangPlong", "PlingPlangPlong"}
 
 // Convert returns a string that contains raindrop sounds corresponding to potential factors.
@@ -24,7 +24,9 @@ func Convert(number int) string {
 	for _, rain := range factors {
 		index += divisible_by(number, rain)
 	}
-	raindrops[0] = strconv.Itoa(number)
+	if index == 0 {
+		return strconv.Itoa(number)
+	}
 	return raindrops[index]
 }
 
