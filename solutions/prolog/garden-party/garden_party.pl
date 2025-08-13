@@ -4,57 +4,45 @@
 %
 % The beverage/2 predicate succeeds with the specific Drink each Chef brought.
 beverage(Chef, Drink) :-
-    drinks(Index, Drink),
-    person(Person, Chef),
+    solve(People, _, [1,2,3,4]),
+    chefs(Person, Chef),
     nth1(Person, People, Value),
-    nth1(Index, Drinks, Value),
-    solve(People, _, Drinks),
-    once(label(Drinks)).
+    drinks(Value, Drink).
 
 %! dish(?Chef, ?Dish)
 %
 % The dish/2 predicate succeeds with the specific Dish each Chef prepared.
 dish(Chef, Dish) :-
-    dishes(Index, Dish),
-    person(Person, Chef),    
+    solve(People, [1,2,3,4], _),
+    chefs(Person, Chef),
     nth1(Person, People, Value),
-    nth1(Index, Dishes, Value),    
-    solve(People, Dishes, _),
-    once(label(Dishes)).
+    dishes(Value, Dish).
 
-person(1, aisha).
-person(2, emma).
-person(3, mei).
-person(4, winona).
-
-dishes(1, pad_thai).
-dishes(2, frybread).
-dishes(3, tagine).
-dishes(4, biryani).
-
-drinks(1, tonic).
-drinks(2, lassi).
-drinks(3, kombucha).
-drinks(4, amasi).
+% Four chefs: Aisha, Emma, Mei, and Winona
+chefs(1, aisha).
+chefs(2, emma).
+chefs(3, mei).
+chefs(4, winona).
+% The dishes are Pad Thai, Frybread, Tagine, and Biryani.
+dishes([pad_thai, frybread, tagine, biryani]).
+dishes(I, Dish) :- dishes(D), nth1(I, D, Dish).
+% The beverages are Tonic, Lassi, Kombucha, and Amasi.
+drinks([tonic, lassi, kombucha, amasi]).
+drinks(I, Drink) :- drinks(D), nth1(I, D, Drink).
 
 solve(Person, Dishes, Drinks) :-
-
     Person = [Aisha, Emma, Mei, Winona],
     Dishes = [PadThai, Frybread, Tagine, Biryani],
-    Drinks = [Tonic, Lassi, Kombucha, Amasi],
+    Drinks = [Tonic, Lassi, _Kombucha, Amasi],
 
-    all_distinct(Person),
-    all_distinct(Dishes),
-    all_distinct(Drinks),
+    Groups = [Person, Dishes, Drinks],
+    maplist(all_distinct, Groups),
+    append(Groups, Values),
+    Values ins 1..4,
 
-    Person ins 1..4,
-    Dishes ins 1..4,
-    Drinks ins 1..4,
-        
     Aisha #= Tagine,    % Aisha prepares Tagine.
     Emma #= Amasi,      % Emma brings Amasi.
     Frybread #= Tonic,  % The chef who prepares Frybread brings Tonic.
     Mei #= Lassi,       % Mei brings Lassi.
     Winona #\= PadThai, % Winona does not prepare Pad Thai.
-    Lassi #\= Biryani,  % The chef who brings the Lassi did not cook the Biryani
-    drinks(Kombucha, kombucha).
+    Lassi #\= Biryani.  % The chef who brings the Lassi did not cook the Biryani
