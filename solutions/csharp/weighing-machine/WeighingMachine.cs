@@ -2,25 +2,29 @@ using System;
 
 class WeighingMachine
 {
-    private readonly int _precision;
-    private double _weight;
-    private double _tareAdjustment = 5;
+    public int Precision { get; }
 
-    public int Precision => _precision;
+    private double _weight;
     public double Weight
     {
         get => _weight;
         set
         {
-            if (value < 0) throw new ArgumentOutOfRangeException();
+            if (value < 0) throw new ArgumentOutOfRangeException("Weight cannot be negative.");
             _weight = value;
         }
     }
-    public double TareAdjustment { get => _tareAdjustment; set => _tareAdjustment = value; }
-    public string DisplayWeight => String.Format($"{{0:F{Precision}}} kg", Weight - TareAdjustment);
 
-    public WeighingMachine(int precision)
+    public double TareAdjustment { get; set; } = 5;
+
+    public string DisplayWeight
     {
-        _precision = precision;
+        get
+        {
+            double displayWeight = Math.Round(Weight - TareAdjustment, Precision);
+            return $"{displayWeight.ToString($"F{Precision}")} kg";
+        }
     }
+
+    public WeighingMachine(int precision) => Precision = precision;
 }
