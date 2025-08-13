@@ -9,10 +9,8 @@
 export const encode = (input) => {
   const encodedPair = (
     /** @type {string} */ match,
-    /** @type {string} */ p1
-  ) => {
-    return `${match.length}${p1}`;
-  };
+    /** @type {string} */ char
+  ) => `${match.length}${char}`;
 
   return input.replace(/(.)\1+/g, encodedPair);
 };
@@ -26,11 +24,9 @@ export const encode = (input) => {
 export const decode = (input) => {
   const decodedGroup = (
     /** @type {string} */ _match,
-    /** @type {number} */ p1,
-    /** @type {string} */ p2
-  ) => {
-    return p2.repeat(p1);
-  };
+    /** @type {number} */ count,
+    /** @type {string} */ char
+  ) => char.repeat(count);
 
   return input.replace(/(\d+)(.)/g, decodedGroup);
 };
