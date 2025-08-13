@@ -9,15 +9,13 @@ class BankAccount {
     private int balance = 0;
 
     void open() throws BankAccountActionInvalidException {
-        if (status == AccountStatus.OPEN) {
-            throw new BankAccountActionInvalidException("Account already open");
-        }
+        checkAccountNotOpen();
         status = AccountStatus.OPEN;
         balance = 0;
     }
 
     void close() throws BankAccountActionInvalidException {
-        checkAccountNotClosed("Account not open");
+        checkAccountIsOpen();
         status = AccountStatus.CLOSED;
     }
 
@@ -35,25 +33,37 @@ class BankAccount {
     synchronized void withdraw(int amount) throws BankAccountActionInvalidException {
         checkAccountNotClosed();
         checkAmountNotNegative(amount);
-        if (amount > balance) {
-            throw new BankAccountActionInvalidException("Cannot withdraw more money than is currently in the account");
-        }
+        checkAmountLessThanBalance(amount);
         balance -= amount;
     }
 
-    private void checkAccountNotClosed() throws BankAccountActionInvalidException {
-        checkAccountNotClosed("Account closed");
+    private void checkAccountNotOpen() throws BankAccountActionInvalidException {
+        if (status == AccountStatus.OPEN) {
+            throw new BankAccountActionInvalidException("Account already open");
+        }
     }
 
-    private void checkAccountNotClosed(String message) throws BankAccountActionInvalidException {
+    private void checkAccountIsOpen() throws BankAccountActionInvalidException {
+        if (status != AccountStatus.OPEN) {
+            throw new BankAccountActionInvalidException("Account not open");
+        }
+    }
+
+    private void checkAccountNotClosed() throws BankAccountActionInvalidException {
         if (status == AccountStatus.CLOSED) {
-            throw new BankAccountActionInvalidException(message);
+            throw new BankAccountActionInvalidException("Account closed");
         }
     }
 
     private void checkAmountNotNegative(int amount) throws BankAccountActionInvalidException {
         if (amount < 0) {
             throw new BankAccountActionInvalidException("Cannot deposit or withdraw negative amount");
+        }
+    }
+
+    private void checkAmountLessThanBalance(int amount) throws BankAccountActionInvalidException {
+        if (amount > balance) {
+            throw new BankAccountActionInvalidException("Cannot withdraw more money than is currently in the account");
         }
     }
 }
