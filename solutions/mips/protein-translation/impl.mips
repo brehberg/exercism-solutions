@@ -1,0 +1,99 @@
+    # | Register | Usage        | Type    | Description                   |
+    # | -------- | ------------ | ------- | ----------------------------- |
+    # | `$a0`    | input        | address | null-terminated input string  |
+    # | `$a1`    | input/output | address | null-terminated output string |
+    # | `$t0-9`  | temporary    | any     | used for temporary storage    |
+
+.globl  proteins
+
+.eqv    AUG, 0x00475541
+.eqv    UUU, 0x00555555
+.eqv    UUC, 0x00435555
+.eqv    UUA, 0x00415555
+.eqv    UUG, 0x00475555
+.eqv    UCU, 0x00554355
+.eqv    UCC, 0x00434355
+.eqv    UCA, 0x00414355
+.eqv    UCG, 0x00474355
+.eqv    UAU, 0x00554155
+.eqv    UAC, 0x00434155
+.eqv    UGU, 0x00554755
+.eqv    UGC, 0x00434755
+.eqv    UGG, 0x00474755
+.eqv    UAA, 0x00414155
+.eqv    UAG, 0x00474155
+.eqv    UGA, 0x00414755
+
+.data
+
+methionine:     .asciiz "Methionine\n"
+phenylalanine:  .asciiz "Phenylalanine\n"
+leucine:        .asciiz "Leucine\n"
+serine:         .asciiz "Serine\n"
+tyrosine:       .asciiz "Tyrosine\n"
+cysteine:       .asciiz "Cysteine\n"
+tryptophan:     .asciiz "Tryptophan\n"
+
+.text
+
+proteins:       
+    move    $t0, $a0
+    move    $t1, $a1
+__read:     # validate and read unaligned word of codon input
+    lb      $t2, 0($t0)
+    beqz    $t2, __stop
+    lb      $t2, 1($t0)
+    beqz    $t2, __fail
+    lb      $t2, 2($t0)
+    beqz    $t2, __fail
+
+    ulw     $t3, 0($t0)
+    andi    $t3, $t3, 0x00FFFFFF
+    addi    $t0, $t0, 3
+
+    la      $t2, methionine
+    beq     $t3, AUG, __copy
+
+    la      $t2, phenylalanine
+    beq     $t3, UUU, __copy
+    beq     $t3, UUC, __copy
+
+    la      $t2, leucine
+    beq     $t3, UUA, __copy
+    beq     $t3, UUG, __copy
+
+    la      $t2, serine
+    beq     $t3, UCU, __copy
+    beq     $t3, UCC, __copy
+    beq     $t3, UCA, __copy
+    beq     $t3, UCG, __copy
+
+    la      $t2, tyrosine
+    beq     $t3, UAU, __copy
+    beq     $t3, UAC, __copy
+
+    la      $t2, cysteine
+    beq     $t3, UGU, __copy
+    beq     $t3, UGC, __copy
+
+    la      $t2, tryptophan
+    beq     $t3, UGG, __copy
+
+    beq     $t3, UAA, __stop
+    beq     $t3, UAG, __stop
+    beq     $t3, UGA, __stop
+    j		__fail
+
+__copy:     # copy string from source $t2 to destination $t1
+    lb      $t3, 0($t2)
+    sb      $t3, 0($t1)
+    addi    $t2, $t2, 1
+    addi    $t1, $t1, 1
+    bnez    $t3, __copy
+    subi    $t1, $t1, 1
+    j		__read
+
+__fail:
+    sb      $zero, 0($a1)
+__stop:
+    jr      $ra
