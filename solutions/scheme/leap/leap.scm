@@ -1,7 +1,8 @@
 (import (rnrs))
 
 (define (leap-year? year)
-(apply (lambda (a b c) (and a (or (not b) c)))
-       (map (lambda (n) (zero? (remainder year n)))
-            '(4 100 400))))
+    (define (divisible-by? n) (zero? (remainder year n)))
+        (and (divisible-by? 4)
+            (or (not (divisible-by? 100))
+                (divisible-by? 400))))
 
