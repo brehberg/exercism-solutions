@@ -1,7 +1,5 @@
 defmodule LogParser do
-  @moduledoc """
-  Functions to clean up the organization's archived log files.
-  """
+  @moduledoc "Functions to clean up the organization's archived log files."
 
   @doc """
   Identify garbled log lines
@@ -10,7 +8,7 @@ defmodule LogParser do
     [DEBUG]  [INFO]  [WARNING]  [ERROR]
   """
   @spec valid_line?(String.t()) :: boolean
-  def valid_line?(line), do: line =~ ~r/^\[DEBUG|INFO|WARNING|ERROR\]/
+  def valid_line?(line), do: line =~ ~r/^\[(?>DEBUG|INFO|WARNING|ERROR)\]/
 
   @doc """
   Split the log line
