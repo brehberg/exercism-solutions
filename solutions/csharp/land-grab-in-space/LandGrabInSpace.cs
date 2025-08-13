@@ -9,8 +9,8 @@ public struct Coord
         X = x;
         Y = y;
     }
-    public ushort X { get; }
-    public ushort Y { get; }
+    public ushort X { get; } = 0;
+    public ushort Y { get; } = 0;
 }
 public struct Side
 {
@@ -19,8 +19,8 @@ public struct Side
         A = a;
         B = b;
     }
-    public Coord A { get; }
-    public Coord B { get; }
+    public Coord A { get; } = new Coord();
+    public Coord B { get; } = new Coord();
     public float Length() => (B.X - A.X) * 2 + (B.Y - A.Y) * 2;
 }
 public struct Plot
@@ -38,8 +38,10 @@ public struct Plot
         LongestSide = sides.OrderByDescending((s => s.Length())).First();
     }
 
-    public (Coord, Coord, Coord, Coord) Coordinates { get; }
-    public Side LongestSide { get; }
+    public (Coord, Coord, Coord, Coord) Coordinates { get; } =
+        (new Coord(), new Coord(), new Coord(), new Coord());
+    public Side LongestSide { get; } =
+        new Side(new Coord(), new Coord());
 
     public bool hasLongerSide(Plot plot) =>
         this.LongestSide.Length() > plot.LongestSide.Length();
