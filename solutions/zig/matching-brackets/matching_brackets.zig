@@ -14,7 +14,7 @@ pub fn isBalanced(allocator: mem.Allocator, input: []const u8) !bool {
     defer closerNeeded.deinit();
 
     for (input) |char| {
-        var closer = matches.get(char);
+        const closer = matches.get(char);
         if (closer) |c| {
             // opening bracket was found, add matching closing value to the stack
             try closerNeeded.append(c);
