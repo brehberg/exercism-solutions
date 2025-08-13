@@ -1,2 +1,3 @@
 proc isLeapYear*(year: int): bool =
-  result = year mod 4 == 0 and year mod 100 != 0 or year mod 400 == 0
+  func isDivisibleBy(n: int): bool = year mod n == 0
+  isDivisibleBy(4) and not isDivisibleBy(100) or isDivisibleBy(400)
