@@ -1,13 +1,14 @@
 return {
   to_roman = function(n)
     remaining = n
+    value = 1000
     roman = ""
 
-    local function cypher(value, unit, five, full)
+    local function cypher(unit, five, full)
       local function add_literals(multi, pattern)
-        while (remaining >= value * multi) do
+        while (remaining >= multi * value) do
           roman = roman .. pattern
-          remaining = remaining - value * multi          
+          remaining = remaining - multi * value
         end
       end
 
@@ -15,12 +16,13 @@ return {
       add_literals(5, five)
       add_literals(4, unit .. five)
       add_literals(1, unit)
+      value = value / 10
     end
 
-    cypher(1000, "M", "", "")
-    cypher(100, "C", "D", "M")
-    cypher(10, "X", "L", "C")
-    cypher(1, "I", "V", "X")
+    cypher("M", "", "")
+    cypher("C", "D", "M")
+    cypher("X", "L", "C")
+    cypher("I", "V", "X")
     return roman
   end
 }
