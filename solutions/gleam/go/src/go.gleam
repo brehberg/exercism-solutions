@@ -22,10 +22,17 @@ pub fn apply_rules(
   rule4: fn(Game) -> Result(Game, String),
 ) -> Game {
   case
-    game |> rule1 |> result.map(rule2) |> result.try(rule3) |> result.try(rule4)
+    game
+    |> rule1
+    |> result.map(rule2)
+    |> result.try(rule3)
+    |> result.try(rule4)
   {
-    Ok(g) if g.player == White -> Game(..g, player: Black)
-    Ok(g) -> Game(..g, player: White)
+    Ok(g) ->
+      case g.player {
+        Black -> Game(..g, player: White)
+        White -> Game(..g, player: Black)
+      }
     Error(e) -> Game(..game, error: e)
   }
 }
