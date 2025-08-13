@@ -24,7 +24,7 @@ public class TwoBucket
 
     public TwoBucketResult Measure(int goal)
     {
-        if (!isValid(goal)) throw new ArgumentException("invalid goal amount");
+        if (!IsValid(goal)) throw new ArgumentException("invalid goal amount");
 
         first.Fill();
         var moves = 1;
@@ -42,14 +42,16 @@ public class TwoBucket
             moves += 1;
         }
 
-        var result = new TwoBucketResult();
-        result.Moves = moves;
-        result.GoalBucket = first.Amount == goal ? first.Name : second.Name;
-        result.OtherBucket = first.Amount == goal ? second.Amount : first.Amount;
+        var result = new TwoBucketResult
+        {
+            Moves = moves,
+            GoalBucket = first.Amount == goal ? first.Name : second.Name,
+            OtherBucket = first.Amount == goal ? second.Amount : first.Amount
+        };
         return result;
     }
 
-    private bool isValid(int goal)
+    private bool IsValid(int goal)
     {
         int gcd(int a, int b) => b == 0 ? a : gcd(b, a % b);
         var factor = gcd(first.Size, second.Size);
@@ -57,7 +59,7 @@ public class TwoBucket
             (factor == 1 || goal % factor == 0);
     }
 
-    private SingleBucket first, second;
+    private readonly SingleBucket first, second;
 
     private class SingleBucket(Bucket name, int size)
     {
