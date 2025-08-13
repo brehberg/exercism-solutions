@@ -40,12 +40,12 @@ CLASS zcl_itab_aggregation IMPLEMENTATION.
     LOOP AT initial_numbers REFERENCE INTO DATA(record)
       GROUP BY ( group = record->group
                  size = GROUP SIZE
-                ) REFERENCE INTO DATA(key).
+                ) INTO DATA(key).
 
       DATA(aggregate) = REDUCE aggregated_data_type(
         INIT result = VALUE #(
-            group = key->group
-            count = key->size
+            group = key-group
+            count = key-size
             min = cl_abap_math=>max_int4
             max = cl_abap_math=>min_int4 )
         FOR member IN GROUP key
