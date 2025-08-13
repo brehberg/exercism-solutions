@@ -13,6 +13,7 @@ CLASS zcl_crypto_square DEFINITION
     METHODS normalize
       IMPORTING input         TYPE string
       RETURNING VALUE(result) TYPE string.
+
 ENDCLASS.
 
 
@@ -24,23 +25,18 @@ CLASS zcl_crypto_square IMPLEMENTATION.
     DATA(clean) = normalize( plain_text ).
     DATA(max) = strlen( clean ).
     CHECK max > 0.
-    
-    DATA(cols) = ceil( sqrt( max ) ).
-    DATA(rows) = max / cols.
-    DATA(start) = 0.
 
-    WHILE start < cols.
-      DATA(n) = start.
-      DO rows TIMES.
-        crypto_text = crypto_text && COND #(
-            WHEN n < max THEN clean+n(1) ELSE ` ` ).
-        n += cols.
-      ENDDO.
-      start += 1.
-      IF start < cols.
-        crypto_text = crypto_text && ` `.
-      ENDIF.
-    ENDWHILE.
+    DATA(cols) = ceil( sqrt( max ) ).
+    DATA(rows) = ceil( max / cols ).
+    " add spaces to fill partial rows plus extra blank row
+    max = cols * ( rows  + 1 ) - 1.
+    clean = |{ clean WIDTH = max PAD = ` ` }|.
+
+    crypto_text = REDUCE #(
+       INIT str = ``
+       FOR start = 0 WHILE start < cols
+       FOR n = start THEN n + cols WHILE n < max
+       NEXT str = str && clean+n(1) ).
 
   ENDMETHOD.
 
