@@ -14,38 +14,35 @@ main() {
   local yellingReply="Whoa, chill out!"
   local yellingQuestionReply="Calm down, I know what I'm doing!"
 
-  is_silence() {
-    local trimmed="${1//[[:space:]]/}"
-    [[ -z "${trimmed}" ]]
-  }
-
-  is_yelling() {
-    local input="$1"
-    local -u upper="$1" # "${1^^}"
-    local -l lower="$1" # "${1,,}"
-    [[ "${input}" == "${upper}" && "${input}" != "${lower}" ]]
-  }
-
-  is_question() {
-    local input="$1"
-    [[ "${input}" =~ \?[[:space:]]*$ ]]
-  }
-
-  if (is_silence "${input}"); then
+  if is_silence; then
     echo "${silenceReply}"
 
-  elif (is_yelling "${input}"); then
-    if (is_question "${input}"); then
+  elif is_yelling; then
+    if is_question; then
       echo "${yellingQuestionReply}"
     else
       echo "${yellingReply}"
     fi
 
-  elif (is_question "${input}"); then
+  elif is_question; then
     echo "${questionReply}"
   else
     echo "${defaultReply}"
   fi
+}
+
+is_silence() {
+  local trimmed="${input//[[:space:]]/}"
+  [[ -z "${trimmed}" ]]
+}
+
+is_yelling() {
+  local anyUpper='[A-Z]'
+  [[ "${input}" =~ ${anyUpper} && "${input}" == "${input^^}" ]]
+}
+
+is_question() {
+  [[ "${input}" =~ \?[[:space:]]*$ ]]
 }
 
 main "$@"
