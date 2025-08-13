@@ -15,7 +15,7 @@ validate_arguments() {
     return 1
   fi
 
-  if (($1 < 1 || $1 > 64)) && [[ $1 != "total" ]]; then
+  if [[ $1 != "total" ]] && (($1 < 1 || $1 > 64)); then
     fail # There are 64 squares on a chessboard
   fi
 }
@@ -24,14 +24,12 @@ main() {
   validate_arguments "$@" || exit 1
 
   if [[ "$1" == "total" ]]; then
-    echo 18446744073709551615
+    echo "2^64 - 1" | bc # 18446744073709551615
     exit 0
   fi
 
   local -i square="$1"
-  local -i grains=$((2 ** (square - 1)))
-
-  echo ${grains#-}
+  echo "2^(${square} - 1)" | bc
 }
 
 main "$@"
