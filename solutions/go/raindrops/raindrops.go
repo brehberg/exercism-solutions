@@ -3,7 +3,7 @@ package raindrops
 import "strconv"
 
 // Provides the mapping of factors to their corresponding rain sounds.
-var mapping = []struct {
+var raindrops = []struct {
 	factor int
 	sound  string
 }{{3, "Pling"}, {5, "Plang"}, {7, "Plong"}}
@@ -16,7 +16,7 @@ var mapping = []struct {
 //	has 7 as a factor, add 'Plong' to the result.
 //	does not have any of 3, 5, or 7 as a factor, result should be the digits of the number.
 func Convert(number int) (result string) {
-	for _, rain := range mapping {
+	for _, rain := range raindrops {
 		if divisible_by(rain.factor, number) {
 			result += rain.sound
 		}
