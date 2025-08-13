@@ -8,7 +8,7 @@
 
 (defn absolute-value [n] (max n (- n)))
 
-(defn calc-percent-value [value percentage]
+(defn calc-percent-value [percentage value]
   (-> percentage
       absolute-value
       (/ 100.0)
@@ -16,14 +16,14 @@
       (* value)))
 
 (defn annual-balance-update [balance]
-  (->> balance
-       interest-rate
-       (calc-percent-value balance)
-       (+ balance)))
+  (-> balance
+      interest-rate
+      (calc-percent-value balance)
+      (+ balance)))
 
 (defn amount-to-donate [balance tax-free-percentage]
   (if (> 0 balance) 0
-      (-> balance
-          (calc-percent-value tax-free-percentage)
+      (-> tax-free-percentage
+          (calc-percent-value balance)
           (* 2.0)
           (int))))
