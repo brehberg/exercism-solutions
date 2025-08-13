@@ -1,9 +1,8 @@
 // Protect the recovered secret plans with a password
 func protectSecret(_ secret: String, withPassword password: String) -> (String) -> String {
-  func passwordChecker(_ guess: String) -> String {
-    return guess == password ? secret : "Sorry. No hidden secrets here."
+  return { (_ guess: String) -> String in
+    guess == password ? secret : "Sorry. No hidden secrets here."
   }
-  return passwordChecker
 }
 
 // Generate a combination to open their safe
