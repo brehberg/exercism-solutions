@@ -10,16 +10,16 @@ defmodule Bob do
   @spec hey(String.t()) :: String.t()
   def hey(input) do
     cond do
-      is_nothing?(input) -> "Fine. Be that way!"
-      is_question?(input) and is_yell?(input) -> "Calm down, I know what I'm doing!"
-      is_yell?(input) -> "Whoa, chill out!"
-      is_question?(input) -> "Sure."
+      nothing?(input) -> "Fine. Be that way!"
+      question?(input) and yell?(input) -> "Calm down, I know what I'm doing!"
+      yell?(input) -> "Whoa, chill out!"
+      question?(input) -> "Sure."
       true -> "Whatever."
     end
   end
 
   @doc false
-  defp is_yell?(str), do: String.upcase(str) == str and String.match?(str, ~r/[A-ZУХОДИ]/)
-  defp is_question?(str), do: String.trim(str) |> String.ends_with?("?")
-  defp is_nothing?(str), do: String.trim(str) == ""
+  defp yell?(str), do: String.upcase(str) == str and String.match?(str, ~r/[A-ZУХОДИ]/)
+  defp question?(str), do: String.trim(str) |> String.ends_with?("?")
+  defp nothing?(str), do: String.trim(str) == ""
 end
