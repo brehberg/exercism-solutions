@@ -26,6 +26,12 @@ function Test-LeapYear {
     #>
     param( [int]$year )
 
-    if ($year % 100) { return !($year % 4) }
-    else { return !($year % 400) }
+    function Test-DivisibleBy {
+        param( [int]$n )
+        return $year % $n -eq 0
+    }
+
+    return (Test-DivisibleBy 4) `
+        -and -not (Test-DivisibleBy 100) `
+        -or (Test-DivisibleBy 400)
 }
