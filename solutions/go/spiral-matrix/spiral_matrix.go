@@ -1,97 +1,59 @@
 package spiralmatrix
 
-type matrix [][]int
+// sequence of directions to fill the matrix in clockwise order
+type direction int
 
-type value struct {
-	prev int
-	done int
-}
+const (
+	right direction = iota
+	down
+	left
+	up
+)
 
+// row and column indexes representing a position in the matrix
 type position struct {
-	row int
-	col int
-	min int
-	max int
+	row, col int
 }
 
+// SpiralMatrix return a square matrix of a given size that is filled with natural numbers,
+// starting from 1 in the top-left corner, increasing in an inward, clockwise spiral order.
 func SpiralMatrix(size int) [][]int {
 	spiral := make([][]int, size)
 	for i := range spiral {
 		spiral[i] = make([]int, size)
 	}
 
-	val := value{prev: 0, done: size * size}
-	pos := position{row: 0, col: 0, min: -1, max: size}
+	pos := position{row: 0, col: 0}
+	dir := right
 
-	return go_right(spiral, val, pos)
+	for val := 1; val <= size*size; val++ {
+		// update value at this position and check for valid next move
+		spiral[pos.row][pos.col] = val
+		next := adjustPosition(pos, dir)
+
+		if next.col >= size || // position beyond last column, turn down instead
+			next.row >= size || // position beyond last row, turn left instead
+			next.col < 0 || // position beyond first column, turn up instead
+			next.row < 0 || // position beyond first row, turn right instead
+			spiral[next.row][next.col] > 0 { // position filled, turn instead
+			dir = (dir + 1) % 4
+		}
+		pos = adjustPosition(pos, dir)
+	}
+	return spiral
 }
 
-func go_right(spiral matrix, val value, pos position) matrix {
-	if val.prev == val.done {
-		return spiral
+// adjustPosition return a new position based on the current direction
+func adjustPosition(pos position, dir direction) position {
+	switch dir {
+	case right:
+		pos.col += 1 // move right to next column
+	case down:
+		pos.row += 1 // move down to next row
+	case left:
+		pos.col -= 1 // move left to previous column
+	case up:
+		pos.row -= 1 // move up to previous row
 	}
-	if pos.col == pos.max {
-		// position beyond last column, turn down instead
-		pos.row += 1
-		pos.col -= 1
-		return go_down(spiral, val, pos)
-	}
-	// update this position and move right to next column
-	spiral[pos.row][pos.col] = val.prev + 1
-	val.prev += 1
-	pos.col += 1
-	return go_right(spiral, val, pos)
-}
-
-func go_down(spiral matrix, val value, pos position) matrix {
-	if val.prev == val.done {
-		return spiral
-	}
-	if pos.row == pos.max {
-		// position beyond last row, turn left instead
-		pos.row -= 1
-		pos.col -= 1
-		return go_left(spiral, val, pos)
-	}
-	// update this position and move down to next row
-	spiral[pos.row][pos.col] = val.prev + 1
-	val.prev += 1
-	pos.row += 1
-	return go_down(spiral, val, pos)
-}
-
-func go_left(spiral matrix, val value, pos position) matrix {
-	if val.prev == val.done {
-		return spiral
-	}
-	if pos.col == pos.min {
-		// position beyond first column, turn up and increase min position
-		pos.row -= 1
-		pos.col += 1
-		pos.min += 1
-		return go_up(spiral, val, pos)
-	}
-	// update this position and move left to previous column
-	spiral[pos.row][pos.col] = val.prev + 1
-	val.prev += 1
-	pos.col -= 1
-	return go_left(spiral, val, pos)
-}
-
-func go_up(spiral matrix, val value, pos position) matrix {
-	if val.prev == val.done {
-		return spiral
-	}
-	if pos.row == pos.min {
-		// position beyond first row, turn right and decrease max position
-		pos.row += 1
-		pos.col += 1
-		pos.max -= 1
-		return go_right(spiral, val, pos)
-	}
-	// update this position and move up to previous row
-	spiral[pos.row][pos.col] = val.prev + 1
-	val.prev += 1
-	pos.row -= 1
-	return go_up(spiral, val, pos)
+	return pos
 }
