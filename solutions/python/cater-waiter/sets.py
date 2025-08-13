@@ -35,10 +35,8 @@ def check_drinks(drink_name, drink_ingredients):
     name followed by "Cocktail" (includes alcohol).
 
     """
-    return (
-        drink_name + " Mocktail"
-        if (set(drink_ingredients).isdisjoint(ALCOHOLS))
-        else drink_name + " Cocktail"
+    return drink_name + (
+        " Mocktail" if (set(drink_ingredients).isdisjoint(ALCOHOLS)) else " Cocktail"
     )
 
 
