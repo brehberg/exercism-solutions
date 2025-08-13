@@ -1,33 +1,31 @@
 module RnaTranscription exposing (toRNA)
 
 
-dnaToRna : Char -> Char
+dnaToRna : Char -> Result String Char
 dnaToRna nucleotide =
     case nucleotide of
         'G' ->
-            'C'
+            Ok 'C'
 
         'C' ->
-            'G'
+            Ok 'G'
 
         'T' ->
-            'A'
+            Ok 'A'
 
         'A' ->
-            'U'
+            Ok 'U'
 
         _ ->
-            '?'
+            Err "Invalid nucleotide detected."
 
 
 toRNA : String -> Result String String
-toRNA dna =
-    let
-        rna =
-            dna |> String.map dnaToRna
-    in
-    if rna |> String.contains "?" then
-        Err "Invalid nucleotide detected."
-
-    else
-        Ok rna
+toRNA =
+    String.foldr
+        (\c ->
+            Result.map2
+                String.cons
+                (dnaToRna c)
+        )
+        (Ok "")
