@@ -61,11 +61,10 @@ fn check_full_house(mut dice: Dice) -> u8 {
 // a four of a kind is worth the sum of the four dice showing the same face
 fn check_four_of_a_kind(mut dice: Dice) -> u8 {
     dice.sort();
-    let [d1, d2, _d3, d4, d5] = dice;
-    if d1 == d4 {
-        4 * d1 // [s, s, s, s, _]
-    } else if d2 == d5 {
-        4 * d2 // [_, b, b, b, b]
+    let [d1, d2, d3, d4, d5] = dice;
+    // [s, s, s, s, _] or [_, b, b, b, b]
+    if d1 == d4 || d2 == d5 {
+        4 * d3
     } else {
         0
     }
