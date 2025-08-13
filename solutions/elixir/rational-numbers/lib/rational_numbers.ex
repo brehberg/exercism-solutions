@@ -38,7 +38,7 @@ defmodule RationalNumbers do
   def pow_rational({x1, y1}, n) when n >= 0, do: reduce({pow(x1, n), pow(y1, n)})
   def pow_rational({x1, y1}, n), do: reduce({pow(y1, Kernel.abs(n)), pow(x1, Kernel.abs(n))})
   @doc false
-  defp pow(x, 0), do: 1
+  defp pow(_, 0), do: 1
   defp pow(x, 1), do: x
   defp pow(x, n), do: x * pow(x, n-1)
 
