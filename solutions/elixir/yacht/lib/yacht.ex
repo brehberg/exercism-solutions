@@ -1,4 +1,7 @@
 defmodule Yacht do
+  @moduledoc false
+  import Enum, only: [filter: 2, sort: 1, sum: 1, to_list: 1]
+
   @type category ::
           :ones
           | :twos
@@ -24,22 +27,24 @@ defmodule Yacht do
   def score(:fives, dice), do: dice |> sum_for_value(5)
   def score(:sixes, dice), do: dice |> sum_for_value(6)
 
-  def score(:little_straight, dice), do: if(dice |> have_range(1..5), do: 30, else: 0)
-  def score(:big_straight, dice), do: if(dice |> have_range(2..6), do: 30, else: 0)
-  def score(:choice, dice), do: dice |> Enum.sum()
+  # a straight is worth 30 points if all dice values required are present
+  def score(:little_straight, dice), do: dice |> score_for(1..5)
+  def score(:big_straight, dice), do: dice |> score_for(2..6)
+  def score(:choice, dice), do: sum(dice)
   def score(:yacht, [d, d, d, d, d]), do: 50
   def score(:yacht, _dice), do: 0
 
   def score(:full_house, dice) do
-    case Enum.sort(dice) do
-      [s, s, b, b, b] -> if s == b, do: 0, else: dice |> Enum.sum()
-      [s, s, s, b, b] -> if s == b, do: 0, else: dice |> Enum.sum()
+    case sort(dice) do
+      [d, d, d, d, d] -> 0
+      [s, s, b, b, b] -> sum(dice)
+      [s, s, s, b, b] -> sum(dice)
       _ -> 0
     end
   end
 
   def score(:four_of_a_kind, dice) do
-    case Enum.sort(dice) do
+    case sort(dice) do
       [s, s, s, s, _] -> s * 4
       [_, b, b, b, b] -> b * 4
       _ -> 0
@@ -48,7 +53,11 @@ defmodule Yacht do
 
   @doc false
   @spec sum_for_value([integer], integer) :: integer
-  defp sum_for_value(dice, n), do: dice |> Enum.filter(&(&1 == n)) |> Enum.sum()
-  @spec have_range([integer], Range.t()) :: boolean
-  defp have_range(dice, range), do: Enum.sort(dice) == Enum.to_list(range)
+  defp sum_for_value(dice, num),
+    do: dice |> filter(&(&1 == num)) |> sum()
+
+  @doc false
+  @spec score_for([integer], Range.t()) :: integer
+  defp score_for(dice, nums),
+    do: if(sort(dice) == to_list(nums), do: 30, else: 0)
 end
