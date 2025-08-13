@@ -21,25 +21,25 @@ class Alien:
 
     total_aliens_created = 0
 
-    def __init__(self, x, y):
-        self.x_coordinate = x
-        self.y_coordinate = y
+    def __init__(self, x_pos, y_pos):
+        self.x_coordinate = x_pos
+        self.y_coordinate = y_pos
         self.health = 3
         Alien.total_aliens_created += 1
 
     def hit(self):
-        self.health = h if (h := self.health - 1) > 0 else 0
+        self.health = health if (health := self.health - 1) > 0 else 0
 
     def is_alive(self):
         return self.health > 0
 
-    def teleport(self, new_x, new_y):
-        self.x_coordinate = new_x
-        self.y_coordinate = new_y
+    def teleport(self, x_pos, y_pos):
+        self.x_coordinate = x_pos
+        self.y_coordinate = y_pos
 
     def collision_detection(self, other):
         pass
 
 
 def new_aliens_collection(positions):
-    return [Alien(x, y) for x, y in positions]
+    return [Alien(x_pos, y_pos) for x_pos, y_pos in positions]
