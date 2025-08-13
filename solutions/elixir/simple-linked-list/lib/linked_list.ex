@@ -2,19 +2,19 @@ defmodule LinkedList do
   alias Tuple, as: T
   @opaque t :: tuple()
 
-  defguardp is_empty(list) when elem(list, 0) == 0
+  defguardp is_empty(list) when list == {}
 
   @doc """
   Construct a new LinkedList
   """
   @spec new() :: t
-  def new(), do: {0, {:head}}
+  def new(), do: {}
 
   @doc """
   Push an item onto a LinkedList
   """
   @spec push(t, any()) :: t
-  def push({size, data}, elem), do: {size + 1, T.append(data, elem)}
+  def push(list, elem), do: {elem, list}
 
   @doc """
   Counts the number of elements in a LinkedList
@@ -34,30 +34,30 @@ defmodule LinkedList do
   """
   @spec peek(t) :: {:ok, any()} | {:error, :empty_list}
   def peek(list) when is_empty(list), do: {:error, :empty_list}
-  def peek(list), do: {:ok, do_peek(list)}
-  defp do_peek({size, data}), do: elem(data, size)
+  def peek({elem, _rest}), do: {:ok, elem}
 
   @doc """
   Get tail of a LinkedList
   """
   @spec tail(t) :: {:ok, t} | {:error, :empty_list}
   def tail(list) when is_empty(list), do: {:error, :empty_list}
-  def tail(list), do: {:ok, do_tail(list)}
-  defp do_tail({size, data}), do: {size - 1, T.delete_at(data, size)}
+  def tail({_elem, rest}), do: {:ok, rest}
 
   @doc """
   Remove the head from a LinkedList
   """
   @spec pop(t) :: {:ok, any(), t} | {:error, :empty_list}
   def pop(list) when is_empty(list), do: {:error, :empty_list}
-  def pop(list), do: {:ok, do_peek(list), do_tail(list)}
+  def pop({elem, rest}), do: {:ok, elem, rest}
 
   @doc """
   Construct a LinkedList from a stdlib List
   """
   @spec from_list(list()) :: t
-  def from_list(list) do
-    list |> Enum.reverse() |> Enum.reduce(new(), &push(&2, &1))
+  def from_list(list), do: from_list_acc(list, {})
+  defp from_list_acc([], list), do: list
+  defp from_list_acc([first, rest], list)
+    from_list_acc(rest, {first, list})
   end
 
   @doc """
