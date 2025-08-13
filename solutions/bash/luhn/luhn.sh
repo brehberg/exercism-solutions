@@ -32,8 +32,4 @@ for ((i = 1; i <= ${#id}; i++)); do
 done
 
 # if the sum is evenly divisible by 10, then the number is valid
-if [[ $((sum % 10)) -eq 0 ]]; then
-  echo true
-else
-  echo false
-fi
+((sum % 10 == 0)) && echo true || echo false
